@@ -10,5 +10,3 @@ class ReversiSpec extends AnyWordSpec:
       cells() should be ("|   |   |   |" + eol)
     }
   }
-
-// Hallo
