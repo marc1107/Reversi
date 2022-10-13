@@ -8,3 +8,4 @@ def mesh(cellWidth:Int=3, cellNum:Int=8) =
 
 println("Welcome to Reversi")
 println(mesh())
+println("End")
