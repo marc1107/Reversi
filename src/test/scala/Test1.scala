@@ -1,4 +1,4 @@
-import org.scalatest.wordspec.AnyWordSpec
+/*import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers._
 
 class ReversiSpec extends AnyWordSpec:
@@ -9,4 +9,4 @@ class ReversiSpec extends AnyWordSpec:
     "have cells as String of form '|   |   |   |'" in {
       cells() should be ("|   |   |   |" + eol)
     }
-  }
+  }*/
