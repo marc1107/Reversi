@@ -1,9 +1,9 @@
 val eol = sys.props("line.separator")
-def bar(cellWidth:Int=4, cellNum:Int=8) =
+def bar(cellWidth: Int = 4, cellNum: Int = 8) =
   ("+" + "-" * cellWidth) * cellNum + "+" + eol
-def cells(cellWidth:Int=4, cellNum:Int=8) =
+def cells(cellWidth: Int = 4, cellNum: Int = 8) =
   ("|" + " " * cellWidth) * cellNum + "|" + eol
-def mesh(cellWidth:Int=4, cellNum:Int=8) =
+def mesh(cellWidth: Int = 4, cellNum: Int = 8) =
   (bar(cellWidth, cellNum) + cells(cellWidth, cellNum)) * cellNum + bar(cellWidth, cellNum)
 
 println("Welcome to Reversi")
