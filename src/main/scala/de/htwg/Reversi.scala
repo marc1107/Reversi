@@ -8,7 +8,7 @@ object Reversi {
     println(mesh(cellNum = 8))
   }
 
-  def mesh(cellWidth: Int = 4, cellNum: Int = 4): String =
+  def mesh(cellWidth: Int = 4, cellNum: Int = 2): String =
 
     (bar(cellWidth, cellNum) + cells(cellWidth, cellNum)) * cellNum + bar(cellWidth, cellNum)
 
