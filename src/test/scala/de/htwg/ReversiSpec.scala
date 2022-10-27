@@ -11,5 +11,8 @@ class ReversiSpec extends AnyWordSpec {
     "have cells as String of form '|    |    |    |    |'" in {
       Reversi.cells() should be("|    |    |    |    |" + Reversi.eol)
     }
+    "have mesh as String of form '+----+----+\n|    |    |\n+----+----+\n|    |    |\n+----+----+'" in {
+      Reversi.mesh() should be("+----+----+\n|    |    |\n+----+----+\n|    |    |\n+----+----+" + Reversi.eol)
+    }
   }
 }
