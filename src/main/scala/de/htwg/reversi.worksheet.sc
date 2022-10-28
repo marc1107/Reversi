@@ -1,3 +1,5 @@
+import de.htwg.Reversi
+
 val eol = sys.props("line.separator")
 def bar(cellWidth: Int = 4, cellNum: Int = 8) =
   ("+" + "-" * cellWidth) * cellNum + "+" + eol
