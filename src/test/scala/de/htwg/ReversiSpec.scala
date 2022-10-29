@@ -12,7 +12,7 @@ class ReversiSpec extends AnyWordSpec {
       Reversi.cells() should be("|    |    |    |    |" + Reversi.eol)
     }
     "have mesh as String of form '+----+----+\n|    |    |\n+----+----+\n|    |    |\n+----+----+'" in {
-      Reversi.mesh() should be("+----+----+\n|    |    |\n+----+----+\n|    |    |\n+----+----+" + Reversi.eol)
+      Reversi.mesh() should be("+----+----+" + Reversi.eol + "|    |    |" + Reversi.eol + "+----+----+" + Reversi.eol + "|    |    |" + Reversi.eol + "+----+----+" + Reversi.eol)
     }
   }
 }
