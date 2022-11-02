@@ -67,4 +67,30 @@ object Reversi {
     val move = Array(x, y)
     move
   }
+
+  /**
+   * returns and prints the game field at the game state
+   * @param arr game state array
+   * @param cellWidth width of cells
+   * @return game field with game state
+   */
+  def printFilledField(arr: Array[Array[Int]], cellWidth: Int = 4): String = {
+    var field: String = ""
+    for (i <- arr.indices) {
+      field = field + bar(cellNum = arr.length)
+      for (j <- arr.indices) {
+        if (arr(i)(j) == 1) {
+          field = field + "|X" + " " * (cellWidth - 1)
+        } else if (arr(i)(j) == 2) {
+          field = field + "|O" + " " * (cellWidth - 1)
+        } else {
+          field = field + "|" + " " * cellWidth
+        }
+      }
+      field = field + "|" + eol
+    }
+    field = field + bar(cellNum = arr.length)
+    println(field)
+    field
+  }
 }

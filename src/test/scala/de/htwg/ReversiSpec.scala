@@ -29,5 +29,8 @@ class ReversiSpec extends AnyWordSpec {
     "have move as Array of form 'Array(0, 0)'" in {
       Reversi.askForNextMove(1, Array("Lukas", "Marc")) should be(Array(0, 0))
     }
+    "have field as String of form '+----+----+\n|    |1   |\n+----+----+\n|    |2   |\n+----+----+'" in {
+      Reversi.printFilledField(Array(Array(0, 1), Array(0, 2))) should be("+----+----+" + Reversi.eol + "|    |X   |" + Reversi.eol + "+----+----+" + Reversi.eol + "|    |O   |" + Reversi.eol + "+----+----+" + Reversi.eol)
+    }
   }
 }
