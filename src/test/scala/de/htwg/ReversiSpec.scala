@@ -14,9 +14,6 @@ class ReversiSpec extends AnyWordSpec {
     "have mesh as String of form '+----+----+\n|    |    |\n+----+----+\n|    |    |\n+----+----+'" in {
       Reversi.mesh() should be("+----+----+" + Reversi.eol + "|    |    |" + Reversi.eol + "+----+----+" + Reversi.eol + "|    |    |" + Reversi.eol + "+----+----+" + Reversi.eol)
     }
-    "have a playerOne of 'Lukas\n' and a playerTwo 'Marc\n'" in {
-      Reversi.requestPlayerName() should be(Array("Lukas", "Marc"))
-    }
     "be runningGame of 'true'\n" in {
       Reversi.gameRunning(Array(Array(1,0), Array(1,1))) should be(true)
     }
@@ -32,11 +29,17 @@ class ReversiSpec extends AnyWordSpec {
     "have game state as Array of form 'Array((0,1),(2,1))'" in {
       Reversi.makeMove(Array(Array(0, 1), Array(2, 1)), 2, 1, 2) should be(Array(Array(0,1), Array(2,1)))
     }
-    "have move as Array of form 'Array(0, 0)'" in {
-      Reversi.askForNextMove(1, Array("Lukas", "Marc")) should be(Array(0, 0))
-    }
     "have field as String of form '+----+----+\n|    |1   |\n+----+----+\n|    |2   |\n+----+----+'" in {
       Reversi.printFilledField(Array(Array(0, 1), Array(0, 2))) should be("+----+----+" + Reversi.eol + "|    |X   |" + Reversi.eol + "+----+----+" + Reversi.eol + "|    |O   |" + Reversi.eol + "+----+----+" + Reversi.eol)
+    }
+    "have a playerOne of 'Lukas\n' and a playerTwo 'Marc\n'" in {
+      Reversi.requestPlayerName() should be(Array("Lukas", "Marc"))
+    }
+    "have move as Array of form 'Array(1, 1)'" in {
+      Reversi.askForNextMove(1, Array("Lukas", "Marc")) should be(Array(1, 1))
+    }
+    "have value as String of form 'Game ended'" in {
+      Reversi.gameloop(Array.ofDim[Int](1,1)) should be("Game ended")
     }
   }
 }
