@@ -14,6 +14,12 @@ class ReversiSpec extends AnyWordSpec {
     "have mesh as String of form '+----+----+\n|    |    |\n+----+----+\n|    |    |\n+----+----+'" in {
       Reversi.mesh() should be("+----+----+" + Reversi.eol + "|    |    |" + Reversi.eol + "+----+----+" + Reversi.eol + "|    |    |" + Reversi.eol + "+----+----+" + Reversi.eol)
     }
+    "have a playerOne of 'Lukas\n' and a playerTwo 'Marc\n'" in {
+      Reversi.requestPlayerName() should be(Array("Lukas", "Marc"))
+    }
+    "be runningGame of 'true'\n" in {
+      Reversi.gameRunning(Array(Array(1,0), Array(1,1))) should be(true)
+    }
     "have value as Boolean of form 'true'" in {
       Reversi.isMovePossible(Array(Array(0, 1), Array(2, 1)), 1, 1, 1) should be(true)
     }
