@@ -24,7 +24,7 @@ object Reversi {
   /**
    * Starts the gameloop until it gets interrupted
    */
-  def gameloop(arr: Array[Array[Int]]) : Unit =
+  def gameloop(arr: Array[Array[Int]]) : String =
     var gameState = arr
     var player = 1
     val playerNames = requestPlayerName()
@@ -44,6 +44,7 @@ object Reversi {
 
     // TODO: Auswertung
     println("Spiel vorbei")
+    "Game ended"
 
   /**
    * checks if the game is running
@@ -115,7 +116,12 @@ object Reversi {
     val x = readInt()
     println("y eingeben:")
     val y = readInt()
-    val move = Array(x, y)
+
+    var move = Array(x, y)
+    if (x == 0 || y == 0) {
+      println(eol + s"$RESET${RED}Invalid move$RESET" + eol)
+      move = askForNextMove(player, names)
+    }
     move
   }
 
