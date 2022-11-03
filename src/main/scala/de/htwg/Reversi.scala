@@ -20,6 +20,11 @@ object Reversi {
   def cells(cellWidth: Int = 4, cellNum: Int = 4): String =
     ("|" + " " * cellWidth) * cellNum + "|" + eol
 
+  /**
+   * checks if the game is running
+   * @param arr game state array
+   * @return true if the game is running, false if the game is at end state
+   */
   def gameRunning(arr: Array[Array[Int]]): Boolean =
     var running = false
     for(i <- arr.indices; j <- arr.indices) {
@@ -28,10 +33,12 @@ object Reversi {
     }
     running
 
+  /**
+   * request player names for player one and player two
+   * @return array of type String with the two player names
+   */
   def requestPlayerName(): Array[String] =
-    //println("Please type in Player Name 1")
     val playerOne = readLine("Please type in Player Name 1\n")
-    //println("Please type in Player Name 2")
     val playerTwo = readLine("Please type in Player Name 2\n")
 
     val playerList = Array(playerOne, playerTwo)
