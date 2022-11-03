@@ -1,14 +1,15 @@
 package de.htwg
 
 import scala.io.StdIn._
+import Console.{RESET, RED}
 
 object Reversi {
   val eol: String = sys.props("line.separator")
 
   def main(args: Array[String]): Unit = {
     println("Welcome to Reversi")
-    requestPlayerName()
-    println(mesh(cellNum = 8))
+    val arr = Array.ofDim[Int](2,2)
+    gameloop(arr)
   }
 
   def mesh(cellWidth: Int = 4, cellNum: Int = 2): String =
@@ -19,6 +20,30 @@ object Reversi {
 
   def cells(cellWidth: Int = 4, cellNum: Int = 4): String =
     ("|" + " " * cellWidth) * cellNum + "|" + eol
+
+  /**
+   * Starts the gameloop until it gets interrupted
+   */
+  def gameloop(arr: Array[Array[Int]]) : Unit =
+    var gameState = arr
+    var player = 1
+    val playerNames = requestPlayerName()
+
+    printFilledField(gameState)
+
+    while(gameRunning(gameState)) {
+      val move = askForNextMove(player, playerNames)
+      if (isMovePossible(gameState, move(0), move(1), player)) {
+        gameState = makeMove(gameState, move(0), move(1), player)
+        printFilledField(gameState)
+        player = if (player == 1) 2 else 1
+      } else {
+        Console.println(eol + s"$RESET${RED}Feld schon belegt$RESET" + eol)
+      }
+    }
+
+    // TODO: Auswertung
+    println("Spiel vorbei")
 
   /**
    * checks if the game is running
