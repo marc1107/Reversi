@@ -26,7 +26,8 @@ object Reversi {
    * @param y y coordinate
    * @return true if the move is possible, false if not possible
    */
-  def isMovePossible(arr: Array[Array[Int]], x: Int, y: Int): Boolean = {
+  def isMovePossible(arr: Array[Array[Int]], x: Int, y: Int, player: Int): Boolean = {
+    // TODO: Abfrage so ändern dass genau der Spieler "player" einen Move machen darf (Steine drum herum prüfen)
     if (x > arr.length || y > arr(0).length) {
       false
     } else {
@@ -43,7 +44,7 @@ object Reversi {
    * @return game state array including the players move
    */
   def makeMove(arr: Array[Array[Int]], x: Int, y: Int, player: Int): Array[Array[Int]] = {
-    if (isMovePossible(arr, x, y)) {
+    if (isMovePossible(arr, x, y, player)) {
       arr(x-1)(y-1) = player
     }
     arr

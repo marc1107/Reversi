@@ -15,10 +15,10 @@ class ReversiSpec extends AnyWordSpec {
       Reversi.mesh() should be("+----+----+" + Reversi.eol + "|    |    |" + Reversi.eol + "+----+----+" + Reversi.eol + "|    |    |" + Reversi.eol + "+----+----+" + Reversi.eol)
     }
     "have value as Boolean of form 'true'" in {
-      Reversi.isMovePossible(Array(Array(0, 1), Array(2, 1)), 1, 1) should be(true)
+      Reversi.isMovePossible(Array(Array(0, 1), Array(2, 1)), 1, 1, 1) should be(true)
     }
     "have value as Boolean of form 'false'" in {
-      Reversi.isMovePossible(Array(Array(0, 1), Array(2, 1)), 2, 1) should be(false)
+      Reversi.isMovePossible(Array(Array(0, 1), Array(2, 1)), 2, 1, 1) should be(false)
     }
     "have game state as Array of form 'Array((2,1),(2,1))'" in {
       Reversi.makeMove(Array(Array(0, 1), Array(2, 1)), 1, 1, 2) should be(Array(Array(2,1), Array(2,1)))
