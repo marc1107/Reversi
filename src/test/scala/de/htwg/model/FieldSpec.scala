@@ -18,20 +18,20 @@ class FieldSpec extends AnyWordSpec {
         field2.bar(2, 1) should be("+--+" + eol)
         field2.bar(1, 2) should be("+-+-+" + eol)
       }
-      "have cells as String of form '| B | B | B |'" in {
-        field3.cells(0) should be("| B | B | B |" + eol)
+      "have cells as String of form '| □ | □ | □ |'" in {
+        field3.cells(0) should be("| □ | □ | □ |" + eol)
       }
       "have scalable cells" in {
-        field1.cells(0, 1) should be("|B|" + eol)
-        field2.cells(0, 1) should be("|B|B|" + eol)
-        field1.cells(0, 3) should be("| B |" + eol)
+        field1.cells(0, 1) should be("|□|" + eol)
+        field2.cells(0, 1) should be("|□|□|" + eol)
+        field1.cells(0, 3) should be("| □ |" + eol)
       }
       "have a mesh in the form " +
         "+-+" +
-        "|B|" +
+        "|□|" +
         "+-+" in {
-        field1.mesh(1) should be("+-+" + eol + "|B|" + eol + "+-+" + eol)
-        field2.mesh(1) should be("+-+-+" + eol + "|B|B|" + eol + "+-+-+" + eol + "|B|B|" + eol + "+-+-+" + eol)
+        field1.mesh(1) should be("+-+" + eol + "|□|" + eol + "+-+" + eol)
+        field2.mesh(1) should be("+-+-+" + eol + "|□|□|" + eol + "+-+-+" + eol + "|□|□|" + eol + "+-+-+" + eol)
       }
     }
     "filled with W" should {
@@ -47,20 +47,20 @@ class FieldSpec extends AnyWordSpec {
         field2.bar(2, 1) should be("+--+" + eol)
         field2.bar(1, 2) should be("+-+-+" + eol)
       }
-      "have cells as String of form '| W | W | W |'" in {
-        field3.cells(0) should be("| W | W | W |" + eol)
+      "have cells as String of form '| ■ | ■ | ■ |'" in {
+        field3.cells(0) should be("| ■ | ■ | ■ |" + eol)
       }
       "have scalable cells" in {
-        field1.cells(0, 1) should be("|W|" + eol)
-        field2.cells(0, 1) should be("|W|W|" + eol)
-        field1.cells(0, 3) should be("| W |" + eol)
+        field1.cells(0, 1) should be("|■|" + eol)
+        field2.cells(0, 1) should be("|■|■|" + eol)
+        field1.cells(0, 3) should be("| ■ |" + eol)
       }
       "have a mesh in the form " +
         "+-+" +
-        "|W|" +
+        "|■|" +
         "+-+" in {
-        field1.mesh(1) should be("+-+" + eol + "|W|" + eol + "+-+" + eol)
-        field2.mesh(1) should be("+-+-+" + eol + "|W|W|" + eol + "+-+-+" + eol + "|W|W|" + eol + "+-+-+" + eol)
+        field1.mesh(1) should be("+-+" + eol + "|■|" + eol + "+-+" + eol)
+        field2.mesh(1) should be("+-+-+" + eol + "|■|■|" + eol + "+-+-+" + eol + "|■|■|" + eol + "+-+-+" + eol)
       }
     }
     "filled with Empty" should {
@@ -75,11 +75,11 @@ class FieldSpec extends AnyWordSpec {
           #+---+---+---+
           #""" .stripMargin('#'))
       }
-      "have a B and W after two moves" in {
+      "have a □ and ■ after two moves" in {
         field.put(Stone.B, 0, 0).put(Stone.W, 1, 1).toString should be( """#+---+---+---+
-          #| B |   |   |
+          #| □ |   |   |
           #+---+---+---+
-          #|   | W |   |
+          #|   | ■ |   |
           #+---+---+---+
           #|   |   |   |
           #+---+---+---+
