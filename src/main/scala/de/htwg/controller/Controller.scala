@@ -3,10 +3,13 @@ package controller
 
 import model.Field
 import model.Stone
+import model.Move
 import util.Observable
 
 case class Controller(var field: Field) extends Observable:
-  def put(stone: Stone, x: Int, y: Int): Unit =
-    field = field.put(stone, x, y)
+  def doAndPublish(doThis: Move => Field, move: Move): Unit =
+    field = doThis(move)
     notifyObservers
-  override def toString: String = field.toString
+  def put(move: Move): Field =
+    field.put(move.stone, move.x, move.y)
+  override def toString = field.toString

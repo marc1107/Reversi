@@ -76,7 +76,7 @@ class FieldSpec extends AnyWordSpec {
           #""" .stripMargin('#'))
       }
       "have a □ and ■ after two moves" in {
-        field.put(Stone.B, 0, 0).put(Stone.W, 1, 1).toString should be( """#+---+---+---+
+        field.put(Stone.B, 1, 1).put(Stone.W, 2, 2).toString should be( """#+---+---+---+
           #| □ |   |   |
           #+---+---+---+
           #|   | ■ |   |
