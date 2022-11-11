@@ -24,7 +24,7 @@ class TUI(controller: Controller) extends Observer:
   def analyseInput(input: String): Option[Move] =
     input match
       case "q" => None
-      case _ => {
+      case _ =>
         val chars = input.toCharArray
         val stone = chars(0) match
           case 'B' => Stone.B
@@ -35,4 +35,3 @@ class TUI(controller: Controller) extends Observer:
         val x = chars(1).toString.toInt
         val y = chars(2).toString.toInt
         Some(Move(stone, x, y))
-      }
