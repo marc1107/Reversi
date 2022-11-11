@@ -23,7 +23,7 @@ class TUI(controller: Controller) extends Observer:
 
   def analyseInput(input: String): Option[Move] =
     input match
-      case "q" => None
+      case "q" => sys.exit()
       case _ =>
         val chars = input.toCharArray
         val stone = chars(0) match
