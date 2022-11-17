@@ -30,4 +30,3 @@ jobs:
         run: |
           export CI_BRANCH="${GITHUB_REF#refs/heads/}"
           sbt clean test jacoco
-          
