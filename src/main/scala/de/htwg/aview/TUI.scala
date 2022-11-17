@@ -16,7 +16,12 @@ class TUI(controller: Controller) extends Observer:
   override def update = println(controller.field.toString)
 
   def getInputAndPrintLoop(): Unit =
-    analyseInput(readLine) match
+    val input: String = readLine
+    if (input.length != 3) {
+      println("Eingabe muss Länge 3 haben")
+      getInputAndPrintLoop()
+    }
+    analyseInput(input) match
       case None       =>
       case Some(move) => controller.doAndPublish(controller.put, move)
     getInputAndPrintLoop()
