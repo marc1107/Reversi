@@ -17,10 +17,6 @@ class TUI(controller: Controller) extends Observer:
 
   def getInputAndPrintLoop(): Unit =
     val input: String = readLine
-    if (input.length != 3) {
-      println("Eingabe muss Länge 3 haben")
-      getInputAndPrintLoop()
-    }
     analyseInput(input) match
       case None       =>
       case Some(move) => controller.doAndPublish(controller.put, move)
