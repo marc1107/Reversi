@@ -29,10 +29,12 @@ case class Controller(var field: Field) extends Observable:
     var strategy = if (strat == 0) strategy1 else strategy2
 
     def strategy1(move: Move): Boolean =
+      // TODO: implement a strategy
       val stone: Stone = field.get(move.x, move.y)
       stone.toString == " "
 
     def strategy2(move: Move): Boolean =
+      // TODO: implement a strategy
       val stone: Stone = field.get(move.x, move.y)
       stone.toString == " "
   }
