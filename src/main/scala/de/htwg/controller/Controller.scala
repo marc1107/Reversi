@@ -19,8 +19,6 @@ case class Controller(var field: Field) extends Observable:
 
   override def toString = field.toString
 
-  def isMovePossible(move: Move): Boolean = MovePossible.strategy(move)
-
   /**
    * Strategy Pattern to check if a Move is possible
    */
