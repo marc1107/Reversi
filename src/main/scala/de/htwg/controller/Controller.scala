@@ -38,6 +38,9 @@ case class Controller(var field: Field) extends Observable:
       stone.toString == " "
   }
 
+  /**
+   * contains whose players turn it is
+   */
   object playerState {
     var state: Int = player1
 
