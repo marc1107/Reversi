@@ -20,7 +20,7 @@ case class Controller(var field: Field) extends Observable:
     else
       field
 
-  override def toString = field.toString
+  override def toString: String = field.toString
 
   /**
    * Strategy Pattern to check if a Move is possible
@@ -52,13 +52,25 @@ case class Controller(var field: Field) extends Observable:
             r += rDelta
             c += cDelta
           else
-            outflanked
+            return outflanked
         }
         new ListBuffer[Move]
       }
 
-      val stone: Stone = field.get(move.x, move.y)
-      stone.toString == " "
+      def outFlanked(x: Int, y: Int): ListBuffer[Move] = {
+        val outflanked = ListBuffer[Move]()
+
+        for (rDelta <- -1 to 1) {
+          for (cDelta <- -1 to 1) {
+            if (rDelta != 0 || cDelta != 0)
+              outflanked.appendAll(outflankedInDir(x, y, rDelta, cDelta))
+          }
+        }
+
+        outflanked
+      }
+
+      field.get(move.x, move.y) == Stone.Empty
   }
 
   /**
