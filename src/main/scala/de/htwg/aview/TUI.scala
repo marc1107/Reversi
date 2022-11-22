@@ -7,22 +7,22 @@ import model.Stone
 import scala.io.StdIn.readLine
 import util.Observer
 
-class TUI(controller: Controller) extends Observer:
+class TUI(controller: Controller) extends UI(controller):
   controller.add(this)
-  def run =
+  override def run =
     println(controller.field.toString)
     getInputAndPrintLoop()
 
   override def update = println(controller.field.toString)
 
-  def getInputAndPrintLoop(): Unit =
+  override def getInputAndPrintLoop(): Unit =
     val input: String = readLine
     analyseInput(input) match
       case None       =>
       case Some(move) => controller.doAndPublish(controller.put, move)
     getInputAndPrintLoop()
 
-  def analyseInput(input: String): Option[Move] =
+  override def analyseInput(input: String): Option[Move] =
     input match
       case "q" => sys.exit()
       case _ =>
