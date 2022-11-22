@@ -39,23 +39,23 @@ case class Controller(var field: Field) extends Observable:
   }
 
   object playerState {
-    var state = player1
+    var state: Int = player1
 
     def getStone: Stone = {
       state match {
-        case player1 => Stone.B
-        case player2 => Stone.W
+        case 1 => Stone.B
+        case 2 => Stone.W
       }
     }
 
     def changeState = {
       state match {
-        case player1 => state = player2
-        case player2 => state = player1
+        case 1 => state = player2
+        case 2 => state = player1
       }
       state
     }
 
-    def player1 = 1
-    def player2 = 2
+    def player1: Int = 1
+    def player2: Int = 2
   }

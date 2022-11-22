@@ -34,6 +34,6 @@ class TUI(controller: Controller) extends Observer:
           case 'w' => Stone.W
           case _   => Stone.Empty*/
         val stone = controller.playerState.getStone
-        val x = chars(1).toString.toInt
-        val y = chars(2).toString.toInt
+        val x = chars(0).toString.toInt
+        val y = chars(1).toString.toInt
         Some(Move(stone, x, y))
