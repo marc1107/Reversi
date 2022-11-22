@@ -27,12 +27,13 @@ class TUI(controller: Controller) extends Observer:
       case "q" => sys.exit()
       case _ =>
         val chars = input.toCharArray
-        val stone = chars(0) match
+        /*val stone = chars(0) match
           case 'B' => Stone.B
           case 'b' => Stone.B
           case 'W' => Stone.W
           case 'w' => Stone.W
-          case _   => Stone.Empty
+          case _   => Stone.Empty*/
+        val stone = controller.playerState.getStone
         val x = chars(1).toString.toInt
         val y = chars(2).toString.toInt
         Some(Move(stone, x, y))

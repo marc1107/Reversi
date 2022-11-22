@@ -13,6 +13,7 @@ case class Controller(var field: Field) extends Observable:
 
   def put(move: Move): Field =
     if (MovePossible.strategy(move))
+      playerState.changeState
       field.put(move.stone, move.x, move.y)
     else
       field
@@ -35,4 +36,26 @@ case class Controller(var field: Field) extends Observable:
       // TODO: implement a strategy
       val stone: Stone = field.get(move.x, move.y)
       stone.toString == " "
+  }
+
+  object playerState {
+    var state = player1
+
+    def getStone: Stone = {
+      state match {
+        case player1 => Stone.B
+        case player2 => Stone.W
+      }
+    }
+
+    def changeState = {
+      state match {
+        case player1 => state = player2
+        case player2 => state = player1
+      }
+      state
+    }
+
+    def player1 = 1
+    def player2 = 2
   }
