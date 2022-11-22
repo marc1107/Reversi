@@ -14,11 +14,12 @@ case class Controller(var field: Field) extends Observable:
     notifyObservers
 
   def put(move: Move): Field =
-    if (MovePossible.strategy(move))
+    val list = MovePossible.strategy(move)
+    if (list.nonEmpty)
       playerState.changeState
-      field.put(move.stone, move.x, move.y)
-    else
-      field
+      field = field.put(move.stone, move.x, move.y)
+      list.foreach(el => field = field.put(el.stone, el.x, el.y))
+    field
 
   override def toString: String = field.toString
 
@@ -26,18 +27,18 @@ case class Controller(var field: Field) extends Observable:
    * Strategy Pattern to check if a Move is possible
    */
   object MovePossible {
-    val strat = 0
-    var strategy = if (strat == 0) strategy1 else strategy2
+    val strat = 1
+    var strategy: Move => ListBuffer[Move] = if (strat == 0) strategy1 else strategy2
 
-    def strategy1(move: Move): Boolean =
+    def strategy1(move: Move): ListBuffer[Move] =
       // TODO: implement a strategy
-      val stone: Stone = field.get(move.x, move.y)
-      stone.toString == " "
+      field.get(move.x, move.y) == Stone.Empty
+      new ListBuffer[Move]
 
-    def strategy2(move: Move): Boolean =
+    def strategy2(move: Move): ListBuffer[Move] =
       // TODO: implement a strategy
       def isInsideField(r: Int, c: Int): Boolean = {
-        r >= 0 && r < field.size && c >= 0 && c < field.size
+        r >= 1 && r <= field.size && c >= 1 && c <= field.size
       }
 
       def outflankedInDir(x: Int, y: Int, rDelta: Int, cDelta: Int): ListBuffer[Move] = {
@@ -70,7 +71,15 @@ case class Controller(var field: Field) extends Observable:
         outflanked
       }
 
-      field.get(move.x, move.y) == Stone.Empty
+      def isMoveLegal(x: Int, y: Int): Boolean = {
+        outFlanked(x, y).nonEmpty
+      }
+
+      if (field.get(move.x, move.y) == Stone.Empty)
+        outFlanked(move.x, move.y)
+      else
+        new ListBuffer[Move]
+      //isMoveLegal(move.x, move.y)
   }
 
   /**
