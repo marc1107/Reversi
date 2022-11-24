@@ -1,3 +1,3 @@
 package de.htwg.model
 
-case class Move(stone: Stone, x: Int, y: Int)
+case class Move(stone: Stone, r: Int, c: Int)

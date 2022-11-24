@@ -10,16 +10,17 @@ import scala.collection.mutable.ListBuffer
 
 case class Controller(var field: Field) extends Observable:
   def doAndPublish(doThis: Move => Field, move: Move): Unit =
-    field = doThis(move)
-    notifyObservers
-
-  def put(move: Move): Field =
     val list = MovePossible.strategy(move)
     if (list.nonEmpty)
       playerState.changeState
-      field = field.put(move.stone, move.x, move.y)
-      list.foreach(el => field = field.put(el.stone, el.x, el.y))
-    field
+      field = doThis(move)
+      list.foreach(el => field = field.put(el.stone, el.r, el.c))
+
+    notifyObservers
+
+  def put(move: Move): Field =
+      field.put(move.stone, move.r, move.c)
+
 
   override def toString: String = field.toString
 
@@ -32,7 +33,7 @@ case class Controller(var field: Field) extends Observable:
 
     def strategy1(move: Move): ListBuffer[Move] =
       // TODO: implement a strategy
-      field.get(move.x, move.y) == Stone.Empty
+      field.get(move.r, move.c) == Stone.Empty
       new ListBuffer[Move]
 
     def strategy2(move: Move): ListBuffer[Move] =
@@ -41,15 +42,15 @@ case class Controller(var field: Field) extends Observable:
         r >= 1 && r <= field.size && c >= 1 && c <= field.size
       }
 
-      def outflankedInDir(x: Int, y: Int, rDelta: Int, cDelta: Int): ListBuffer[Move] = {
+      def outflankedInDir(row: Int, col: Int, cDelta: Int, rDelta: Int): ListBuffer[Move] = {
         val outflanked = ListBuffer[Move]()
-        var r: Int = y + rDelta
-        var c: Int = x + cDelta
+        var r: Int = row + rDelta
+        var c: Int = col + cDelta
 
-        while (isInsideField(r, c) && field.get(c, r) != Stone.Empty) {
+        while (isInsideField(r, c) && field.get(r, c) != Stone.Empty) {
           // wenn gegnerischer Stein
-          if (field.get(c, r) != playerState.getStone)
-            outflanked += Move(playerState.getStone, c, r)
+          if (field.get(r, c) != playerState.getStone)
+            outflanked += Move(playerState.getStone, r, c)
             r += rDelta
             c += cDelta
           else
@@ -58,28 +59,28 @@ case class Controller(var field: Field) extends Observable:
         new ListBuffer[Move]
       }
 
-      def outFlanked(x: Int, y: Int): ListBuffer[Move] = {
+      def outFlanked(r: Int, c: Int): ListBuffer[Move] = {
         val outflanked = ListBuffer[Move]()
 
         for (rDelta <- -1 to 1) {
           for (cDelta <- -1 to 1) {
             if (rDelta != 0 || cDelta != 0)
-              outflanked.appendAll(outflankedInDir(x, y, rDelta, cDelta))
+              outflanked.appendAll(outflankedInDir(r, c, cDelta, rDelta))
           }
         }
 
         outflanked
       }
 
-      def isMoveLegal(x: Int, y: Int): Boolean = {
-        outFlanked(x, y).nonEmpty
+      def isMoveLegal(r: Int, c: Int): Boolean = {
+        outFlanked(r, c).nonEmpty
       }
 
-      if (field.get(move.x, move.y) == Stone.Empty)
-        outFlanked(move.x, move.y)
+      if (field.get(move.r, move.c) == Stone.Empty)
+        outFlanked(move.r, move.c)
       else
         new ListBuffer[Move]
-      //isMoveLegal(move.x, move.y)
+      //isMoveLegal(move.r, move.c)
   }
 
   /**

@@ -10,5 +10,5 @@ case class Field(matrix: Matrix[Stone]):
   def mesh(cellWidth: Int = 3): String =
     (0 until size).map(cells(_, cellWidth)).mkString(bar(cellWidth, size), bar(cellWidth, size), bar(cellWidth, size))
   override def toString = mesh()
-  def put(stone: Stone, x: Int, y: Int) = copy(matrix.replaceCell(x-1, y-1, stone))
-  def get(x: Int, y: Int): Stone = matrix.cell(x-1, y-1)
+  def put(stone: Stone, r: Int, c: Int) = copy(matrix.replaceCell(r-1, c-1, stone))
+  def get(r: Int, c: Int): Stone = matrix.cell(r-1, c-1)

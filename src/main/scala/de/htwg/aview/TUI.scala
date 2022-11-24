@@ -13,7 +13,7 @@ class TUI(controller: Controller) extends UI(controller):
     println(controller.field.toString)
     getInputAndPrintLoop()
 
-  override def update = println(controller.field.toString)
+  override def update = println(controller.toString)
 
   override def getInputAndPrintLoop(): Unit =
     val input: String = readLine
@@ -34,6 +34,6 @@ class TUI(controller: Controller) extends UI(controller):
           case 'w' => Stone.W
           case _   => Stone.Empty*/
         val stone = controller.playerState.getStone
-        val y = chars(0).toString.toInt
-        val x = chars(1).toString.toInt
-        Some(Move(stone, x, y))
+        val r = chars(0).toString.toInt
+        val c = chars(1).toString.toInt
+        Some(Move(stone, r, c))
