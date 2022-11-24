@@ -32,12 +32,10 @@ case class Controller(var field: Field) extends Observable:
     var strategy: Move => ListBuffer[Move] = if (strat == 0) strategy1 else strategy2
 
     def strategy1(move: Move): ListBuffer[Move] =
-      // TODO: implement a strategy
       field.get(move.r, move.c) == Stone.Empty
       new ListBuffer[Move]
 
     def strategy2(move: Move): ListBuffer[Move] =
-      // TODO: implement a strategy
       def isInsideField(r: Int, c: Int): Boolean = {
         r >= 1 && r <= field.size && c >= 1 && c <= field.size
       }
@@ -84,7 +82,7 @@ case class Controller(var field: Field) extends Observable:
   }
 
   /**
-   * contains whose players turn it is
+   * state pattern contains whose players turn it is
    */
   object playerState {
     var state: Int = player1
