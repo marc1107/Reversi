@@ -11,9 +11,12 @@ import org.scalatest.wordspec.AnyWordSpec
 class TUISpec extends AnyWordSpec {
 
   "The TUI" should {
-    val tui = TUI(Controller(new Field(3, Stone.Empty)))
-    "recognize the input b12 as move of stone B to field (1,2)" in {
-      tui.analyseInput("b12") should be(Some(Move(Stone.B, 1, 2)))
+    var field = new Field(3, Stone.Empty)
+    field = field.put(Stone.B, 3, 1)
+    field = field.put(Stone.W, 2, 1)
+    val tui = TUI(Controller(field))
+    "recognize the input 11 as move of stone B to field (1,1)" in {
+      tui.analyseInput("11") should be(Some(Move(Stone.B, 1, 1)))
     }
   }
 }

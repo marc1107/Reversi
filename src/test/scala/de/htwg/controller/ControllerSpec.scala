@@ -10,11 +10,14 @@ import util.Observer
 
 class ControllerSpec extends AnyWordSpec {
   "The Controller" should {
-    val controller = Controller(new Field(3, Stone.Empty))
+    var field = new Field(3, Stone.Empty)
+    field = field.put(Stone.B, 1, 1)
+    field = field.put(Stone.W, 1, 2)
+    val controller = Controller(field)
     "put a stone on the field when a move is made" in {
-      val fieldWithMove = controller.put(Move(Stone.B, 1, 2))
-      fieldWithMove.get(1, 2) should be(Stone.B)
-      fieldWithMove.get(1, 1) should be(Stone.Empty)
+      val fieldWithMove = controller.put(Move(Stone.B, 1, 3))
+      fieldWithMove.get(1, 3) should be(Stone.B)
+      fieldWithMove.get(2, 1) should be(Stone.Empty)
     }
     "notify its observers on change" in {
       class TestObserver(controller: Controller) extends Observer:
@@ -23,13 +26,12 @@ class ControllerSpec extends AnyWordSpec {
         def update = bing = true
       val testObserver = TestObserver(controller)
       testObserver.bing should be(false)
-      controller.doAndPublish(controller.put, Move(Stone.B, 1, 2))
+      controller.doAndPublish(controller.put, Move(Stone.B, 1, 3))
       testObserver.bing should be(true)
     }
     "print a field" in {
-      val fieldWithMove = controller.put(Move(Stone.B, 1, 2))
       controller.toString should be( """#+---+---+---+
-                                        #|   | □ |   |
+                                        #| □ | □ | □ |
                                         #+---+---+---+
                                         #|   |   |   |
                                         #+---+---+---+

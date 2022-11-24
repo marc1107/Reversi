@@ -7,32 +7,33 @@ import model.Stone
 import scala.io.StdIn.readLine
 import util.Observer
 
-class TUI(controller: Controller) extends Observer:
+class TUI(controller: Controller) extends UI(controller):
   controller.add(this)
-  def run =
+  override def run =
     println(controller.field.toString)
     getInputAndPrintLoop()
 
-  override def update = println(controller.field.toString)
+  override def update = println(controller.toString)
 
-  def getInputAndPrintLoop(): Unit =
+  override def getInputAndPrintLoop(): Unit =
     val input: String = readLine
     analyseInput(input) match
       case None       =>
       case Some(move) => controller.doAndPublish(controller.put, move)
     getInputAndPrintLoop()
 
-  def analyseInput(input: String): Option[Move] =
+  override def analyseInput(input: String): Option[Move] =
     input match
       case "q" => sys.exit()
       case _ =>
         val chars = input.toCharArray
-        val stone = chars(0) match
+        /*val stone = chars(0) match
           case 'B' => Stone.B
           case 'b' => Stone.B
           case 'W' => Stone.W
           case 'w' => Stone.W
-          case _   => Stone.Empty
-        val x = chars(1).toString.toInt
-        val y = chars(2).toString.toInt
-        Some(Move(stone, x, y))
+          case _   => Stone.Empty*/
+        val stone = controller.playerState.getStone
+        val r = chars(0).toString.toInt
+        val c = chars(1).toString.toInt
+        Some(Move(stone, r, c))
