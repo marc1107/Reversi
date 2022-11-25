@@ -60,11 +60,9 @@ case class Controller(var field: Field) extends Observable:
       def outFlanked(r: Int, c: Int): ListBuffer[Move] = {
         val outflanked = ListBuffer[Move]()
 
-        for (rDelta <- -1 to 1) {
-          for (cDelta <- -1 to 1) {
-            if (rDelta != 0 || cDelta != 0)
-              outflanked.appendAll(outflankedInDir(r, c, cDelta, rDelta))
-          }
+        for (rDelta <- -1 to 1; cDelta <- -1 to 1) {
+          if (rDelta != 0 || cDelta != 0)
+            outflanked.appendAll(outflankedInDir(r, c, cDelta, rDelta))
         }
 
         outflanked
