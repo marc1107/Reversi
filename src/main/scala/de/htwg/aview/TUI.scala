@@ -8,7 +8,7 @@ import scala.io.StdIn.readLine
 import util.Observer
 
 class TUI(controller: Controller) extends UI(controller):
-  controller.add(this)
+  //controller.add(this)
   /*override def run =
     println(controller.field.toString)
     gameloop*/
