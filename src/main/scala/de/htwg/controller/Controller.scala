@@ -28,12 +28,15 @@ case class Controller(var field: Field) extends Observable:
    * Strategy Pattern to check if a Move is possible
    */
   object MovePossible {
-    val strat = 1
+    var strat = 1
     var strategy: Move => ListBuffer[Move] = if (strat == 0) strategy1 else strategy2
 
     def strategy1(move: Move): ListBuffer[Move] =
       field.get(move.r, move.c) == Stone.Empty
-      new ListBuffer[Move]
+      val lb = new ListBuffer[Move]
+      lb.append(move)
+      lb
+
 
     def strategy2(move: Move): ListBuffer[Move] =
       def isInsideField(r: Int, c: Int): Boolean = {

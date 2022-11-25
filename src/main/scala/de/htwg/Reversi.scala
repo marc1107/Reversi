@@ -15,6 +15,7 @@ object Reversi {
     field = field.put(Stone.B, 5, 4)
     field = field.put(Stone.W, 5, 5)
     val controller = Controller(field)
+    controller.MovePossible.strat = 0
     val tui = TUI(controller)
     tui.run
   }
