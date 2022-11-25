@@ -9,18 +9,18 @@ import util.Observer
 
 class TUI(controller: Controller) extends UI(controller):
   controller.add(this)
-  override def run =
+  /*override def run =
     println(controller.field.toString)
-    getInputAndPrintLoop()
+    gameloop*/
 
   override def update = println(controller.toString)
 
-  override def getInputAndPrintLoop(): Unit =
+  override def gameloop: Unit =
     val input: String = readLine
     analyseInput(input) match
       case None       =>
       case Some(move) => controller.doAndPublish(controller.put, move)
-    getInputAndPrintLoop()
+    gameloop
 
   override def analyseInput(input: String): Option[Move] =
     input match
