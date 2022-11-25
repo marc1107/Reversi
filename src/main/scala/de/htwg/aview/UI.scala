@@ -9,7 +9,9 @@ import de.htwg.util.Observer
  * @param controller
  */
 abstract class UI(controller: Controller) extends Observer {
-  def run: Unit
-  def getInputAndPrintLoop(): Unit
+  def run: Unit =
+    update
+    gameloop
+  def gameloop: Unit
   def analyseInput(input: String): Option[Move]
 }
