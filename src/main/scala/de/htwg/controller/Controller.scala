@@ -5,10 +5,12 @@ import model.Field
 import model.Stone
 import model.Move
 import util.Observable
+import util.UndoManager
 
 import scala.collection.mutable.ListBuffer
 
 case class Controller(var field: Field) extends Observable:
+  val undoManager = new UndoManager
   def doAndPublish(doThis: Move => Field, move: Move): Unit =
     val list = MovePossible.strategy(move)
     if (list.nonEmpty)
@@ -18,8 +20,13 @@ case class Controller(var field: Field) extends Observable:
 
     notifyObservers
 
-  def put(move: Move): Field =
-      field.put(move.stone, move.r, move.c)
+  def doAndPublish(doThis: => Field) =
+    field = doThis
+    notifyObservers
+
+  def put(move: Move): Field = undoManager.doStep(field, PutCommand(move))
+  def undo: Field = undoManager.undoStep(field)
+  def redo: Field = undoManager.redoStep(field)
 
 
   override def toString: String = field.toString
