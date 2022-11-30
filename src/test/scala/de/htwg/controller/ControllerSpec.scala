@@ -53,10 +53,9 @@ class ControllerSpec extends AnyWordSpec {
       field = controller.put(Move(Stone.B, 1, 2))
       field.get(1, 2) should be(Stone.B)
       field = controller.undo
-      println(field)
-      /*field.get(1, 2) should be(Stone.Empty)
+      field.get(1, 2) should be(Stone.Empty)
       field = controller.redo
-      field.get(1, 2) should be(Stone.B)*/
+      field.get(1, 2) should be(Stone.B)
     }
     /*"undo the last move" in {
       controller.undo should be( """#+---+---+---+
