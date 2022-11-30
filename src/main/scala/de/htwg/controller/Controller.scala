@@ -5,10 +5,12 @@ import model.Field
 import model.Stone
 import model.Move
 import util.Observable
+import util.UndoManager
 
 import scala.collection.mutable.ListBuffer
 
 case class Controller(var field: Field) extends Observable:
+  val undoManager = new UndoManager
   def doAndPublish(doThis: Move => Field, move: Move): Unit =
     val list = MovePossible.strategy(move)
     if (list.nonEmpty)
@@ -18,8 +20,17 @@ case class Controller(var field: Field) extends Observable:
 
     notifyObservers
 
-  def put(move: Move): Field =
-      field.put(move.stone, move.r, move.c)
+  def doAndPublish(doThis: => Field) =
+    field = doThis
+    notifyObservers
+
+  def put(move: Move): Field = undoManager.doStep(field, PutCommand(move, field))
+  def undo: Field =
+    playerState.changeState
+    undoManager.undoStep(field)
+  def redo: Field =
+    playerState.changeState
+    undoManager.redoStep(field)
 
 
   override def toString: String = field.toString
@@ -28,12 +39,15 @@ case class Controller(var field: Field) extends Observable:
    * Strategy Pattern to check if a Move is possible
    */
   object MovePossible {
-    val strat = 1
+    var strat = 1
     var strategy: Move => ListBuffer[Move] = if (strat == 0) strategy1 else strategy2
 
     def strategy1(move: Move): ListBuffer[Move] =
       field.get(move.r, move.c) == Stone.Empty
-      new ListBuffer[Move]
+      val lb = new ListBuffer[Move]
+      lb.append(move)
+      lb
+
 
     def strategy2(move: Move): ListBuffer[Move] =
       def isInsideField(r: Int, c: Int): Boolean = {

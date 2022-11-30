@@ -9,6 +9,7 @@ import de.htwg.util.Observer
  * @param controller
  */
 abstract class UI(controller: Controller) extends Observer {
+  controller.add(this)
   def run: Unit =
     update
     gameloop
