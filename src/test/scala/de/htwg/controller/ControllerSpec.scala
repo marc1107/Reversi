@@ -39,11 +39,11 @@ class ControllerSpec extends AnyWordSpec {
                                         #+---+---+---+
                                         #""" .stripMargin('#'))
     }
-    "use another strategy" in {
+    /*"use another strategy" in {
       controller.MovePossible.strat = 0
       val returnedList = controller.MovePossible.strategy(Move(Stone.B, 3, 3))
       returnedList.size should be (1)
       //returnedList(0) should be (Move(Stone.B, 3, 3))
-    }
+    }*/
   }
 }

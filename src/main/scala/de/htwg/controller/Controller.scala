@@ -24,9 +24,13 @@ case class Controller(var field: Field) extends Observable:
     field = doThis
     notifyObservers
 
-  def put(move: Move): Field = undoManager.doStep(field, PutCommand(move))
-  def undo: Field = undoManager.undoStep(field)
-  def redo: Field = undoManager.redoStep(field)
+  def put(move: Move): Field = undoManager.doStep(field, PutCommand(move, field))
+  def undo: Field =
+    playerState.changeState
+    undoManager.undoStep(field)
+  def redo: Field =
+    playerState.changeState
+    undoManager.redoStep(field)
 
 
   override def toString: String = field.toString
