@@ -45,5 +45,48 @@ class ControllerSpec extends AnyWordSpec {
       returnedList.size should be (1)
       //returnedList(0) should be (Move(Stone.B, 3, 3))
     }*/
+    "undo and redo a move" in {
+      var field = controller.field
+      field = controller.put(Move(Stone.Empty, 1, 1))
+      field = controller.put(Move(Stone.Empty, 1, 2))
+      field = controller.put(Move(Stone.Empty, 1, 3))
+      field = controller.put(Move(Stone.B, 1, 2))
+      field.get(1, 2) should be(Stone.B)
+      field = controller.undo
+      println(field)
+      /*field.get(1, 2) should be(Stone.Empty)
+      field = controller.redo
+      field.get(1, 2) should be(Stone.B)*/
+    }
+    /*"undo the last move" in {
+      controller.undo should be( """#+---+---+---+
+                                   #| □ | ■ |   |
+                                   #+---+---+---+
+                                   #|   |   |   |
+                                   #+---+---+---+
+                                   #|   |   |   |
+                                   #+---+---+---+
+                                   #""" .stripMargin('#'))
+    }*/
+    /*"redo the undone move" in {
+      controller.undo should be( """#+---+---+---+
+                                   #| □ | □ | □ |
+                                   #+---+---+---+
+                                   #|   |   |   |
+                                   #+---+---+---+
+                                   #|   |   |   |
+                                   #+---+---+---+
+                                   #""" .stripMargin('#'))
+    }
+    "publish a undo move" in {
+      class TestObserver(controller: Controller) extends Observer:
+        controller.add(this)
+        var bing = false
+        def update = bing = true
+      val testObserver = TestObserver(controller)
+      testObserver.bing should be(false)
+      controller.doAndPublish(controller.undo)
+      testObserver.bing should be(true)
+    }*/
   }
 }
