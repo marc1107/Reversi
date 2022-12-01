@@ -82,9 +82,9 @@ case class Controller(var field: Field) extends Observable:
         outflanked
       }
 
-      def isMoveLegal(r: Int, c: Int): Boolean = {
+      /*def isMoveLegal(r: Int, c: Int): Boolean = {
         outFlanked(r, c).nonEmpty
-      }
+      }*/
 
       if (field.get(move.r, move.c) == Stone.Empty)
         outFlanked(move.r, move.c)

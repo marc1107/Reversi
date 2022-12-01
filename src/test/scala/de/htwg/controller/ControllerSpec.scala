@@ -57,7 +57,7 @@ class ControllerSpec extends AnyWordSpec {
       field = controller.redo
       //field.get(1, 2) should be(Stone.B)
       controller.doAndPublish(controller.undo)
-
+      controller.MovePossible.strategy1(Move(Stone.B, 1, 1))
     }
     /*"undo the last move" in {
       controller.undo should be( """#+---+---+---+
