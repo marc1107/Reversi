@@ -18,13 +18,13 @@ case class Controller(var field: Field) extends Observable:
       playerState.changeState
       field = doThis(move)
       list.foreach(el => field = field.put(el.stone, el.r, el.c))*/
-    val list = MovePossible.strategy(move)
-    list match
-      case Success(v) =>
+    val t = MovePossible.strategy(move)
+    t match
+      case Success(list) =>
         playerState.changeState
         field = doThis(move)
-        v.foreach(el => field = field.put(el.stone, el.r, el.c))
-      case Failure(f) =>
+        list.foreach(el => field = field.put(el.stone, el.r, el.c))
+      case Failure(f) => println(f.getMessage)
 
     notifyObservers
 
