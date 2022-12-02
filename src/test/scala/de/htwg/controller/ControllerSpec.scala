@@ -59,35 +59,5 @@ class ControllerSpec extends AnyWordSpec {
       controller.doAndPublish(controller.undo)
       controller.MovePossible.strategy1(Move(Stone.B, 1, 1))
     }
-    /*"undo the last move" in {
-      controller.undo should be( """#+---+---+---+
-                                   #| □ | ■ |   |
-                                   #+---+---+---+
-                                   #|   |   |   |
-                                   #+---+---+---+
-                                   #|   |   |   |
-                                   #+---+---+---+
-                                   #""" .stripMargin('#'))
-    }*/
-    /*"redo the undone move" in {
-      controller.undo should be( """#+---+---+---+
-                                   #| □ | □ | □ |
-                                   #+---+---+---+
-                                   #|   |   |   |
-                                   #+---+---+---+
-                                   #|   |   |   |
-                                   #+---+---+---+
-                                   #""" .stripMargin('#'))
-    }
-    "publish a undo move" in {
-      class TestObserver(controller: Controller) extends Observer:
-        controller.add(this)
-        var bing = false
-        def update = bing = true
-      val testObserver = TestObserver(controller)
-      testObserver.bing should be(false)
-      controller.doAndPublish(controller.undo)
-      testObserver.bing should be(true)
-    }*/
   }
 }
