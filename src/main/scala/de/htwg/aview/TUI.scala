@@ -17,6 +17,11 @@ class TUI(controller: Controller) extends UI(controller):
       case Some(move) => controller.doAndPublish(controller.put, move)
     gameloop
 
+  /**
+   * analyses the input from teh console and calls the controller
+   * @param input String
+   * @return Option (Some(Move) or None)
+   */
   override def analyseInput(input: String): Option[Move] =
     input match
       case "q" => sys.exit()
