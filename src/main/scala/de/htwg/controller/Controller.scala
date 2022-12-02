@@ -8,15 +8,23 @@ import util.Observable
 import util.UndoManager
 
 import scala.collection.mutable.ListBuffer
+import scala.util.{Try, Success, Failure}
 
 case class Controller(var field: Field) extends Observable:
   val undoManager = new UndoManager
   def doAndPublish(doThis: Move => Field, move: Move): Unit =
-    val list = MovePossible.strategy(move)
+    /*val list = MovePossible.strategy(move)
     if (list.nonEmpty)
       playerState.changeState
       field = doThis(move)
-      list.foreach(el => field = field.put(el.stone, el.r, el.c))
+      list.foreach(el => field = field.put(el.stone, el.r, el.c))*/
+    val list = MovePossible.strategy(move)
+    list match
+      case Success(v) =>
+        playerState.changeState
+        field = doThis(move)
+        v.foreach(el => field = field.put(el.stone, el.r, el.c))
+      case Failure(f) =>
 
     notifyObservers
 
@@ -40,16 +48,16 @@ case class Controller(var field: Field) extends Observable:
    */
   object MovePossible {
     var strat = 1
-    var strategy: Move => ListBuffer[Move] = if (strat == 0) strategy1 else strategy2
+    var strategy: Move => Try[ListBuffer[Move]] = if (strat == 0) strategy1 else strategy2
 
-    def strategy1(move: Move): ListBuffer[Move] =
+    def strategy1(move: Move): Try[ListBuffer[Move]] =
       field.get(move.r, move.c) == Stone.Empty
       val lb = new ListBuffer[Move]
       lb.append(move)
-      lb
+      Success(lb)
 
 
-    def strategy2(move: Move): ListBuffer[Move] =
+    def strategy2(move: Move): Try[ListBuffer[Move]] =
       def isInsideField(r: Int, c: Int): Boolean = {
         r >= 1 && r <= field.size && c >= 1 && c <= field.size
       }
@@ -82,15 +90,14 @@ case class Controller(var field: Field) extends Observable:
         outflanked
       }
 
-      /*def isMoveLegal(r: Int, c: Int): Boolean = {
-        outFlanked(r, c).nonEmpty
-      }*/
-
-      if (field.get(move.r, move.c) == Stone.Empty)
-        outFlanked(move.r, move.c)
-      else
-        new ListBuffer[Move]
-      //isMoveLegal(move.r, move.c)
+      field.get(move.r, move.c) match {
+        case Stone.Empty =>
+          val outflanked = outFlanked(move.r, move.c)
+          outflanked.isEmpty match
+            case false => Success(outflanked)
+            case _ => Failure(new Exception("Nothing to turn"))
+        case _ => Failure(new Exception("Cell not empty"))
+      }
   }
 
   /**
