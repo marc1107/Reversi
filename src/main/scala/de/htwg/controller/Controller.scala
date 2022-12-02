@@ -13,12 +13,7 @@ import scala.util.{Try, Success, Failure}
 case class Controller(var field: Field) extends Observable:
   val undoManager = new UndoManager
   def doAndPublish(doThis: Move => Field, move: Move): Unit =
-    /*val list = MovePossible.strategy(move)
-    if (list.nonEmpty)
-      playerState.changeState
-      field = doThis(move)
-      list.foreach(el => field = field.put(el.stone, el.r, el.c))*/
-    val t = MovePossible.strategy(move)
+    val t = MovePossible.strategy(move) // returns a Try
     t match
       case Success(list) =>
         playerState.changeState
