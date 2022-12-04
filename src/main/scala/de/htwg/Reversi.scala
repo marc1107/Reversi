@@ -1,6 +1,7 @@
 package de.htwg
 
 import aview.TUI
+import aview.GUI
 import controller.Controller
 import model.Field
 import model.Matrix
@@ -16,6 +17,8 @@ object Reversi {
     field = field.put(Stone.W, 5, 5)
     val controller = Controller(field)
     controller.MovePossible.strat = 0
+    val gui = GUI(controller)
+    gui.run
     val tui = TUI(controller)
     tui.run
   }
