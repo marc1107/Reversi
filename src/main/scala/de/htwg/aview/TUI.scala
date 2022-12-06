@@ -8,7 +8,9 @@ import scala.io.StdIn.readLine
 import util.Observer
 
 class TUI(controller: Controller) extends UI(controller):
-  override def update = println(controller.toString)
+  override def update =
+    println(controller.playerState.getStone.toString + " ist an der Reihe")
+    println(controller.toString)
 
   override def gameloop: Unit =
     val input: String = readLine

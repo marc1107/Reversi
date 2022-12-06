@@ -13,7 +13,7 @@ class GUI(controller: Controller) extends Frame with UI(controller){
 
   override def analyseInput(input: String): Option[Move] = None
 
-  title = "TicTacToe"
+  title = "Reversi"
   menuBar = new MenuBar {
     contents += new Menu("File") {
       contents += new MenuItem(Action("Exit") {
@@ -22,7 +22,7 @@ class GUI(controller: Controller) extends Frame with UI(controller){
     }
   }
   contents = new BorderPanel {
-    add(new Label("Welcome to Reversi"), BorderPanel.Position.North)
+    add(new Label(controller.playerState.getStone.toString + " ist an der Reihe"), BorderPanel.Position.North)
     add(new CellPanel(controller.field.size, controller.field.size), BorderPanel.Position.Center)
   }
   pack()
@@ -30,13 +30,10 @@ class GUI(controller: Controller) extends Frame with UI(controller){
   open()
 
   override def update =
-    contents.foreach(f => if(f.isInstanceOf[BorderPanel]) {
-      val bp: BorderPanel = f.asInstanceOf[BorderPanel]
-      bp.contents.foreach(t => if(t.isInstanceOf[CellPanel]) {
-        /*val cp: CellPanel = t.asInstanceOf[CellPanel]
-        cp.contents.foreach(c => )*/
-      })
-    })
+    contents = new BorderPanel {
+      add(new Label(controller.playerState.getStone.toString + " ist an der Reihe"), BorderPanel.Position.North)
+      add(new CellPanel(controller.field.size, controller.field.size), BorderPanel.Position.Center)
+    }
     repaint
 
   class CellPanel(r: Int, c: Int) extends GridPanel(r, c):
@@ -46,9 +43,7 @@ class GUI(controller: Controller) extends Frame with UI(controller){
     }
     list.foreach(t => contents += t)
 
-    //def button(stone: String) = new Button(stone)
-
-  class CellButton(r: Int, c: Int, stone: String) extends Button(stone):
+  case class CellButton(r: Int, c: Int, var stone: String) extends Button(stone):
     listenTo(mouse.clicks)
     reactions += {
       case MouseClicked(src, pt, mod, clicks, props) => {
