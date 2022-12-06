@@ -8,7 +8,7 @@ import de.htwg.util.Observer
  * template method design pattern
  * @param controller
  */
-abstract class UI(controller: Controller) extends Observer {
+trait UI(controller: Controller) extends Observer {
   controller.add(this)
   def run: Unit =
     update
