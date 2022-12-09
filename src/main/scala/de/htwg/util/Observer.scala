@@ -2,7 +2,7 @@ package de.htwg
 package util
 
 trait Observer {
-  def update: Unit
+  def update(e: Event): Unit
 }
 
 class Observable {
@@ -12,5 +12,10 @@ class Observable {
 
   def remove(s: Observer) = subscribers = subscribers.filterNot(o => o == s)
 
-  def notifyObservers = subscribers.foreach(o => o.update)
+  def notifyObservers(e: Event) = subscribers.foreach(o => o.update(e))
 }
+
+enum Event:
+  case Quit
+  case Move
+  case End

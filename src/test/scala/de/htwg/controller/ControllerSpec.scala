@@ -7,6 +7,7 @@ import model.Stone
 import org.scalatest.matchers.should.Matchers._
 import org.scalatest.wordspec.AnyWordSpec
 import util.Observer
+import util.Event
 
 class ControllerSpec extends AnyWordSpec {
   "The Controller" should {
@@ -23,7 +24,7 @@ class ControllerSpec extends AnyWordSpec {
       class TestObserver(controller: Controller) extends Observer:
         controller.add(this)
         var bing = false
-        def update = bing = true
+        def update(e: Event) = bing = true
       val testObserver = TestObserver(controller)
       testObserver.bing should be(false)
       controller.doAndPublish(controller.put, Move(Stone.B, 1, 3))
@@ -65,6 +66,12 @@ class ControllerSpec extends AnyWordSpec {
       controller.playerState.changeState
       val stone_test_b = controller.playerState.getStone
       controller.doAndPublish(controller.put, Move(stone_test_b, 3, 3))
+    }
+    "get a winner" in {
+      val field = new Field(3, Stone.Empty)
+      controller.winner(field.put(Stone.B, 1, 1)) should be {
+        Stone.B.toString
+      }
     }
   }
 }

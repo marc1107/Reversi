@@ -6,6 +6,7 @@ import model.Stone
 import model.Move
 import util.Observable
 import util.UndoManager
+import util.Event
 
 import scala.collection.mutable.ListBuffer
 import scala.util.{Try, Success, Failure}
@@ -21,7 +22,7 @@ case class Controller(var field: Field) extends Observable:
         list.foreach(el => field = field.put(el.stone, el.r, el.c))
       case Failure(f) => println(f.getMessage)
 
-    notifyObservers
+    notifyObservers(Event.Move)
 
   def doAndPublish(doThis: => Field) =
     field = doThis
@@ -34,6 +35,22 @@ case class Controller(var field: Field) extends Observable:
   def redo: Field =
     playerState.changeState
     undoManager.redoStep(field)
+
+  /*def winner(field: Field): String =
+    var countW: Int = 0
+    var countB: Int = 0
+    for (i <- 1 to field.size; j <- 1 to field.size) {
+      field.get(i, j) match {
+        case Stone.B => countB += 1
+        case Stone.W => countW += 1
+      }
+    }
+    countW.compareTo(countB) match {
+      case -1 => Stone.B.toString
+      case 1 => Stone.W.toString
+      case _ => "Unentschieden"
+    }*/
+  def winner(field: Field) : String = Stone.B.toString
 
 
   override def toString: String = field.toString

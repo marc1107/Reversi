@@ -6,11 +6,16 @@ import model.Move
 import model.Stone
 import scala.io.StdIn.readLine
 import util.Observer
+import util.Event
 
 class TUI(controller: Controller) extends UI(controller):
-  override def update =
-    println(controller.playerState.getStone.toString + " ist an der Reihe")
-    println(controller.toString)
+  override def update(e: Event) = e match {
+    case Event.Quit => sys.exit()
+    case Event.Move =>
+      println(controller.playerState.getStone.toString + " ist an der Reihe")
+      println(controller.toString)
+    case Event.End => println(controller.winner(controller.field) + " hat gewonnen")
+  }
 
   override def gameloop: Unit =
     val input: String = readLine
