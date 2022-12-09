@@ -13,6 +13,8 @@ class GUI(controller: Controller) extends Frame with UI(controller){
 
   override def analyseInput(input: String): Option[Move] = None
 
+  val lblFont = new Font("Arial", 0, 20)
+
   title = "Reversi"
   menuBar = new MenuBar {
     contents += new Menu("File") {
@@ -22,7 +24,9 @@ class GUI(controller: Controller) extends Frame with UI(controller){
     }
   }
   contents = new BorderPanel {
-    add(new Label(controller.playerState.getStone.toString + " ist an der Reihe"), BorderPanel.Position.North)
+    val lbl: Label = new Label(controller.playerState.getStone.toString + " ist an der Reihe")
+    lbl.font = lblFont
+    add(lbl, BorderPanel.Position.North)
     add(new CellPanel(controller.field.size, controller.field.size), BorderPanel.Position.Center)
   }
   pack()
@@ -31,7 +35,9 @@ class GUI(controller: Controller) extends Frame with UI(controller){
 
   override def update =
     contents = new BorderPanel {
-      add(new Label(controller.playerState.getStone.toString + " ist an der Reihe"), BorderPanel.Position.North)
+      val lbl: Label = new Label(controller.playerState.getStone.toString + " ist an der Reihe")
+      lbl.font = lblFont
+      add(lbl, BorderPanel.Position.North)
       add(new CellPanel(controller.field.size, controller.field.size), BorderPanel.Position.Center)
     }
     repaint
@@ -39,11 +45,17 @@ class GUI(controller: Controller) extends Frame with UI(controller){
   class CellPanel(r: Int, c: Int) extends GridPanel(r, c):
     var list: List[CellButton] = List()
     for (i <- 1 to r; j <- 1 to c) {
-      list = list :+ CellButton(i, j, controller.field.get(i, j).toString)
+      val cb : CellButton = CellButton(i, j, controller.field.get(i, j).toString)
+      list = list :+ cb
     }
     list.foreach(t => contents += t)
 
   case class CellButton(r: Int, c: Int, var stone: String) extends Button(stone):
+    val dim =  new Dimension(80, 80)
+    minimumSize = dim
+    maximumSize = dim
+    preferredSize = dim
+    font = new Font("Arial", 0, 30)
     listenTo(mouse.clicks)
     reactions += {
       case MouseClicked(src, pt, mod, clicks, props) => {
