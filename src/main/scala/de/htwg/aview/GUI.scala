@@ -42,6 +42,7 @@ class GUI(controller: Controller) extends Frame with UI(controller){
         add(lbl, BorderPanel.Position.North)
         add(new CellPanel(controller.field.size, controller.field.size), BorderPanel.Position.Center)
       }
+      controller.winner(controller.field)
       repaint
     case Event.End => contents = new BorderPanel {
         val lbl: Label = new Label(controller.winner(controller.field) + " hat gewonnen")

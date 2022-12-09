@@ -28,7 +28,8 @@ case class Controller(var field: Field) extends Observable:
     field = doThis
     notifyObservers
 
-  def put(move: Move): Field = undoManager.doStep(field, PutCommand(move, field))
+  def put(move: Move): Field =
+    undoManager.doStep(field, PutCommand(move, field))
   def undo: Field =
     playerState.changeState
     undoManager.undoStep(field)
@@ -36,9 +37,9 @@ case class Controller(var field: Field) extends Observable:
     playerState.changeState
     undoManager.redoStep(field)
 
-  /*def winner(field: Field): String =
-    var countW: Int = 0
-    var countB: Int = 0
+  /*def winner(field: Field, b: Int = 0, w: Int = 0): String =
+    var countB = b
+    var countW = w
     for (i <- 1 to field.size; j <- 1 to field.size) {
       field.get(i, j) match {
         case Stone.B => countB += 1
