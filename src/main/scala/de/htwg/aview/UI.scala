@@ -1,15 +1,16 @@
-package de.htwg.aview
+package de.htwg
+package aview
 
-import de.htwg.controller.Controller
-import de.htwg.model.Move
-import de.htwg.util.Observer
-import de.htwg.util.Event
+import controller.controllerComponent.ControllerInterface
+import model.Move
+import util.Observer
+import util.Event
 
 /**
  * template method design pattern
  * @param controller
  */
-trait UI(controller: Controller) extends Observer {
+trait UI(controller: ControllerInterface) extends Observer {
   controller.add(this)
   def run: Unit =
     update(Event.Move)
