@@ -1,10 +1,11 @@
 package de.htwg
 package controller
 
+import de.htwg.controller.controllerComponent.Controller
 import model.Field
 import model.Move
 import model.Stone
-import org.scalatest.matchers.should.Matchers._
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import util.Observer
 import util.Event
@@ -58,7 +59,7 @@ class ControllerSpec extends AnyWordSpec {
       field = controller.redo
       //field.get(1, 2) should be(Stone.B)
       controller.doAndPublish(controller.undo)
-      controller.MovePossible.strategy1(Move(Stone.B, 1, 1))
+      controller.movePossible.strategy1(Move(Stone.B, 1, 1))
     }
     "have failures" in {
       val stone_test_a = controller.playerState.getStone

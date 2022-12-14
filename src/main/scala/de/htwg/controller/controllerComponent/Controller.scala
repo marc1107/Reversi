@@ -1,41 +1,46 @@
 package de.htwg
-package controller
+package controller.controllerComponent
 
-import model.Field
-import model.Stone
-import model.Move
-import util.Observable
-import util.UndoManager
-import util.Event
+import controller.{MovePossible, PlayerState, PutCommand}
+import model.{Field, Move, Stone}
+import util.{Event, Observable, UndoManager}
 
 import scala.collection.mutable.ListBuffer
-import scala.util.{Try, Success, Failure}
+import scala.util.{Failure, Success, Try}
 
-case class Controller(var field: Field) extends Observable:
+class Controller(var fieldC: Field) extends ControllerInterface() with Observable :
   val undoManager = new UndoManager
+  val movePossible: MovePossible = new MovePossible(this)
+  val playerState: PlayerState = new PlayerState
+
   def doAndPublish(doThis: Move => Field, move: Move): Unit =
-    val t = MovePossible.strategy(move) // returns a Try
+    val t = movePossible.strategy(move) // returns a Try
     t match
       case Success(list) =>
         playerState.changeState
-        field = doThis(move)
-        list.foreach(el => field = field.put(el.stone, el.r, el.c))
+        fieldC = doThis(move)
+        fieldC = fieldC.put(move.stone, move.r, move.c)
+        list.foreach(el => fieldC = fieldC.put(el.stone, el.r, el.c))
       case Failure(f) => println(f.getMessage)
 
     notifyObservers(Event.Move)
 
   def doAndPublish(doThis: => Field) =
-    field = doThis
-    notifyObservers
+    fieldC = doThis
+    notifyObservers(Event.Move)
 
   def put(move: Move): Field =
-    undoManager.doStep(field, PutCommand(move, field))
+    undoManager.doStep(fieldC, PutCommand(move, fieldC))
+
   def undo: Field =
     playerState.changeState
-    undoManager.undoStep(field)
+    undoManager.undoStep(fieldC)
+
   def redo: Field =
     playerState.changeState
-    undoManager.redoStep(field)
+    undoManager.redoStep(fieldC)
+
+  def field: Field = fieldC
 
   /*def winner(field: Field, b: Int = 0, w: Int = 0): String =
     var countB = b
@@ -51,15 +56,15 @@ case class Controller(var field: Field) extends Observable:
       case 1 => Stone.W.toString
       case _ => "Unentschieden"
     }*/
-  def winner(field: Field) : String = Stone.B.toString
+  def winner(field: Field): String = Stone.B.toString
 
 
-  override def toString: String = field.toString
+  override def toString: String = fieldC.toString
 
   /**
    * Strategy Pattern to check if a Move is possible
    */
-  object MovePossible {
+  /*object MovePossible {
     var strat = 1
     var strategy: Move => Try[ListBuffer[Move]] = if (strat == 0) strategy1 else strategy2
 
@@ -111,12 +116,12 @@ case class Controller(var field: Field) extends Observable:
             case _ => Failure(new Exception("Nothing to turn"))
         case _ => Failure(new Exception("Cell not empty"))
       }
-  }
+  }*/
 
   /**
    * state pattern contains whose players turn it is
    */
-  object playerState {
+  /*object playerState {
     var state: Int = player1
 
     def getStone: Stone = {
@@ -128,12 +133,13 @@ case class Controller(var field: Field) extends Observable:
 
     def changeState = {
       state match {
-        case 1 => state = player2
+        case 1  => state = player2
         case 2 => state = player1
       }
       state
     }
 
     def player1: Int = 1
+
     def player2: Int = 2
-  }
+  }*/

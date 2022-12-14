@@ -5,7 +5,7 @@ trait Observer {
   def update(e: Event): Unit
 }
 
-class Observable {
+trait Observable {
   var subscribers: Vector[Observer] = Vector()
 
   def add(s: Observer) = subscribers = subscribers :+ s
