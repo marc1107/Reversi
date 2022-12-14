@@ -18,7 +18,7 @@ case class Field(matrix: MatrixInterface[Stone]) extends FieldInterface :
   def mesh(cellWidth: Int = 3): String =
     (0 until size).map(cells(_, cellWidth)).mkString(bar(cellWidth, size), bar(cellWidth, size), bar(cellWidth, size))
 
-  override def toString = mesh()
+  override def toString: String = mesh()
 
   def put(stone: Stone, r: Int, c: Int): Field = copy(matrix.replaceCell(r - 1, c - 1, stone))
 

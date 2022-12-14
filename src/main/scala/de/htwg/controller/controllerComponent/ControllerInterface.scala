@@ -9,7 +9,7 @@ import util.{Event, Observable, UndoManager}
 import scala.collection.mutable.ListBuffer
 import scala.util.{Failure, Success, Try}
 
-trait ControllerInterface() extends Observable {
+trait ControllerInterface extends Observable {
   val playerState: PlayerState
   val movePossible: MovePossible
   def doAndPublish(doThis: Move => FieldInterface, move: Move): Unit
