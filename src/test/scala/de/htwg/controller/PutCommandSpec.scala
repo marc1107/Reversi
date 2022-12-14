@@ -1,9 +1,9 @@
 package de.htwg
 package controller
 
-import org.scalatest.matchers.should.Matchers._
+import de.htwg.model.fieldComponent.Field
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
-import model.Field
 import model.Stone
 import model.Move
 

@@ -2,7 +2,7 @@ package de.htwg
 package controller
 
 import de.htwg.controller.controllerComponent.Controller
-import model.Field
+import de.htwg.model.fieldComponent.Field
 import model.Move
 import model.Stone
 import org.scalatest.matchers.should.Matchers.*
