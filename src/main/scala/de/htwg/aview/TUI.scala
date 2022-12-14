@@ -1,14 +1,15 @@
 package de.htwg
 package aview
 
-import controller.Controller
+import controller.controllerComponent.ControllerInterface
 import model.Move
 import model.Stone
+
 import scala.io.StdIn.readLine
 import util.Observer
 import util.Event
 
-class TUI(controller: Controller) extends UI(controller):
+class TUI(controller: ControllerInterface) extends UI(controller):
   override def update(e: Event) = e match {
     case Event.Quit => sys.exit()
     case Event.Move =>
