@@ -2,7 +2,7 @@ package de.htwg
 package controller
 
 import controller.controllerComponent.ControllerInterface
-import model.{Field, Move, Stone}
+import model.{Move, Stone}
 
 import scala.collection.mutable.ListBuffer
 import scala.util.{Failure, Success, Try}
