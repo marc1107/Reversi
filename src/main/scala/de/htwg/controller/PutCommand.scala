@@ -1,8 +1,7 @@
 package de.htwg
 package controller
 
-import de.htwg.model.fieldComponent.FieldInterface
-import model.Field
+import de.htwg.model.fieldComponent.{Field, FieldInterface}
 import model.Move
 import model.Stone
 import util.Command

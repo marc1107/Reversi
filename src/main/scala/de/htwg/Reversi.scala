@@ -3,8 +3,8 @@ package de.htwg
 import aview.TUI
 import aview.GUI
 import de.htwg.controller.controllerComponent.Controller
+import de.htwg.model.fieldComponent.Field
 import de.htwg.model.matrixComponent.Matrix
-import model.Field
 import model.Stone
 
 object Reversi {
