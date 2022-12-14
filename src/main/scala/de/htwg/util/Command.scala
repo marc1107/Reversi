@@ -1,18 +1,18 @@
 package de.htwg.util
-import de.htwg.model.Field
+import de.htwg.model.fieldComponent.FieldInterface
 
 trait Command:
-  def doStep(field: Field): Field
-  def undoStep(field: Field): Field
-  def redoStep(field: Field): Field
+  def doStep(field: FieldInterface): FieldInterface
+  def undoStep(field: FieldInterface): FieldInterface
+  def redoStep(field: FieldInterface): FieldInterface
 
 class UndoManager:
   private var undoStack: List[Command] = Nil
   private var redoStack: List[Command] = Nil
-  def doStep(field: Field, command: Command): Field =
+  def doStep(field: FieldInterface, command: Command): FieldInterface =
     undoStack = command::undoStack
     command.doStep(field)
-  def undoStep(field: Field): Field =
+  def undoStep(field: FieldInterface): FieldInterface =
     undoStack match {
       case Nil => field
       case head::stack => {
@@ -22,7 +22,7 @@ class UndoManager:
         result
       }
     }
-  def redoStep(field: Field): Field =
+  def redoStep(field: FieldInterface): FieldInterface =
     redoStack match {
       case Nil => field
       case head::stack => {

@@ -1,7 +1,8 @@
 package de.htwg.model
 
+import de.htwg.model.matrixComponent.Matrix
 import org.scalatest.wordspec.AnyWordSpec
-import org.scalatest.matchers.should.Matchers._
+import org.scalatest.matchers.should.Matchers.*
 
 class MatrixSpec extends AnyWordSpec {
   "A Matrix is a tailor-made immutable data type that contains a two-dimensional Vector of something. A Matrix" when {
