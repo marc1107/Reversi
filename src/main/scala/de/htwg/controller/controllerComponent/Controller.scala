@@ -5,11 +5,13 @@ import controller.{MovePossible, PlayerState, PutCommand}
 import de.htwg.model.fieldComponent.FieldInterface
 import model.{Move, Stone}
 import util.{Event, Observable, UndoManager}
+import com.google.inject.{Guice, Inject}
+import com.google.inject.name.Named
 
 import scala.collection.mutable.ListBuffer
 import scala.util.{Failure, Success, Try}
 
-class Controller(var fieldC: FieldInterface) extends ControllerInterface() with Observable :
+class Controller @Inject() (/*@Named("defaultField") */var fieldC: FieldInterface) extends ControllerInterface() with Observable :
   val undoManager = new UndoManager
   val movePossible: MovePossible = new MovePossible(this)
   val playerState: PlayerState = new PlayerState

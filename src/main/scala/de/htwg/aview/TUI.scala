@@ -1,6 +1,7 @@
 package de.htwg
 package aview
 
+//import controller.modules.Default.given_ControllerInterface
 import controller.controllerComponent.ControllerInterface
 import model.Move
 import model.Stone

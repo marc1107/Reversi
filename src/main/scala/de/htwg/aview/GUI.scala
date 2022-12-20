@@ -1,7 +1,8 @@
 package de.htwg
 package aview
 
-import de.htwg.controller.controllerComponent.ControllerInterface
+//import controller.modules.Default.given_ControllerInterface
+import controller.controllerComponent.ControllerInterface
 import model.Move
 
 import scala.language.postfixOps

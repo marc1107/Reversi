@@ -3,7 +3,9 @@ package de.htwg.model.fieldComponent
 import de.htwg.model.Stone
 import de.htwg.model.matrixComponent.{Matrix, MatrixInterface}
 
-case class Field(matrix: MatrixInterface[Stone]) extends FieldInterface :
+import com.google.inject.Inject
+
+case class Field @Inject() (matrix: MatrixInterface[Stone]) extends FieldInterface :
   def this(size: Int, filling: Stone) = this(new Matrix(size, filling))
 
   def size = matrix.size
