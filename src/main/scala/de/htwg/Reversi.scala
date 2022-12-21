@@ -1,25 +1,19 @@
 package de.htwg
 
+import com.google.inject.Guice
+
 import aview.TUI
 import aview.GUI
-import de.htwg.controller.controllerComponent.Controller
-import de.htwg.model.fieldComponent.Field
-import de.htwg.model.matrixComponent.Matrix
+import controller.controllerComponent.{Controller, ControllerInterface}
+import model.fieldComponent.Field
+import model.matrixComponent.Matrix
 import model.Stone
+import controller.modules.Default.{given}
 
 object Reversi {
   def main(args: Array[String]): Unit = {
     println("Welcome to Reversi")
-    var field = new Field(8, Stone.Empty)
-    field = field.put(Stone.W, 4, 4)
-    field = field.put(Stone.B, 4, 5)
-    field = field.put(Stone.B, 5, 4)
-    field = field.put(Stone.W, 5, 5)
-    val controller = Controller(field)
-    controller.movePossible.strat = 0
-    val gui = GUI(controller)
-    gui.run
-    val tui = TUI(controller)
-    tui.run
+    new GUI().run
+    new TUI().run
   }
 }

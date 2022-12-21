@@ -1,6 +1,9 @@
-package de.htwg.model.matrixComponent
+package de.htwg
+package model.matrixComponent
 
-case class Matrix[T](rows: Vector[Vector[T]]) extends MatrixInterface[T] :
+import com.google.inject.{Guice, Inject}
+
+case class Matrix[T] @Inject() (rows: Vector[Vector[T]]) extends MatrixInterface[T] :
   def this(size: Int, filling: T) = this(Vector.tabulate(size, size) { (row, col) => filling })
 
   def size: Int = rows.size

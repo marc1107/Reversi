@@ -1,8 +1,8 @@
 package de.htwg
 package controller
 
-import de.htwg.controller.controllerComponent.Controller
-import de.htwg.model.fieldComponent.Field
+import controller.controllerComponent.Controller
+import model.fieldComponent.Field
 import model.Move
 import model.Stone
 import org.scalatest.matchers.should.Matchers.*
@@ -15,7 +15,7 @@ class ControllerSpec extends AnyWordSpec {
     var field = new Field(3, Stone.Empty)
     field = field.put(Stone.B, 1, 1)
     field = field.put(Stone.W, 1, 2)
-    val controller = Controller(field)
+    val controller = Controller(using field)
     "put a stone on the field when a move is made" in {
       val fieldWithMove = controller.put(Move(Stone.B, 1, 3))
       fieldWithMove.get(1, 3) should be(Stone.B)
