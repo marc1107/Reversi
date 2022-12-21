@@ -8,7 +8,7 @@ import controller.controllerComponent.{Controller, ControllerInterface}
 import model.fieldComponent.Field
 import model.matrixComponent.Matrix
 import model.Stone
-import controller.modules.Default.{given}
+import Default.{given}
 
 object Reversi {
   def main(args: Array[String]): Unit = {

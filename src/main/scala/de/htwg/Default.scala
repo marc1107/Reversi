@@ -1,10 +1,9 @@
-package de.htwg.controller
-package modules
+package de.htwg
 
-import controllerComponent.ControllerInterface
-import controllerComponent.Controller
-import de.htwg.model.Stone
-import de.htwg.model.fieldComponent.{Field, FieldInterface}
+import controller.controllerComponent.ControllerInterface
+import controller.controllerComponent.Controller
+import model.Stone
+import model.fieldComponent.{Field, FieldInterface}
 
 object Default {
   var field = new Field(8, Stone.Empty)
@@ -14,5 +13,6 @@ object Default {
   field = field.put(Stone.W, 5, 5)
 
   given FieldInterface = field
+
   given ControllerInterface = Controller()
 }

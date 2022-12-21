@@ -8,7 +8,7 @@ import model.Move
 import model.Stone
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
-import controller.modules.Default.{given}
+import Default.{given}
 
 class TUISpec extends AnyWordSpec {
 
