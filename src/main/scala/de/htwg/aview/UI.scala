@@ -10,7 +10,7 @@ import util.Event
  * template method design pattern
  * @param controller
  */
-trait UI(using controller: ControllerInterface) extends Observer {
+trait UI(controller: ControllerInterface) extends Observer {
   controller.add(this)
   def run: Unit =
     update(Event.Move)
