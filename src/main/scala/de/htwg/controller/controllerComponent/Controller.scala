@@ -3,7 +3,7 @@ package controller.controllerComponent
 
 import controller.{MovePossible, PlayerState, PutCommand}
 import model.fieldComponent.FieldInterface
-import controller.modules.Default.{given}
+import Default.{given}
 import model.{Move, Stone}
 import util.{Event, Observable, UndoManager}//
 import com.google.inject.name.Named

@@ -1,7 +1,7 @@
 package de.htwg
 package aview
 
-import controller.modules.Default.{given}
+import Default.{given}
 import controller.controllerComponent.ControllerInterface
 import model.Move
 
