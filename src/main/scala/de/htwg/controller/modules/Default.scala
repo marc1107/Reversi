@@ -13,5 +13,6 @@ object Default {
   field = field.put(Stone.B, 5, 4)
   field = field.put(Stone.W, 5, 5)
 
-  given ControllerInterface = Controller(field)
+  given FieldInterface = field
+  given ControllerInterface = Controller()
 }

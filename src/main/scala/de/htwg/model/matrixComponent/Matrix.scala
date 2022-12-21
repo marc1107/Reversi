@@ -1,4 +1,5 @@
-package de.htwg.model.matrixComponent
+package de.htwg
+package model.matrixComponent
 
 import com.google.inject.{Guice, Inject}
 

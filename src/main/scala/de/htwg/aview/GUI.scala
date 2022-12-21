@@ -1,7 +1,7 @@
 package de.htwg
 package aview
 
-//import controller.modules.Default.given_ControllerInterface
+import controller.modules.Default.{given}
 import controller.controllerComponent.ControllerInterface
 import model.Move
 
@@ -10,7 +10,7 @@ import scala.swing.*
 import scala.swing.event.*
 import util.Event
 
-class GUI(controller: ControllerInterface) extends Frame with UI(controller){
+class GUI(using controller: ControllerInterface) extends Frame with UI(controller){
   override def gameloop: Unit = None
 
   override def analyseInput(input: String): Option[Move] = None
