@@ -36,6 +36,8 @@ class TUI(using controller: ControllerInterface) extends UI(controller):
       case "q" => sys.exit()
       case "u" => controller.doAndPublish(controller.undo); None
       case "r" => controller.doAndPublish(controller.redo); None
+      case "s" => controller.doAndPublish(controller.save); None
+      case "l" => controller.doAndPublish(controller.load); None
       case _ =>
         val chars = input.toCharArray
         val stone = controller.playerState.getStone

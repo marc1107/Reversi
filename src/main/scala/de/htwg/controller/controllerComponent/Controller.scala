@@ -3,10 +3,11 @@ package controller.controllerComponent
 
 import controller.{MovePossible, PlayerState, PutCommand}
 import model.fieldComponent.FieldInterface
-import Default.{given}
+import Default.given
 import model.{Move, Stone}
-import util.{Event, Observable, UndoManager}//
+import util.{Event, Observable, UndoManager}
 import com.google.inject.name.Named
+import de.htwg.model.fileIoComponent.fileIoXmlImpl.FileIO
 
 import scala.collection.mutable.ListBuffer
 import scala.util.{Failure, Success, Try}
@@ -15,6 +16,7 @@ class Controller(using var fieldC: FieldInterface) extends ControllerInterface()
   val undoManager = new UndoManager
   val movePossible: MovePossible = new MovePossible(this)
   val playerState: PlayerState = new PlayerState
+  val fileIo = new FileIO
 
   def doAndPublish(doThis: Move => FieldInterface, move: Move): Unit =
     val t = movePossible.strategy(move) // returns a Try
@@ -42,6 +44,14 @@ class Controller(using var fieldC: FieldInterface) extends ControllerInterface()
   def redo: FieldInterface =
     playerState.changeState
     undoManager.redoStep(fieldC)
+
+  def save: FieldInterface =
+    fileIo.save(fieldC)
+    fieldC
+
+  def load: FieldInterface =
+    fieldC = fileIo.load
+    fieldC
 
   def field: FieldInterface = fieldC
 
