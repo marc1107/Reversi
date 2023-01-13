@@ -2,7 +2,7 @@ package de.htwg
 package controller.controllerComponent
 
 import controller.{MovePossible, PlayerState, PutCommand}
-import de.htwg.model.fieldComponent.FieldInterface
+import model.fieldComponent.FieldInterface
 import model.{Move, Stone}
 import util.{Event, Observable, UndoManager}
 
@@ -17,6 +17,8 @@ trait ControllerInterface extends Observable {
   def put(move: Move): FieldInterface
   def undo: FieldInterface
   def redo: FieldInterface
+  def save: FieldInterface
+  def load: FieldInterface
   def winner(field: FieldInterface): String
   def field: FieldInterface
   override def toString: String
