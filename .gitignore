@@ -41,3 +41,6 @@ bin/
 
 # general
 *.class
+
+field.json
+field.xml
