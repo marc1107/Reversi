@@ -2,7 +2,7 @@ package de.htwg
 package controller.controllerComponent
 
 import controller.{MovePossible, PlayerState, PutCommand}
-import de.htwg.model.fieldComponent.FieldInterface
+import model.fieldComponent.FieldInterface
 import model.{Move, Stone}
 import util.{Event, Observable, UndoManager}
 

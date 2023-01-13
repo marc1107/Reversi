@@ -5,7 +5,7 @@ import controller.controllerComponent.Controller
 import model.Stone
 import model.fieldComponent.{Field, FieldInterface}
 import model.fileIoComponent.FileIOInterface
-import model.fileIoComponent.fileIoXmlImpl.FileIO
+import model.fileIoComponent.fileIoJsonImpl.FileIO
 
 object Default {
   var field = new Field(8, Stone.Empty)
