@@ -23,6 +23,12 @@ class GUI(using controller: ControllerInterface) extends Frame with UI(controlle
       contents += new MenuItem(Action("Exit") {
         sys.exit(0)
       })
+      contents += new MenuItem(Action("Save") {
+        controller.doAndPublish(controller.save)
+      })
+      contents += new MenuItem(Action("Load") {
+        controller.doAndPublish(controller.load)
+      })
     }
   }
   contents = new BorderPanel {

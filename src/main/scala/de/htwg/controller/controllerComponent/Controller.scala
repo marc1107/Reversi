@@ -17,7 +17,6 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
   val undoManager = new UndoManager
   val movePossible: MovePossible = new MovePossible(this)
   val playerState: PlayerState = new PlayerState
-  //val fileIo: FileIOInterface =
 
   def doAndPublish(doThis: Move => FieldInterface, move: Move): Unit =
     val t = movePossible.strategy(move) // returns a Try
