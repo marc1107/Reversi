@@ -7,16 +7,17 @@ import Default.given
 import model.{Move, Stone}
 import util.{Event, Observable, UndoManager}
 import com.google.inject.name.Named
+import de.htwg.model.fileIoComponent.FileIOInterface
 import de.htwg.model.fileIoComponent.fileIoJsonImpl.FileIO
 
 import scala.collection.mutable.ListBuffer
 import scala.util.{Failure, Success, Try}
 
-class Controller(using var fieldC: FieldInterface) extends ControllerInterface() with Observable :
+class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) extends ControllerInterface() with Observable :
   val undoManager = new UndoManager
   val movePossible: MovePossible = new MovePossible(this)
   val playerState: PlayerState = new PlayerState
-  val fileIo = new FileIO
+  //val fileIo: FileIOInterface =
 
   def doAndPublish(doThis: Move => FieldInterface, move: Move): Unit =
     val t = movePossible.strategy(move) // returns a Try
