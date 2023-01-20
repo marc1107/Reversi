@@ -29,6 +29,9 @@ class GUI(using controller: ControllerInterface) extends Frame with UI(controlle
       contents += new MenuItem(Action("Load") {
         controller.doAndPublish(controller.load)
       })
+      contents += new MenuItem(Action("Winner") {
+        controller.notifyObservers(Event.End)
+      })
     }
   }
   contents = new BorderPanel {
