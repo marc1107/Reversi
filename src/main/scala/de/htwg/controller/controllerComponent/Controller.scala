@@ -55,7 +55,20 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
 
   def field: FieldInterface = fieldC
 
-  def winner(field: FieldInterface): String = Stone.B.toString
+  def winner(field: FieldInterface): String =
+    if (countStone(Stone.B) > countStone(Stone.W))
+      Stone.B.toString
+    else if (countStone(Stone.B) < countStone(Stone.W))
+      Stone.W.toString
+    else
+      "keiner"
 
+  def countStone(stone: Stone): Int =
+    var counter: Int = 0
+    for (i <- 1 to fieldC.size; j <- 1 to fieldC.size) {
+      if (fieldC.get(i, j).equals(stone))
+        counter += 1
+    }
+    counter
 
   override def toString: String = fieldC.toString

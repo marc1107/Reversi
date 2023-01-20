@@ -20,6 +20,7 @@ trait ControllerInterface extends Observable {
   def save: FieldInterface
   def load: FieldInterface
   def winner(field: FieldInterface): String
+  def countStone(stone: Stone): Int
   def field: FieldInterface
   override def toString: String
 }
