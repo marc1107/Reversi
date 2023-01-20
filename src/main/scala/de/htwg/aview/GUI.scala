@@ -33,8 +33,11 @@ class GUI(using controller: ControllerInterface) extends Frame with UI(controlle
   }
   contents = new BorderPanel {
     val lbl: Label = new Label(controller.playerState.getStone.toString + " ist an der Reihe")
+    val message: Label = new Label("")
     lbl.font = lblFont
+    message.font = lblFont
     add(lbl, BorderPanel.Position.North)
+    add(message, BorderPanel.Position.South)
     add(new CellPanel(controller.field.size, controller.field.size), BorderPanel.Position.Center)
   }
   pack()
@@ -45,8 +48,11 @@ class GUI(using controller: ControllerInterface) extends Frame with UI(controlle
     case Event.Quit => this.dispose
     case Event.Move => contents = new BorderPanel {
         val lbl: Label = new Label(controller.playerState.getStone.toString + " ist an der Reihe")
+        val message: Label = new Label(controller.movePossible.exceptions)
         lbl.font = lblFont
+        message.font = lblFont
         add(lbl, BorderPanel.Position.North)
+        add(message, BorderPanel.Position.South)
         add(new CellPanel(controller.field.size, controller.field.size), BorderPanel.Position.Center)
       }
       controller.winner(controller.field)

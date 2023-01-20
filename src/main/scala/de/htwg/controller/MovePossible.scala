@@ -9,6 +9,7 @@ import scala.util.{Failure, Success, Try}
 
 class MovePossible(controller: ControllerInterface) {
   var strat = 1
+  var exceptions = " "
   val strategy: Move => Try[ListBuffer[Move]] =
     if (strat == 0) strategy1 else strategy2
 
@@ -56,8 +57,11 @@ class MovePossible(controller: ControllerInterface) {
       case Stone.Empty =>
         val outflanked = outFlanked(move.r, move.c)
         outflanked.isEmpty match
-          case false => Success(outflanked)
-          case _ => Failure(new Exception("Nothing to turn"))
-      case _ => Failure(new Exception("Cell not empty"))
+          case false => exceptions = move.stone.toString + "successfully placed"
+            Success(outflanked)
+          case _ => exceptions = "Nothing to turn"
+            Failure(new Exception(exceptions))
+      case _ => exceptions = "Cell not empty"
+        Failure(new Exception(exceptions))
     }
 }
