@@ -25,8 +25,8 @@ class FileIO extends FileIOInterface {
       val value: String = cell.text.trim.toString
       value match {
         case " " => field = field.put(Stone.Empty, row, col)
-        case "□" => field = field.put(Stone.B, row, col)
-        case "■" => field = field.put(Stone.W, row, col)
+        case "□" => field = field.put(Stone.W, row, col)
+        case "■" => field = field.put(Stone.B, row, col)
         case _ =>
       }
     }

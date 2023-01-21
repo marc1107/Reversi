@@ -22,8 +22,8 @@ class FileIO extends FileIOInterface {
       val value = (json \\ "cell")(index).as[String]
       value match {
         case " " => field = field.put(Stone.Empty, row, col)
-        case "□" => field = field.put(Stone.B, row, col)
-        case "■" => field = field.put(Stone.W, row, col)
+        case "□" => field = field.put(Stone.W, row, col)
+        case "■" => field = field.put(Stone.B, row, col)
         case _ =>
       }
     }
