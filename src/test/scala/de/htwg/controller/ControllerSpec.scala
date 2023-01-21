@@ -35,7 +35,7 @@ class ControllerSpec extends AnyWordSpec {
     }
     "print a field" in {
       controller.toString should be( """#+---+---+---+
-                                        #| □ | □ | □ |
+                                        #| ■ | ■ | ■ |
                                         #+---+---+---+
                                         #|   |   |   |
                                         #+---+---+---+
