@@ -76,5 +76,39 @@ class ControllerSpec extends AnyWordSpec {
         Stone.B.toString
       }
     }
+    "save the field" in {
+      var field = new Field(3, Stone.Empty)
+      field = field.put(Stone.B, 1, 1)
+      field = field.put(Stone.W, 1, 2)
+      val fileIo = new FileIO()
+      val controller = Controller(using field, fileIo)
+      controller.save.toString should be(
+        """#+---+---+---+
+          #| ■ | □ |   |
+          #+---+---+---+
+          #|   |   |   |
+          #+---+---+---+
+          #|   |   |   |
+          #+---+---+---+
+          #""".stripMargin('#'))
+    }
+    "load the field" in {
+      var field = new Field(3, Stone.Empty)
+      field = field.put(Stone.B, 1, 1)
+      field = field.put(Stone.W, 1, 2)
+      val fileIo = new FileIO()
+      val controller = Controller(using field, fileIo)
+      controller.save
+      controller.put(Move(Stone.B, 1, 3))
+      controller.load.toString should be(
+        """#+---+---+---+
+          #| ■ | □ |   |
+          #+---+---+---+
+          #|   |   |   |
+          #+---+---+---+
+          #|   |   |   |
+          #+---+---+---+
+          #""".stripMargin('#'))
+    }
   }
 }
