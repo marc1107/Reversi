@@ -1,14 +1,20 @@
 package de.htwg
 package aview
 
-import Default.{given}
+import Default.given
 import controller.controllerComponent.ControllerInterface
 import model.Move
+import model.Stone
 
 import scala.language.postfixOps
 import scala.swing.*
 import scala.swing.event.*
 import util.Event
+
+import java.awt.Color
+import java.io.File
+import javax.imageio.ImageIO
+import javax.swing.ImageIcon
 
 class GUI(using controller: ControllerInterface) extends Frame with UI(controller){
   override def gameloop: Unit = None
@@ -63,16 +69,23 @@ class GUI(using controller: ControllerInterface) extends Frame with UI(controlle
   class CellPanel(r: Int, c: Int) extends GridPanel(r, c):
     var list: List[CellButton] = List()
     for (i <- 1 to r; j <- 1 to c) {
-      val cb : CellButton = CellButton(i, j, controller.field.get(i, j).toString)
+      val cb : CellButton = CellButton(i, j, controller.field.get(i, j))
       list = list :+ cb
     }
     list.foreach(t => contents += t)
 
-  case class CellButton(r: Int, c: Int, var stone: String) extends Button(stone):
-    val dim =  new Dimension(80, 80)
+  case class CellButton(r: Int, c: Int, var stone: Stone) extends Button():
+    val dim =  new Dimension(90, 90)
     minimumSize = dim
     maximumSize = dim
     preferredSize = dim
+
+    stone match {
+      case Stone.W => icon =  new ImageIcon(ImageIO.read(new File("src/main/resources/White.png")))
+      case Stone.B => icon = new ImageIcon(ImageIO.read(new File("src/main/resources/Black.png")))
+      case _ => icon = new ImageIcon(ImageIO.read(new File("src/main/resources/Empty.png")))
+    }
+
     font = new Font("Arial", 0, 30)
     listenTo(mouse.clicks)
     reactions += {
