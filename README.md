@@ -4,6 +4,7 @@
 ## How to Play
 
 This is the game board:
+
 ![alt text](https://github.com/marc1107/Reversi/blob/main/Reversi.jpeg?raw=true)
 
 Each piece played must be laid adjacent to an opponent's piece so that the opponent's piece or a row of opponent's
