@@ -8,7 +8,7 @@ import model.{Move, Stone}
 import util.{Event, Observable, UndoManager}
 import com.google.inject.name.Named
 import de.htwg.model.fileIoComponent.FileIOInterface
-import de.htwg.model.fileIoComponent.fileIoJsonImpl.FileIO
+//import de.htwg.model.fileIoComponent.fileIoXmlImpl.FileIO
 
 import scala.collection.mutable.ListBuffer
 import scala.util.{Failure, Success, Try}
@@ -46,11 +46,15 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
     undoManager.redoStep(fieldC)
 
   def save: FieldInterface =
-    fileIo.save(fieldC)
+    fileIo.save(fieldC, this.playerState)
     fieldC
 
   def load: FieldInterface =
-    fieldC = fileIo.load
+    val tupel = fileIo.load
+    fieldC = tupel(0)
+    if (this.playerState.getStone.toString != tupel(1).getStone.toString) {
+      this.playerState.changeState
+    }
     fieldC
 
   def field: FieldInterface = fieldC

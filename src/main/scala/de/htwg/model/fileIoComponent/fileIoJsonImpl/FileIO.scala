@@ -3,17 +3,26 @@ package model.fileIoComponent.fileIoJsonImpl
 
 import de.htwg.model.Stone
 import model.fieldComponent.{Field, FieldInterface}
+import controller.controllerComponent.Controller
+import de.htwg.controller.PlayerState
 import model.fileIoComponent.FileIOInterface
-import play.api.libs.json._
+import play.api.libs.json.*
 
 import scala.io.Source
 
 class FileIO extends FileIOInterface {
 
-  override def load: FieldInterface = {
+  override def load: (FieldInterface, PlayerState) = {
     val source: String = Source.fromFile("field.json").getLines.mkString
     val json: JsValue = Json.parse(source)
     val size = (json \ "field" \ "size").get.toString.toInt
+    val playerState = (json \ "field" \ "playerState").get.toString
+    var player: PlayerState = new PlayerState
+
+    if (playerState != player.getStone.toString) {
+      player.changeState
+    }
+
     var field: FieldInterface = new Field(size, Stone.Empty)
 
     for (index <- 0 until size * size) {
@@ -27,20 +36,21 @@ class FileIO extends FileIOInterface {
         case _ =>
       }
     }
-    field
+    (field, player)
   }
 
-  override def save(field: FieldInterface): Unit = {
+  override def save(field: FieldInterface, player: PlayerState): Unit = {
     import java.io._
     val pw = new PrintWriter(new File("field.json"))
-    pw.write(Json.prettyPrint(fieldToJson(field)))
+    pw.write(Json.prettyPrint(fieldToJson(field, player)))
     pw.close
   }
 
-  def fieldToJson(field: FieldInterface) = {
+  def fieldToJson(field: FieldInterface, player: PlayerState) = {
     Json.obj(
       "field" -> Json.obj(
         "size" -> JsNumber(field.size),
+        "playerState" -> player.getStone.toString,
         "cells" -> Json.toJson(
           for {
             row <- 1 until field.size + 1
