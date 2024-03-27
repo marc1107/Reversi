@@ -17,7 +17,7 @@ class GUI(using controller: ControllerInterface) extends Frame with UI(controlle
 
   override def analyseInput(input: String): Option[Move] = None
 
-  val lblFont = new Font("Arial", 0, 20)
+  private val lblFont = new Font("Arial", 0, 20)
 
   title = "Reversi"
   menuBar = new MenuBar {
@@ -49,7 +49,7 @@ class GUI(using controller: ControllerInterface) extends Frame with UI(controlle
   centerOnScreen()
   open()
 
-  override def update(e: Event) = e match {
+  override def update(e: Event): Unit = e match {
     case Event.Quit => this.dispose
     case Event.Move => contents = new BorderPanel {
       val lbl: Label = new Label(controller.playerState.getStone.toString + " ist an der Reihe")
@@ -68,16 +68,18 @@ class GUI(using controller: ControllerInterface) extends Frame with UI(controlle
       repaint
   }
 
-  class CellPanel(r: Int, c: Int) extends GridPanel(r, c):
-    var list: List[CellButton] = List()
-    for (i <- 1 to r; j <- 1 to c) {
-      val cb: CellButton = CellButton(i, j, controller.field.get(i, j))
-      list = list :+ cb
-    }
+  private class CellPanel(r: Int, c: Int) extends GridPanel(r, c):
+    private val list: List[CellButton] =
+      for {
+        i <- (1 to r).toList
+        j <- 1 to c
+        cb = CellButton(i, j, controller.field.get(i, j))
+      } yield cb
+
     list.foreach(t => contents += t)
 
-  case class CellButton(r: Int, c: Int, var stone: Stone) extends Button():
-    val dim = new Dimension(90, 90)
+  private case class CellButton(r: Int, c: Int, var stone: Stone) extends Button():
+    private val dim = new Dimension(90, 90)
     minimumSize = dim
     maximumSize = dim
     preferredSize = dim
@@ -91,9 +93,8 @@ class GUI(using controller: ControllerInterface) extends Frame with UI(controlle
     font = new Font("Arial", 0, 30)
     listenTo(mouse.clicks)
     reactions += {
-      case MouseClicked(src, pt, mod, clicks, props) => {
+      case MouseClicked(src, pt, mod, clicks, props) =>
         val stone = controller.playerState.getStone
         controller.doAndPublish(controller.put, Move(stone, r, c))
-      }
     }
 }
