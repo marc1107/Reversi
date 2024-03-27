@@ -1,15 +1,13 @@
 package de.htwg
 package controller
 
-import controller.controllerComponent.Controller
+import de.htwg.controller.controllerComponent.Controller
+import de.htwg.model.{Move, Stone}
+import de.htwg.model.fieldComponent.Field
 import de.htwg.model.fileIoComponent.fileIoJsonImpl.FileIO
-import model.fieldComponent.Field
-import model.Move
-import model.Stone
+import de.htwg.util.{Event, Observer}
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
-import util.Observer
-import util.Event
 
 class ControllerSpec extends AnyWordSpec {
   "The Controller" should {
@@ -27,6 +25,7 @@ class ControllerSpec extends AnyWordSpec {
       class TestObserver(controller: Controller) extends Observer:
         controller.add(this)
         var bing = false
+
         def update(e: Event) = bing = true
       val testObserver = TestObserver(controller)
       testObserver.bing should be(false)
@@ -34,14 +33,15 @@ class ControllerSpec extends AnyWordSpec {
       testObserver.bing should be(true)
     }
     "print a field" in {
-      controller.toString should be( """#+---+---+---+
-                                        #| ■ | ■ | ■ |
-                                        #+---+---+---+
-                                        #|   |   |   |
-                                        #+---+---+---+
-                                        #|   |   |   |
-                                        #+---+---+---+
-                                        #""" .stripMargin('#'))
+      controller.toString should be(
+        """#+---+---+---+
+          #| ■ | ■ | ■ |
+          #+---+---+---+
+          #|   |   |   |
+          #+---+---+---+
+          #|   |   |   |
+          #+---+---+---+
+          #""".stripMargin('#'))
     }
     /*"use another strategy" in {
       controller.MovePossible.strat = 0

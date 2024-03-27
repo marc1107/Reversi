@@ -14,12 +14,13 @@ class PlayerState {
 
   def changeState = {
     state match {
-      case 1  => state = player2
+      case 1 => state = player2
       case 2 => state = player1
     }
     state
   }
 
   def player1: Int = 1
+
   def player2: Int = 2
 }

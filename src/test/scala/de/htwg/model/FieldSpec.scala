@@ -67,24 +67,26 @@ class FieldSpec extends AnyWordSpec {
     "filled with Empty" should {
       val field = new Field(3, Stone.Empty)
       "be empty initially" in {
-        field.toString should be( """#+---+---+---+
-          #|   |   |   |
-          #+---+---+---+
-          #|   |   |   |
-          #+---+---+---+
-          #|   |   |   |
-          #+---+---+---+
-          #""" .stripMargin('#'))
+        field.toString should be(
+          """#+---+---+---+
+            #|   |   |   |
+            #+---+---+---+
+            #|   |   |   |
+            #+---+---+---+
+            #|   |   |   |
+            #+---+---+---+
+            #""".stripMargin('#'))
       }
       "have a ■ and □ after two moves" in {
-        field.put(Stone.B, 1, 1).put(Stone.W, 2, 2).toString should be( """#+---+---+---+
-          #| ■ |   |   |
-          #+---+---+---+
-          #|   | □ |   |
-          #+---+---+---+
-          #|   |   |   |
-          #+---+---+---+
-          #""" .stripMargin('#'))
+        field.put(Stone.B, 1, 1).put(Stone.W, 2, 2).toString should be(
+          """#+---+---+---+
+            #| ■ |   |   |
+            #+---+---+---+
+            #|   | □ |   |
+            #+---+---+---+
+            #|   |   |   |
+            #+---+---+---+
+            #""".stripMargin('#'))
       }
     }
   }

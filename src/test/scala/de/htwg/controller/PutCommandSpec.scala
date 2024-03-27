@@ -1,11 +1,10 @@
 package de.htwg
 package controller
 
+import de.htwg.model.{Move, Stone}
 import de.htwg.model.fieldComponent.Field
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
-import model.Stone
-import model.Move
 
 class PutCommandSpec extends AnyWordSpec {
   var field = new Field(1, Stone.Empty)
@@ -13,15 +12,15 @@ class PutCommandSpec extends AnyWordSpec {
   "The PutCommand" should {
     "have a do step" in {
       field = putCommand.doStep(field).asInstanceOf[Field]
-      field.get(1, 1) should be (Stone.B)
+      field.get(1, 1) should be(Stone.B)
     }
     "have a undo step" in {
       field = putCommand.undoStep(field).asInstanceOf[Field]
-      field.get(1, 1) should be (Stone.Empty)
+      field.get(1, 1) should be(Stone.Empty)
     }
     "have a redo step" in {
       field = putCommand.redoStep(field).asInstanceOf[Field]
-      field.get(1, 1) should be (Stone.B)
+      field.get(1, 1) should be(Stone.B)
     }
   }
 }

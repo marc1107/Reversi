@@ -1,22 +1,18 @@
 package de.htwg
 package aview
 
-import Default.given
-import controller.controllerComponent.ControllerInterface
-import model.Move
-import model.Stone
+import de.htwg.controller.controllerComponent.ControllerInterface
+import de.htwg.model.{Move, Stone}
+import de.htwg.util.Event
 
-import scala.language.postfixOps
-import scala.swing.*
-import scala.swing.event.*
-import util.Event
-
-import java.awt.Color
 import java.io.File
 import javax.imageio.ImageIO
 import javax.swing.ImageIcon
+import scala.language.postfixOps
+import scala.swing.*
+import scala.swing.event.*
 
-class GUI(using controller: ControllerInterface) extends Frame with UI(controller){
+class GUI(using controller: ControllerInterface) extends Frame with UI(controller) {
   override def gameloop: Unit = None
 
   override def analyseInput(input: String): Option[Move] = None
@@ -56,38 +52,38 @@ class GUI(using controller: ControllerInterface) extends Frame with UI(controlle
   override def update(e: Event) = e match {
     case Event.Quit => this.dispose
     case Event.Move => contents = new BorderPanel {
-        val lbl: Label = new Label(controller.playerState.getStone.toString + " ist an der Reihe")
-        lbl.font = lblFont
-        add(lbl, BorderPanel.Position.North)
-        add(new CellPanel(controller.field.size, controller.field.size), BorderPanel.Position.Center)
-      }
+      val lbl: Label = new Label(controller.playerState.getStone.toString + " ist an der Reihe")
+      lbl.font = lblFont
+      add(lbl, BorderPanel.Position.North)
+      add(new CellPanel(controller.field.size, controller.field.size), BorderPanel.Position.Center)
+    }
       controller.winner(controller.field)
       repaint
     case Event.End => contents = new BorderPanel {
-        val lbl: Label = new Label(controller.winner(controller.field) + " hat gewonnen")
-        lbl.font = lblFont
-        add(lbl, BorderPanel.Position.North)
-        add(new CellPanel(controller.field.size, controller.field.size), BorderPanel.Position.Center)
-      }
+      val lbl: Label = new Label(controller.winner(controller.field) + " hat gewonnen")
+      lbl.font = lblFont
+      add(lbl, BorderPanel.Position.North)
+      add(new CellPanel(controller.field.size, controller.field.size), BorderPanel.Position.Center)
+    }
       repaint
   }
 
   class CellPanel(r: Int, c: Int) extends GridPanel(r, c):
     var list: List[CellButton] = List()
     for (i <- 1 to r; j <- 1 to c) {
-      val cb : CellButton = CellButton(i, j, controller.field.get(i, j))
+      val cb: CellButton = CellButton(i, j, controller.field.get(i, j))
       list = list :+ cb
     }
     list.foreach(t => contents += t)
 
   case class CellButton(r: Int, c: Int, var stone: Stone) extends Button():
-    val dim =  new Dimension(90, 90)
+    val dim = new Dimension(90, 90)
     minimumSize = dim
     maximumSize = dim
     preferredSize = dim
 
     stone match {
-      case Stone.W => icon =  new ImageIcon(ImageIO.read(new File("src/main/resources/White.png")))
+      case Stone.W => icon = new ImageIcon(ImageIO.read(new File("src/main/resources/White.png")))
       case Stone.B => icon = new ImageIcon(ImageIO.read(new File("src/main/resources/Black.png")))
       case _ => icon = new ImageIcon(ImageIO.read(new File("src/main/resources/Empty.png")))
     }

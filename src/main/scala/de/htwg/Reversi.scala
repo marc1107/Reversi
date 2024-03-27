@@ -1,14 +1,7 @@
 package de.htwg
 
-import com.google.inject.Guice
-
-import aview.TUI
-import aview.GUI
-import controller.controllerComponent.{Controller, ControllerInterface}
-import model.fieldComponent.Field
-import model.matrixComponent.Matrix
-import model.Stone
-import Default.{given}
+import de.htwg.Default.given
+import de.htwg.aview.{GUI, TUI}
 
 object Reversi {
   def main(args: Array[String]): Unit = {

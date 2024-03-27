@@ -1,19 +1,17 @@
 package de.htwg
 package controller.controllerComponent
 
-import controller.{MovePossible, PlayerState, PutCommand}
-import model.fieldComponent.FieldInterface
-import Default.given
-import model.{Move, Stone}
-import util.{Event, Observable, UndoManager}
-import com.google.inject.name.Named
+import de.htwg.controller.{MovePossible, PlayerState, PutCommand}
+import de.htwg.model.fieldComponent.FieldInterface
 import de.htwg.model.fileIoComponent.FileIOInterface
+import de.htwg.model.{Move, Stone}
+import de.htwg.util.{Event, Observable, UndoManager}
 //import de.htwg.model.fileIoComponent.fileIoXmlImpl.FileIO
 
 import scala.collection.mutable.ListBuffer
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Success}
 
-class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) extends ControllerInterface() with Observable :
+class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) extends ControllerInterface() with Observable:
   val undoManager = new UndoManager
   val movePossible: MovePossible = new MovePossible(this)
   val playerState: PlayerState = new PlayerState

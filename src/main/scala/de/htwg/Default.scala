@@ -1,11 +1,10 @@
 package de.htwg
 
-import controller.controllerComponent.ControllerInterface
-import controller.controllerComponent.Controller
-import model.Stone
-import model.fieldComponent.{Field, FieldInterface}
-import model.fileIoComponent.FileIOInterface
-import model.fileIoComponent.fileIoXmlImpl.FileIO
+import de.htwg.controller.controllerComponent.{Controller, ControllerInterface}
+import de.htwg.model.Stone
+import de.htwg.model.fieldComponent.{Field, FieldInterface}
+import de.htwg.model.fileIoComponent.FileIOInterface
+import de.htwg.model.fileIoComponent.fileIoXmlImpl.FileIO
 
 object Default {
   var field = new Field(8, Stone.Empty)

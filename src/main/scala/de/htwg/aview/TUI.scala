@@ -1,14 +1,11 @@
 package de.htwg
 package aview
 
-import Default.{given}
-import controller.controllerComponent.ControllerInterface
-import model.Move
-import model.Stone
+import de.htwg.controller.controllerComponent.ControllerInterface
+import de.htwg.model.Move
+import de.htwg.util.Event
 
 import scala.io.StdIn.readLine
-import util.Observer
-import util.Event
 
 class TUI(using controller: ControllerInterface) extends UI(controller):
   override def update(e: Event) = e match {
@@ -22,12 +19,13 @@ class TUI(using controller: ControllerInterface) extends UI(controller):
   override def gameloop: Unit =
     val input: String = readLine
     analyseInput(input) match
-      case None       =>
+      case None =>
       case Some(move) => controller.doAndPublish(controller.put, move)
     gameloop
 
   /**
    * analyses the input from teh console and calls the controller
+   *
    * @param input String
    * @return Option (Some(Move) or None)
    */

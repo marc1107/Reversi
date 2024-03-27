@@ -1,13 +1,10 @@
 package de.htwg
 package model.fileIoComponent.fileIoXmlImpl
 
-import com.google.inject.Guice
-import com.google.inject.name.Names
-import model.fieldComponent.FieldInterface
-import model.fieldComponent.Field
-import de.htwg.model.Stone
 import de.htwg.controller.PlayerState
-import model.fileIoComponent.FileIOInterface
+import de.htwg.model.Stone
+import de.htwg.model.fieldComponent.{Field, FieldInterface}
+import de.htwg.model.fileIoComponent.FileIOInterface
 
 import scala.xml.{NodeSeq, PrettyPrinter}
 
@@ -49,27 +46,26 @@ class FileIO extends FileIOInterface {
   }
 
   def saveString(field: FieldInterface, player: PlayerState): Unit = {
-    import java.io._
+    import java.io.*
     val pw = new PrintWriter(new File("field.xml"))
     val prettyPrinter = new PrettyPrinter(120, 4)
     val xml = prettyPrinter.format(fieldToXml(field, player))
     pw.write(xml)
     pw.close
   }
+
   def fieldToXml(field: FieldInterface, player: PlayerState) = {
-    <field size={ field.size.toString } playerState={ player.getStone.toString }>
-      {
-      for {
-        row <- 1 until field.size + 1
-        col <- 1 until field.size + 1
-      } yield cellToXml(field, row, col)
-      }
+    <field size={field.size.toString} playerState={player.getStone.toString}>
+      {for {
+      row <- 1 until field.size + 1
+      col <- 1 until field.size + 1
+    } yield cellToXml(field, row, col)}
     </field>
   }
 
   def cellToXml(field: FieldInterface, row: Int, col: Int) = {
-    <cell row={ row.toString } col={ col.toString }>
-    { field.get(row, col).toString }
+    <cell row={row.toString} col={col.toString}>
+      {field.get(row, col).toString}
     </cell>
   }
 }

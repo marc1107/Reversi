@@ -1,11 +1,10 @@
 package de.htwg.model.fieldComponent
 
+import com.google.inject.Inject
 import de.htwg.model.Stone
 import de.htwg.model.matrixComponent.{Matrix, MatrixInterface}
 
-import com.google.inject.Inject
-
-case class Field @Inject() (matrix: MatrixInterface[Stone]) extends FieldInterface :
+case class Field @Inject()(matrix: MatrixInterface[Stone]) extends FieldInterface:
   def this(size: Int, filling: Stone) = this(new Matrix(size, filling))
 
   def size = matrix.size

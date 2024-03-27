@@ -1,11 +1,10 @@
 package de.htwg
 package model.fileIoComponent.fileIoJsonImpl
 
-import de.htwg.model.Stone
-import model.fieldComponent.{Field, FieldInterface}
-import controller.controllerComponent.Controller
 import de.htwg.controller.PlayerState
-import model.fileIoComponent.FileIOInterface
+import de.htwg.model.Stone
+import de.htwg.model.fieldComponent.{Field, FieldInterface}
+import de.htwg.model.fileIoComponent.FileIOInterface
 import play.api.libs.json.*
 
 import scala.io.Source
@@ -40,7 +39,7 @@ class FileIO extends FileIOInterface {
   }
 
   override def save(field: FieldInterface, player: PlayerState): Unit = {
-    import java.io._
+    import java.io.*
     val pw = new PrintWriter(new File("field.json"))
     pw.write(Json.prettyPrint(fieldToJson(field, player)))
     pw.close
