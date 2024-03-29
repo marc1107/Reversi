@@ -6,13 +6,12 @@ import de.htwg.model.fieldComponent.FieldInterface
 import de.htwg.model.fileIoComponent.FileIOInterface
 import de.htwg.model.{Move, Stone}
 import de.htwg.util.{Event, Observable, UndoManager}
-//import de.htwg.model.fileIoComponent.fileIoXmlImpl.FileIO
 
 import scala.collection.mutable.ListBuffer
 import scala.util.{Failure, Success}
 
 class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) extends ControllerInterface() with Observable:
-  val undoManager = new UndoManager
+  private val undoManager = new UndoManager
   val movePossible: MovePossible = new MovePossible(this)
   val playerState: PlayerState = new PlayerState
 
@@ -28,7 +27,7 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
 
     notifyObservers(Event.Move)
 
-  def doAndPublish(doThis: => FieldInterface) =
+  def doAndPublish(doThis: => FieldInterface): Unit =
     fieldC = doThis
     notifyObservers(Event.Move)
 
