@@ -3,7 +3,7 @@ package de.htwg.controller
 import de.htwg.model.Stone
 
 class PlayerState {
-  var state: Int = player1
+  private var state: Int = player1
 
   def getStone: Stone = {
     state match {
@@ -12,7 +12,7 @@ class PlayerState {
     }
   }
 
-  def changeState = {
+  def changeState: Int = {
     state match {
       case 1 => state = player2
       case 2 => state = player1
@@ -20,7 +20,7 @@ class PlayerState {
     state
   }
 
-  def player1: Int = 1
+  private def player1: Int = 1
 
-  def player2: Int = 2
+  private def player2: Int = 2
 }
