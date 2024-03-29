@@ -8,7 +8,7 @@ import scala.collection.mutable.ListBuffer
 import scala.util.{Failure, Success, Try}
 
 class MovePossible(controller: ControllerInterface) {
-  var strat = 1
+  private val strat = 1
   val strategy: Move => Try[ListBuffer[Move]] =
     if (strat == 0) strategy1 else strategy2
 
@@ -19,7 +19,7 @@ class MovePossible(controller: ControllerInterface) {
     Success(lb)
 
 
-  def strategy2(move: Move): Try[ListBuffer[Move]] =
+  private def strategy2(move: Move): Try[ListBuffer[Move]] =
     def isInsideField(r: Int, c: Int): Boolean = {
       r >= 1 && r <= controller.field.size && c >= 1 && c <= controller.field.size
     }
