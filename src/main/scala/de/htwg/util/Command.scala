@@ -20,21 +20,19 @@ class UndoManager:
   def undoStep(field: FieldInterface): FieldInterface =
     undoStack match {
       case Nil => field
-      case head :: stack => {
+      case head :: stack =>
         val result = head.undoStep(field)
         undoStack = stack
         redoStack = head :: redoStack
         result
-      }
     }
 
   def redoStep(field: FieldInterface): FieldInterface =
     redoStack match {
       case Nil => field
-      case head :: stack => {
+      case head :: stack =>
         val result = head.redoStep(field)
         redoStack = stack
         undoStack = head :: undoStack
         result
-      }
     }

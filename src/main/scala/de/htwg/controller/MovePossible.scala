@@ -4,11 +4,12 @@ package controller
 import de.htwg.controller.controllerComponent.ControllerInterface
 import de.htwg.model.{Move, Stone}
 
+import scala.annotation.tailrec
 import scala.collection.mutable.ListBuffer
 import scala.util.{Failure, Success, Try}
 
 class MovePossible(controller: ControllerInterface) {
-  var strat = 1
+  private val strat = 1
   val strategy: Move => Try[ListBuffer[Move]] =
     if (strat == 0) strategy1 else strategy2
 
@@ -19,26 +20,24 @@ class MovePossible(controller: ControllerInterface) {
     Success(lb)
 
 
-  def strategy2(move: Move): Try[ListBuffer[Move]] =
+  private def strategy2(move: Move): Try[ListBuffer[Move]] =
     def isInsideField(r: Int, c: Int): Boolean = {
       r >= 1 && r <= controller.field.size && c >= 1 && c <= controller.field.size
     }
 
     def outflankedInDir(row: Int, col: Int, cDelta: Int, rDelta: Int): ListBuffer[Move] = {
-      val outflanked = ListBuffer[Move]()
-      var r: Int = row + rDelta
-      var c: Int = col + cDelta
-
-      while (isInsideField(r, c) && controller.field.get(r, c) != Stone.Empty) {
-        // wenn gegnerischer Stein
-        if (controller.field.get(r, c) != controller.playerState.getStone)
-          outflanked += Move(controller.playerState.getStone, r, c)
-          r += rDelta
-          c += cDelta
-        else
-          return outflanked
+      @tailrec
+      def outflankedInDirRec(r: Int, c: Int, outflanked: ListBuffer[Move]): ListBuffer[Move] = {
+        if (!isInsideField(r, c) || controller.field.get(r, c) == Stone.Empty) {
+          ListBuffer.empty[Move]
+        } else if (controller.field.get(r, c) == controller.playerState.getStone) {
+          outflanked
+        } else {
+          outflankedInDirRec(r + rDelta, c + cDelta, outflanked :+ Move(controller.playerState.getStone, r, c))
+        }
       }
-      new ListBuffer[Move]
+    
+      outflankedInDirRec(row + rDelta, col + cDelta, ListBuffer.empty[Move])
     }
 
     def outFlanked(r: Int, c: Int): ListBuffer[Move] = {

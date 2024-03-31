@@ -7,9 +7,9 @@ import de.htwg.model.matrixComponent.{Matrix, MatrixInterface}
 case class Field @Inject()(matrix: MatrixInterface[Stone]) extends FieldInterface:
   def this(size: Int, filling: Stone) = this(new Matrix(size, filling))
 
-  def size = matrix.size
+  def size: Int = matrix.size
 
-  val eol = sys.props("line.separator")
+  val eol: String = sys.props("line.separator")
 
   def bar(cellWidth: Int = 3, cellNum: Int = 3): String = (("+" + "-" * cellWidth) * cellNum) + "+" + eol
 
