@@ -10,7 +10,7 @@ case class Matrix[T] @Inject()(rows: Vector[Vector[T]]) extends MatrixInterface[
 
   def cell(row: Int, col: Int): T = rows(row)(col)
 
-  def row(row: Int) = rows(row)
+  def row(row: Int): Vector[T] = rows(row)
 
   def fill(filling: T): Matrix[T] = copy(Vector.tabulate(size, size) { (row, col) => filling })
 
