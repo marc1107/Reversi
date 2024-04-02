@@ -16,7 +16,6 @@ class FileIO extends FileIOInterface {
     val source: String = Using(Source.fromFile("field.json")) { source =>
       source.getLines.mkString
     }.get
-    // val source: String = Source.fromFile("field.json").getLines.mkString
     val json: JsValue = Json.parse(source)
     val size = (json \ "field" \ "size").get.toString.toInt
     val playerState = (json \ "field" \ "playerState").get.toString
