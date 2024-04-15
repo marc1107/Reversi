@@ -3,6 +3,7 @@ package de.htwg.model
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 
+
 class FieldSpec extends AnyWordSpec {
   "A Reversi Field" when {
     "filled with B" should {
