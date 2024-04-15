@@ -1,4 +1,4 @@
-package de.htwg.model
+package matrixComponent
 
 import matrixComponent.Matrix
 import org.scalatest.matchers.should.Matchers.*

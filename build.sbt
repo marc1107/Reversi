@@ -38,6 +38,7 @@ lazy val tui = project
       commonSettings
   )
   .dependsOn(core, util)
+  .enablePlugins(JacocoPlugin)
 
 lazy val core = project
   .in(file("core"))
@@ -53,6 +54,7 @@ lazy val model = project
       name := "model",
       commonSettings
   )
+  .enablePlugins(JacocoPlugin)
 
 lazy val persistence = project
   .in(file("persistence"))

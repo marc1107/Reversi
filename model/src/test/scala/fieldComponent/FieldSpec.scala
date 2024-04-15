@@ -1,4 +1,4 @@
-package de.htwg.model
+package fieldComponent
 
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
