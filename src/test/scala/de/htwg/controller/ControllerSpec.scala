@@ -2,12 +2,10 @@ package de.htwg
 package controller
 
 import de.htwg.controller.controllerComponent.Controller
-import de.htwg.model.{Move, Stone}
-import de.htwg.model.fieldComponent.Field
-import de.htwg.model.fileIoComponent.fileIoJsonImpl.FileIO
-import de.htwg.util.{Event, Observer}
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
+
+import util.{Event, Observer}
 
 class ControllerSpec extends AnyWordSpec {
   "The Controller" should {

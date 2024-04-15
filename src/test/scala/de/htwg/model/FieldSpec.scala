@@ -1,6 +1,5 @@
 package de.htwg.model
 
-import de.htwg.model.fieldComponent.Field
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 
