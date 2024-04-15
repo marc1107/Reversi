@@ -4,8 +4,6 @@ package aview
 import de.htwg.Default.given
 import de.htwg.controller.controllerComponent
 import de.htwg.controller.controllerComponent.Controller
-import de.htwg.model.{Move, Stone}
-import de.htwg.model.fieldComponent.Field
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 
