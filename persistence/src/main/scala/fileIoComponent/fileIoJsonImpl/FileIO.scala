@@ -47,9 +47,9 @@ class FileIO extends FileIOInterface {
     pw.close()
   }
 
-  private def createEmptyField(size: Int): FieldInterface = new Field(size, Stone.Empty)
+  def createEmptyField(size: Int): FieldInterface = new Field(size, Stone.Empty)
 
-  private def fieldToJson(field: FieldInterface, player: PlayerState) = {
+  def fieldToJson(field: FieldInterface, player: PlayerState): JsObject = {
     Json.obj(
       "field" -> Json.obj(
         "size" -> JsNumber(field.size),

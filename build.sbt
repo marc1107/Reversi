@@ -12,7 +12,8 @@ lazy val commonSettings = Seq(
     jacocoCoverallsServiceName := "github-actions",
     jacocoCoverallsBranch := sys.env.get("CI_BRANCH"),
     jacocoCoverallsPullRequest := sys.env.get("GITHUB_EVENT_NAME"),
-    jacocoCoverallsRepoToken := sys.env.get("COVERALLS_REPO_TOKEN")
+    jacocoCoverallsRepoToken := sys.env.get("COVERALLS_REPO_TOKEN"),
+    Test / classLoaderLayeringStrategy := ClassLoaderLayeringStrategy.ScalaLibrary
 )
 
 lazy val util = project
@@ -27,7 +28,8 @@ lazy val gui = project
   .in(file("gui"))
   .settings(
       name := "gui",
-      commonSettings
+      commonSettings,
+      jacocoExcludes := Seq("*")
   )
   .dependsOn(core, util)
 
