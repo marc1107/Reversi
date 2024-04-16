@@ -1,0 +1,10 @@
+ignore:
+  - "**/gui/*"
+  - "**/tui/*"
+  - "**/core/src/main/scala/CoreModule"´
+
+coverage:
+  status:
+    patch:
+      default:
+        target: 70%
