@@ -1,5 +1,6 @@
 # Reversi
 [![Coverage Status](https://coveralls.io/repos/github/marc1107/Reversi/badge.svg?branch=main&service=github)](https://coveralls.io/github/marc1107/Reversi?branch=main)
+[![codecov](https://codecov.io/gh/marc1107/Reversi/graph/badge.svg?token=ZC922JC7QS)](https://codecov.io/gh/marc1107/Reversi)
 
 ## How to Play
 
