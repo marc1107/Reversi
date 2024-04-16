@@ -71,5 +71,5 @@ lazy val root = project
       name := "Reversi",
       commonSettings
   )
-  .enablePlugins(JacocoCoverallsPlugin)
+  .enablePlugins(JacocoPlugin, JacocoCoverallsPlugin)
   .aggregate(gui, tui, core, util, model, persistence)
