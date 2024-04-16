@@ -29,7 +29,7 @@ jobs:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: |
           export CI_BRANCH="${GITHUB_REF#refs/heads/}"
-          sbt clean jacoco jacocoAggregate jacocoCoveralls
+          sbt clean jacoco jacocoAggregate
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
         with:
