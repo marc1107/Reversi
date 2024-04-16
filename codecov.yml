@@ -1,7 +1,10 @@
 ignore:
-  - "**/gui/*"
-  - "**/tui/*"
-  - "**/core/src/main/scala/CoreModule"´
+  - "**/GUI.scala"
+  - "**/GuiService.scala"
+  - "**/TUI.scala"
+  - "**/TuiService.scala"
+  - "**/CoreModule.scala"
+  - "**/Observer.scala"
 
 coverage:
   status:
