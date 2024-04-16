@@ -3,7 +3,7 @@ package fileIoComponent.fileIoXmlImpl
 import fileIoComponent.{FileIOInterface, PlayerState}
 import fieldComponent.{Field, FieldInterface, Stone}
 
-import scala.xml.{NodeSeq, PrettyPrinter}
+import scala.xml.{Elem, NodeSeq, PrettyPrinter}
 
 class FileIO extends FileIOInterface {
 
@@ -40,7 +40,7 @@ class FileIO extends FileIOInterface {
     scala.xml.XML.save("field.xml", fieldToXml(field, player))
   }
 
-  private def saveString(field: FieldInterface, player: PlayerState): Unit = {
+  def saveString(field: FieldInterface, player: PlayerState): Unit = {
     import java.io._
     val pw = new PrintWriter(new File("field.xml"))
     val prettyPrinter = new scala.xml.PrettyPrinter(120, 4)
@@ -49,9 +49,9 @@ class FileIO extends FileIOInterface {
     pw.close()
   }
 
-  private def createEmptyField(size: Int): FieldInterface = new Field(size, Stone.Empty)
+  def createEmptyField(size: Int): FieldInterface = new Field(size, Stone.Empty)
 
-  private def fieldToXml(field: FieldInterface, player: PlayerState) = {
+  def fieldToXml(field: FieldInterface, player: PlayerState): Elem = {
     <field size={field.size.toString} playerState={player.getStone.toString}>
       {for {
       row <- 1 to field.size

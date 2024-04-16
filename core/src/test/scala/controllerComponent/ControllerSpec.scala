@@ -1,11 +1,10 @@
 package controllerComponent
 
+import fieldComponent.{Field, Move, Stone}
+import fileIoComponent.fileIoJsonImpl.FileIO
+import lib.{Event, Observer}
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
-import scala.util.{Failure, Success}
-import fieldComponent.{FieldInterface, Move, Stone, Field}
-import lib.{Observable, Observer, Event}
-import fileIoComponent.fileIoJsonImpl.FileIO
 
 
 class ControllerSpec extends AnyWordSpec {
