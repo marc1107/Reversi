@@ -24,14 +24,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Build Project and export Coverage
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+      - name: Setup
+        run:
+          sudo -i
+          apt install curl -y
+      - name: Run tests
+        run:
+          sbt clean test jacoco
+      - name: Upload report to Codecov
         run: |
-          export CI_BRANCH="${GITHUB_REF#refs/heads/}"
-          sbt clean jacoco jacocoAggregate
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4.0.1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: marc1107/Reversi
+          curl -s https://codecov.io/bash > .codecov
+          chmod +x .codecov
+          bash .codecov
