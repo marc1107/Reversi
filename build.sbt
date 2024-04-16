@@ -47,7 +47,8 @@ lazy val tui = project
   .in(file("tui"))
   .settings(
       name := "tui",
-      commonSettings
+      commonSettings,
+      jacocoExcludes := Seq("*")
   )
   .dependsOn(core, util)
   .enablePlugins(JacocoPlugin)
