@@ -1,9 +1,9 @@
 package fileIoComponent.fileIoXmlImpl
 
-import fileIoComponent.PlayerState
 import fieldComponent.{Field, FieldInterface, Stone}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+import playerStateComponent.PlayerState
 
 class FileIOSpec extends AnyFlatSpec with Matchers {
   "A FileIO" should "correctly save a game state" in {

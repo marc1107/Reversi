@@ -1,6 +1,7 @@
 package fileIoComponent
 
 import fieldComponent.FieldInterface
+import playerStateComponent.PlayerState
 
 trait FileIOInterface {
 

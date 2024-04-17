@@ -1,8 +1,9 @@
 package controllerComponent
 
 import fieldComponent.{FieldInterface, Move, Stone}
-import fileIoComponent.{FileIOInterface, PlayerState}
+import fileIoComponent.FileIOInterface
 import lib.{Event, MovePossible, Observable, PutCommand, UndoManager}
+import playerStateComponent.PlayerState
 
 import scala.collection.mutable.ListBuffer
 import scala.util.{Failure, Success}

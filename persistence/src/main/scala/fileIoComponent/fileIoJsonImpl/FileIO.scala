@@ -1,8 +1,9 @@
 package fileIoComponent.fileIoJsonImpl
 
-import fileIoComponent.{FileIOInterface, PlayerState}
+import fileIoComponent.FileIOInterface
 import fieldComponent.{Field, FieldInterface, Stone}
 import play.api.libs.json.*
+import playerStateComponent.PlayerState
 
 import scala.util.Using
 import scala.io.Source
