@@ -6,7 +6,7 @@ import fieldComponent.{FieldInterface, Stone}
 import org.slf4j.{Logger, LoggerFactory}
 import play.api.libs.json.{JsValue, Json}
 
-class FieldApi(var field: FieldInterface) {
+class ModuleApi(var field: FieldInterface) {
   val log: Logger = LoggerFactory.getLogger(getClass)
 
   val routes: Route = pathPrefix("field") {
