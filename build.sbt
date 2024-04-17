@@ -9,6 +9,12 @@ lazy val commonSettings = Seq(
     libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "2.1.0",
     libraryDependencies += "com.typesafe.play" %% "play-json" % "2.10.0-RC5",
     libraryDependencies += ("org.scala-lang.modules" %% "scala-swing" % "3.0.0").cross(CrossVersion.for3Use2_13),
+    libraryDependencies ++= Seq(
+      "com.typesafe.akka" %% "akka-http" % "10.5.3",
+      "com.typesafe.akka" %% "akka-http-spray-json" % "10.5.3",
+      "com.typesafe.akka" %% "akka-actor-typed" % "2.8.5",
+      "com.typesafe.akka" %% "akka-stream" % "2.8.5"
+    ),
     jacocoReportSettings := JacocoReportSettings(
       "Jacoco Coverage Report",
       None,

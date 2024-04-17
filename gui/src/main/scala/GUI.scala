@@ -15,7 +15,7 @@ class GUI(using controller: ControllerInterface) extends Frame, Observer {
   def run(): Unit =
     update(Event.Move)
     gameloop
-  
+
   def gameloop: Unit = None
 
   def analyseInput(input: String): Option[Move] = None
