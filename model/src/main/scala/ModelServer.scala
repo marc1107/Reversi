@@ -2,7 +2,7 @@ import CoreModule.field
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
-import api.ModuleApi
+import api.ModelApi
 import fieldComponent.FieldInterface
 
 import scala.concurrent.ExecutionContext
@@ -16,7 +16,7 @@ object ModelServer {
 
     val gameField: FieldInterface = field
 
-    val fieldApi = new ModuleApi(gameField)
+    val fieldApi = new ModelApi(gameField)
     val routes: Route = fieldApi.routes
 
     // Start the server
