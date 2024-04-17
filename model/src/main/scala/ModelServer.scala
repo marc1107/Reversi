@@ -8,7 +8,7 @@ import fieldComponent.FieldInterface
 import scala.concurrent.ExecutionContext
 import scala.io.StdIn
 
-object ModuleServer {
+object ModelServer {
   def main(args: Array[String]): Unit = {
     implicit val system: ActorSystem = ActorSystem("mySystem")
     implicit val executionContext: ExecutionContext = system.dispatcher
