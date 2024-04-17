@@ -1,7 +1,8 @@
 package fileIoComponent.fileIoXmlImpl
 
-import fileIoComponent.{FileIOInterface, PlayerState}
+import fileIoComponent.FileIOInterface
 import fieldComponent.{Field, FieldInterface, Stone}
+import playerStateComponent.PlayerState
 
 import scala.xml.{Elem, NodeSeq, PrettyPrinter}
 

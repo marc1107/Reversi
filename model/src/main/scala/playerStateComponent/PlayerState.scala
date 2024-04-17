@@ -1,4 +1,4 @@
-package fileIoComponent
+package playerStateComponent
 
 import fieldComponent.Stone
 
