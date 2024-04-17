@@ -1,9 +1,9 @@
-import fieldComponent.{Field, FieldInterface}
+import CoreModule.field
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
 import api.FieldApi
-import CoreModule.field
+import fieldComponent.FieldInterface
 
 import scala.concurrent.ExecutionContext
 import scala.io.StdIn
