@@ -88,9 +88,9 @@ class GUI(using controller: ControllerInterface) extends Frame, Observer {
     preferredSize = dim
 
     stone match {
-      case Stone.W => icon = new ImageIcon(ImageIO.read(new File("src/main/resources/White.png")))
-      case Stone.B => icon = new ImageIcon(ImageIO.read(new File("src/main/resources/Black.png")))
-      case _ => icon = new ImageIcon(ImageIO.read(new File("src/main/resources/Empty.png")))
+      case Stone.W => icon = new ImageIcon(ImageIO.read(new File("gui/src/main/resources/White.png")))
+      case Stone.B => icon = new ImageIcon(ImageIO.read(new File("gui/src/main/resources/Black.png")))
+      case _ => icon = new ImageIcon(ImageIO.read(new File("gui/src/main/resources/Empty.png")))
     }
 
     font = new Font("Arial", 0, 30)
