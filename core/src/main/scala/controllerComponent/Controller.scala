@@ -9,18 +9,18 @@ import playerStateComponent.PlayerState
 import java.io.{BufferedReader, InputStreamReader, OutputStreamWriter}
 import java.net.{HttpURLConnection, URL}
 import scala.collection.mutable.ListBuffer
+import scala.io.Source
 import scala.util.{Failure, Success}
 
 class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) extends ControllerInterface() with Observable:
   private val undoManager = new UndoManager
   val movePossible: MovePossible = new MovePossible(this)
-  val playerState: PlayerState = new PlayerState
 
   def doAndPublish(doThis: Move => FieldInterface, move: Move): Unit =
     val t = movePossible.strategy(move) // returns a Try
     t match
       case Success(list) =>
-        playerState.changeState
+        changePlayerStateWithApi
         fieldC = doThis(move)
         fieldC = putStoneAndGetFieldFromApi(fieldC, move.stone, move.r, move.c)
         //fieldC = fieldC.put(move.stone, move.r, move.c)
@@ -37,22 +37,22 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
     undoManager.doStep(fieldC, PutCommand(move, fieldC))
 
   def undo: FieldInterface =
-    playerState.changeState
+    changePlayerStateWithApi
     undoManager.undoStep(fieldC)
 
   def redo: FieldInterface =
-    playerState.changeState
+    changePlayerStateWithApi
     undoManager.redoStep(fieldC)
 
   def save: FieldInterface =
-    fileIo.save(fieldC, this.playerState)
+    fileIo.save(fieldC)
     fieldC
 
   def load: FieldInterface =
     val tupel = fileIo.load
     fieldC = tupel(0)
-    if (this.playerState.getStone.toString != tupel(1).getStone.toString) {
-      this.playerState.changeState
+    if (getPlayerStateFromApi.toString != tupel(1).getStone.toString) {
+      changePlayerStateWithApi
     }
     fieldC
 
@@ -93,3 +93,25 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
       throw new RuntimeException("Failed : HTTP error code : " + connection.getResponseCode)
     }
   }
+
+  def getPlayerStateFromApi: Stone = {
+    val url = "http://localhost:8080/field/playerState" // replace with your API URL
+    val result = Source.fromURL(url).mkString
+    val json: JsValue = Json.parse(result)
+    val playerStone: String = (json \ "playerStone").as[String]
+
+    playerStone match {
+      case "□" => Stone.W
+      case "■" => Stone.B
+      case _ => Stone.Empty
+    }
+  }
+  
+  def changePlayerStateWithApi: Int = {
+  val url = "http://localhost:8080/field/changePlayerState" // replace with your API URL
+  val result = Source.fromURL(url).mkString
+  val json: JsValue = Json.parse(result)
+  val playerTurn: Int = (json \ "playersTurn").as[Int]
+
+  playerTurn
+}

@@ -1,6 +1,7 @@
 package fieldComponent
 
 import play.api.libs.json.JsObject
+import playerStateComponent.PlayerState
 
 trait FieldInterface {
   def size: Int
@@ -20,4 +21,8 @@ trait FieldInterface {
   def toJsObject: JsObject
   
   def jsonToField(json: String): FieldInterface
+  
+  def getPlayerStone: Stone
+  
+  def changePlayerState: Int
 }

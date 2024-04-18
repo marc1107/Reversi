@@ -7,6 +7,6 @@ trait FileIOInterface {
 
   def load: (FieldInterface, PlayerState)
 
-  def save(field: FieldInterface, player: PlayerState): Unit
+  def save(field: FieldInterface): Unit
 
 }

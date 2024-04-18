@@ -47,10 +47,23 @@ class ModelApi(var field: FieldInterface) {
     path("getStone") {
       get {
         parameters("row".as[Int], "col".as[Int]) { (row, col) =>
-          log.info(s"Received GET request for stone at row $row and column $col")
           val stone: Stone = field.get(row, col)
           complete(Json.obj("stone" -> stone.toString).toString())
         }
+      }
+    } ~
+    path("playerState") {
+      get {
+        log.info("Received GET request stone of playerState")
+        complete(Json.obj("playerStone" -> field.getPlayerStone.toString).toString())
+      }
+    } ~
+    path("changePlayerState") {
+      get {
+        log.info("Received POST request for change player state")
+        val state: Int = field.changePlayerState
+        log.info(s"Changed player state to $state")
+        complete(Json.obj("playersTurn" -> state).toString())
       }
     }
   }
