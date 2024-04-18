@@ -59,7 +59,6 @@ class ControllerSpec extends AnyWordSpec {
       field = controller.redo
       //field.get(1, 2) should be(Stone.B)
       controller.doAndPublish(controller.undo)
-      controller.movePossible.strategy1(Move(Stone.B, 1, 1))
     }
     "have failures" in {
       val stone_test_a = controller.playerState.getStone

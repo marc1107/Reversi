@@ -32,7 +32,7 @@ class ModelApi(var field: FieldInterface) {
             case _ => Stone.Empty
           }
 
-          field.put(stone, row, col)
+          field = field.put(stone, row, col)
 
           complete(field.toJsObject.toString())
         }
