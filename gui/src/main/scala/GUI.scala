@@ -45,7 +45,7 @@ class GUI(using controller: ControllerInterface) extends Frame, Observer {
     }
   }
   contents = new BorderPanel {
-    val lbl: Label = new Label(controller.playerState.getStone.toString + " ist an der Reihe")
+    val lbl: Label = new Label(getPlayerStateFromApi.toString + " ist an der Reihe")
     lbl.font = lblFont
     add(lbl, BorderPanel.Position.North)
     add(new CellPanel(getFieldSizeFromApi, getFieldSizeFromApi), BorderPanel.Position.Center)
@@ -57,7 +57,7 @@ class GUI(using controller: ControllerInterface) extends Frame, Observer {
   override def update(e: Event): Unit = e match {
     case Event.Quit => this.dispose
     case Event.Move => contents = new BorderPanel {
-      val lbl: Label = new Label(controller.playerState.getStone.toString + " ist an der Reihe")
+      val lbl: Label = new Label(getPlayerStateFromApi.toString + " ist an der Reihe")
       lbl.font = lblFont
       add(lbl, BorderPanel.Position.North)
       add(new CellPanel(getFieldSizeFromApi, getFieldSizeFromApi), BorderPanel.Position.Center)
@@ -94,6 +94,19 @@ class GUI(using controller: ControllerInterface) extends Frame, Observer {
     stone
   }
 
+  def getPlayerStateFromApi: Stone = {
+    val url = "http://localhost:8080/field/playerState" // replace with your API URL
+    val result = Source.fromURL(url).mkString
+    val json: JsValue = Json.parse(result)
+    val playerStone: String = (json \ "playerStone").as[String]
+
+    playerStone match {
+      case "□" => Stone.W
+      case "■" => Stone.B
+      case _ => Stone.Empty
+    }
+  }
+
   private class CellPanel(r: Int, c: Int) extends GridPanel(r, c):
     private val list: List[CellButton] =
       for {
@@ -120,7 +133,7 @@ class GUI(using controller: ControllerInterface) extends Frame, Observer {
     listenTo(mouse.clicks)
     reactions += {
       case MouseClicked(src, pt, mod, clicks, props) =>
-        val stone = controller.playerState.getStone
+        val stone = getPlayerStateFromApi
         controller.doAndPublish(controller.put, Move(stone, r, c))
     }
 }

@@ -25,10 +25,10 @@ class MovePossible(controller: ControllerInterface) {
       def outflankedInDirRec(r: Int, c: Int, outflanked: ListBuffer[Move]): ListBuffer[Move] = {
         if (!isInsideField(r, c) || getStoneFromApi(r, c) == Stone.Empty) {
           ListBuffer.empty[Move]
-        } else if (getStoneFromApi(r, c) == controller.playerState.getStone) {
+        } else if (getStoneFromApi(r, c) == getPlayerStateFromApi) {
           outflanked
         } else {
-          outflankedInDirRec(r + rDelta, c + cDelta, outflanked :+ Move(controller.playerState.getStone, r, c))
+          outflankedInDirRec(r + rDelta, c + cDelta, outflanked :+ Move(getPlayerStateFromApi, r, c))
         }
       }
     
@@ -65,6 +65,19 @@ class MovePossible(controller: ControllerInterface) {
         case _ => Stone.Empty
       }
       stone
+    }
+
+    def getPlayerStateFromApi: Stone = {
+      val url = "http://localhost:8080/field/playerState" // replace with your API URL
+      val result = Source.fromURL(url).mkString
+      val json: JsValue = Json.parse(result)
+      val playerStone: String = (json \ "playerStone").as[String]
+
+      playerStone match {
+        case "□" => Stone.W
+        case "■" => Stone.B
+        case _ => Stone.Empty
+      }
     }
 
     getStoneFromApi(move.r, move.c) match {

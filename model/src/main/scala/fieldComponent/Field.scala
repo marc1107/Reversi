@@ -3,8 +3,11 @@ package fieldComponent
 import com.google.inject.Inject
 import matrixComponent.{Matrix, MatrixInterface}
 import play.api.libs.json.{JsNumber, JsObject, JsValue, Json}
+import playerStateComponent.PlayerState
 
 case class Field @Inject()(matrix: MatrixInterface[Stone]) extends FieldInterface:
+  val playerState: PlayerState = PlayerState()
+  
   def this(size: Int, filling: Stone) = this(new Matrix(size, filling))
 
   def size: Int = matrix.size
@@ -64,3 +67,7 @@ case class Field @Inject()(matrix: MatrixInterface[Stone]) extends FieldInterfac
     })
     field
   }
+
+  override def getPlayerStone: Stone = playerState.getStone
+
+  override def changePlayerState: Int = playerState.changeState
