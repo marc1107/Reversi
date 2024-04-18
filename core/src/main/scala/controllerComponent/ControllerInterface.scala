@@ -2,7 +2,6 @@ package controllerComponent
 
 import fieldComponent.{FieldInterface, Move}
 import lib.{MovePossible, Observable}
-import playerStateComponent.PlayerState
 
 trait ControllerInterface extends Observable {
 val movePossible: MovePossible

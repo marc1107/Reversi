@@ -4,7 +4,6 @@ import fieldComponent.{FieldInterface, Move, Stone}
 import fileIoComponent.FileIOInterface
 import lib.{Event, MovePossible, Observable, PutCommand, UndoManager}
 import play.api.libs.json.{JsValue, Json}
-import playerStateComponent.PlayerState
 
 import java.io.{BufferedReader, InputStreamReader, OutputStreamWriter}
 import java.net.{HttpURLConnection, URL}
@@ -108,10 +107,10 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
   }
   
   def changePlayerStateWithApi: Int = {
-  val url = "http://localhost:8080/field/changePlayerState" // replace with your API URL
-  val result = Source.fromURL(url).mkString
-  val json: JsValue = Json.parse(result)
-  val playerTurn: Int = (json \ "playersTurn").as[Int]
-
-  playerTurn
-}
+    val url = "http://localhost:8080/field/changePlayerState" // replace with your API URL
+    val result = Source.fromURL(url).mkString
+    val json: JsValue = Json.parse(result)
+    val playerTurn: Int = (json \ "playersTurn").as[Int]
+  
+    playerTurn
+  }
