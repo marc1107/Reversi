@@ -49,7 +49,7 @@ case class Field @Inject()(matrix: MatrixInterface[Stone]) extends FieldInterfac
     val json: JsValue = Json.parse(jsonString)
     val size: Int = (json \ "size").as[Int]
     val cells: Seq[JsValue] = (json \ "cells").as[Seq[JsValue]]
-    var field: Field = new Field(size, Stone.Empty)
+    val field: Field = new Field(size, Stone.Empty)
     cells.foreach(cell => {
       val row: Int = (cell \ "row").as[Int]
       val col: Int = (cell \ "col").as[Int]
@@ -59,8 +59,8 @@ case class Field @Inject()(matrix: MatrixInterface[Stone]) extends FieldInterfac
         case "■" => Stone.B
         case _ => Stone.Empty
       }
-
-      field = field.put(stone, row, col)
+      
+      field.put(stone, row, col)
     })
     field
   }
