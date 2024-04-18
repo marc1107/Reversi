@@ -1,6 +1,4 @@
-import com.google.inject.AbstractModule
-import controllerComponent.Controller
-import controllerComponent.ControllerInterface
+import controllerComponent.{Controller, ControllerInterface}
 import fieldComponent.{Field, FieldInterface, Stone}
 import fileIoComponent.FileIOInterface
 import fileIoComponent.fileIoXmlImpl.FileIO

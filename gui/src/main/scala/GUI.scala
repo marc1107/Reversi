@@ -1,10 +1,12 @@
 import controllerComponent.ControllerInterface
 import fieldComponent.{Move, Stone}
 import lib.{Event, Observer}
+import play.api.libs.json.{JsValue, Json}
 
 import java.io.File
 import javax.imageio.ImageIO
 import javax.swing.ImageIcon
+import scala.io.Source
 import scala.language.postfixOps
 import scala.swing.*
 import scala.swing.event.*
@@ -15,7 +17,7 @@ class GUI(using controller: ControllerInterface) extends Frame, Observer {
   def run(): Unit =
     update(Event.Move)
     gameloop
-  
+
   def gameloop: Unit = None
 
   def analyseInput(input: String): Option[Move] = None
@@ -46,7 +48,7 @@ class GUI(using controller: ControllerInterface) extends Frame, Observer {
     val lbl: Label = new Label(controller.playerState.getStone.toString + " ist an der Reihe")
     lbl.font = lblFont
     add(lbl, BorderPanel.Position.North)
-    add(new CellPanel(controller.field.size, controller.field.size), BorderPanel.Position.Center)
+    add(new CellPanel(getFieldSizeFromApi, getFieldSizeFromApi), BorderPanel.Position.Center)
   }
   pack()
   centerOnScreen()
@@ -58,7 +60,7 @@ class GUI(using controller: ControllerInterface) extends Frame, Observer {
       val lbl: Label = new Label(controller.playerState.getStone.toString + " ist an der Reihe")
       lbl.font = lblFont
       add(lbl, BorderPanel.Position.North)
-      add(new CellPanel(controller.field.size, controller.field.size), BorderPanel.Position.Center)
+      add(new CellPanel(getFieldSizeFromApi, getFieldSizeFromApi), BorderPanel.Position.Center)
     }
       controller.winner(controller.field)
       repaint
@@ -66,9 +68,30 @@ class GUI(using controller: ControllerInterface) extends Frame, Observer {
       val lbl: Label = new Label(controller.winner(controller.field) + " hat gewonnen")
       lbl.font = lblFont
       add(lbl, BorderPanel.Position.North)
-      add(new CellPanel(controller.field.size, controller.field.size), BorderPanel.Position.Center)
+      add(new CellPanel(getFieldSizeFromApi, getFieldSizeFromApi), BorderPanel.Position.Center)
     }
       repaint
+  }
+
+  def getFieldSizeFromApi: Int = {
+    val url = "http://localhost:8080/field/size" // replace with your API URL
+    val result = Source.fromURL(url).mkString
+    val json: JsValue = Json.parse(result)
+    val size: Int = (json \ "size").as[Int]
+    size
+  }
+
+  def getStoneFromApi(row: Int, col: Int): Stone = {
+    val url = s"http://localhost:8080/field/getStone?row=$row&col=$col" // replace with your API URL
+    val result = Source.fromURL(url).mkString
+    val json: JsValue = Json.parse(result)
+    val stoneValue: String = (json \ "stone").as[String]
+    val stone: Stone = stoneValue match {
+      case "□" => Stone.W
+      case "■" => Stone.B
+      case _ => Stone.Empty
+    }
+    stone
   }
 
   private class CellPanel(r: Int, c: Int) extends GridPanel(r, c):
@@ -76,7 +99,7 @@ class GUI(using controller: ControllerInterface) extends Frame, Observer {
       for {
         i <- (1 to r).toList
         j <- 1 to c
-        cb = CellButton(i, j, controller.field.get(i, j))
+        cb = CellButton(i, j, getStoneFromApi(i, j))
       } yield cb
 
     list.foreach(t => contents += t)
