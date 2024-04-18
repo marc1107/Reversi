@@ -24,7 +24,7 @@ class ModelApi(var field: FieldInterface) {
           val row: Int = (jsonValue \ "row").as[Int]
           val col: Int = (jsonValue \ "col").as[Int]
 
-          field = field.jsonToField(fieldValue) // TODO: fix problem here
+          field = field.jsonToField(fieldValue)
 
           val stone: Stone = stoneValue match {
             case "□" => Stone.W
