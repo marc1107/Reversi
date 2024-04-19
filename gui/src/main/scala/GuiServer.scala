@@ -8,7 +8,7 @@ import play.api.libs.json.Json
 import java.io.OutputStreamWriter
 import java.net.{HttpURLConnection, URL}
 import scala.concurrent.ExecutionContext
-import scala.io.{Source, StdIn}
+import scala.io.StdIn
 
 object GuiServer {
   def main(args: Array[String]): Unit = {
