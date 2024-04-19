@@ -3,7 +3,8 @@ import fieldComponent.{Move, Stone}
 import lib.{Event, Observer}
 import play.api.libs.json.{JsValue, Json}
 
-import java.io.File
+import java.io.{File, OutputStreamWriter}
+import java.net.{HttpURLConnection, URL}
 import javax.imageio.ImageIO
 import javax.swing.ImageIcon
 import scala.io.Source
@@ -31,16 +32,20 @@ class GUI(using controller: ControllerInterface) extends Frame, Observer {
         sys.exit(0)
       })
       contents += new MenuItem(Action("Save") {
-        controller.doAndPublish(controller.save)
+        saveWithApi()
+        // controller.doAndPublish(controller.save)
       })
       contents += new MenuItem(Action("Load") {
-        controller.doAndPublish(controller.load)
+        loadWithApi()
+        // controller.doAndPublish(controller.load)
       })
       contents += new MenuItem(Action("Undo") {
-        controller.doAndPublish(controller.undo)
+        undoWithApi()
+        // controller.doAndPublish(controller.undo)
       })
       contents += new MenuItem(Action("Redo") {
-        controller.doAndPublish(controller.redo)
+        redoWithApi()
+        // controller.doAndPublish(controller.redo)
       })
     }
   }
@@ -62,10 +67,10 @@ class GUI(using controller: ControllerInterface) extends Frame, Observer {
       add(lbl, BorderPanel.Position.North)
       add(new CellPanel(getFieldSizeFromApi, getFieldSizeFromApi), BorderPanel.Position.Center)
     }
-      controller.winner(controller.field)
+      //controller.winner(controller.field)
       repaint
     case Event.End => contents = new BorderPanel {
-      val lbl: Label = new Label(controller.winner(controller.field) + " hat gewonnen")
+      val lbl: Label = new Label("Spieler X" + " hat gewonnen")
       lbl.font = lblFont
       add(lbl, BorderPanel.Position.North)
       add(new CellPanel(getFieldSizeFromApi, getFieldSizeFromApi), BorderPanel.Position.Center)
@@ -73,7 +78,7 @@ class GUI(using controller: ControllerInterface) extends Frame, Observer {
       repaint
   }
 
-  def getFieldSizeFromApi: Int = {
+  private def getFieldSizeFromApi: Int = {
     val url = "http://localhost:8080/field/size" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val json: JsValue = Json.parse(result)
@@ -81,7 +86,7 @@ class GUI(using controller: ControllerInterface) extends Frame, Observer {
     size
   }
 
-  def getStoneFromApi(row: Int, col: Int): Stone = {
+  private def getStoneFromApi(row: Int, col: Int): Stone = {
     val url = s"http://localhost:8080/field/getStone?row=$row&col=$col" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val json: JsValue = Json.parse(result)
@@ -94,7 +99,7 @@ class GUI(using controller: ControllerInterface) extends Frame, Observer {
     stone
   }
 
-  def getPlayerStateFromApi: Stone = {
+  private def getPlayerStateFromApi: Stone = {
     val url = "http://localhost:8080/field/playerState" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val json: JsValue = Json.parse(result)
@@ -104,6 +109,62 @@ class GUI(using controller: ControllerInterface) extends Frame, Observer {
       case "□" => Stone.W
       case "■" => Stone.B
       case _ => Stone.Empty
+    }
+  }
+  
+  def putMoveWithApi(move: Move): Unit = {
+    val json = Json.obj(
+      "method" -> "put",
+      "stone" -> move.stone.toString,
+      "row" -> move.r,
+      "col" -> move.c
+    )
+    executePostToCore(json.toString())
+  }
+  
+  def undoWithApi(): Unit = {
+    val json = Json.obj(
+      "method" -> "undo"
+    )
+    executePostToCore(json.toString())
+  }
+  
+  def redoWithApi(): Unit = {
+    val json = Json.obj(
+      "method" -> "redo"
+    )
+    executePostToCore(json.toString())
+  }
+  
+  def saveWithApi(): Unit = {
+    val json = Json.obj(
+      "method" -> "save"
+    )
+    executePostToCore(json.toString())
+  }
+  
+  def loadWithApi(): Unit = {
+    val json = Json.obj(
+      "method" -> "load"
+    )
+    executePostToCore(json.toString())
+  }
+  
+  private def executePostToCore(json: String): Boolean = {
+    val url = new URL("http://localhost:8082/core/doAndPublish") // replace with your API URL
+    val connection = url.openConnection().asInstanceOf[HttpURLConnection]
+    connection.setRequestMethod("POST")
+    connection.setDoOutput(true)
+    connection.setRequestProperty("Content-Type", "application/json")
+
+    val outputStreamWriter = new OutputStreamWriter(connection.getOutputStream, "UTF-8")
+    outputStreamWriter.write(json)
+    outputStreamWriter.close()
+
+    if (connection.getResponseCode == HttpURLConnection.HTTP_OK) {
+      true
+    } else {
+      throw new RuntimeException("Failed : HTTP error code : " + connection.getResponseCode)
     }
   }
 
@@ -134,6 +195,7 @@ class GUI(using controller: ControllerInterface) extends Frame, Observer {
     reactions += {
       case MouseClicked(src, pt, mod, clicks, props) =>
         val stone = getPlayerStateFromApi
-        controller.doAndPublish(controller.put, Move(stone, r, c))
+        putMoveWithApi(Move(stone, r, c))
+        //controller.doAndPublish(controller.put, Move(stone, r, c))
     }
 }

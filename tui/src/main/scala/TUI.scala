@@ -3,6 +3,8 @@ import fieldComponent.{Move, Stone}
 import lib.{Event, Observer}
 import play.api.libs.json.{JsValue, Json}
 
+import java.io.OutputStreamWriter
+import java.net.{HttpURLConnection, URL}
 import scala.io.Source
 import scala.io.StdIn.readLine
 import scala.util.{Failure, Success, Try}
@@ -19,14 +21,14 @@ class TUI(using controller: ControllerInterface) extends Observer:
     case Event.Move =>
       println(getPlayerStateFromApi.toString + " ist an der Reihe")
       println(controller.toString)
-    case Event.End => println(controller.winner(controller.field) + " hat gewonnen")
+    case Event.End => println("Spieler X" + " hat gewonnen")
   }
 
   def gameloop: Unit =
     val input: String = readLine
     analyseInput(input) match
       case None =>
-      case Some(move) => controller.doAndPublish(controller.put, move)
+      case Some(move) => putMoveWithApi(move)
     gameloop
 
   /**
@@ -41,10 +43,10 @@ class TUI(using controller: ControllerInterface) extends Observer:
       case Success(value) =>
         value match
           case "q" => sys.exit()
-          case "u" => controller.doAndPublish(controller.undo); None
-          case "r" => controller.doAndPublish(controller.redo); None
-          case "s" => controller.doAndPublish(controller.save); None
-          case "l" => controller.doAndPublish(controller.load); None
+          case "u" => undoWithApi(); None
+          case "r" => redoWithApi(); None
+          case "s" => saveWithApi(); None
+          case "l" => loadWithApi(); None
           case _ =>
             val chars = value.toCharArray
             val stone = getPlayerStateFromApi
@@ -59,7 +61,7 @@ class TUI(using controller: ControllerInterface) extends Observer:
       case pattern(_*) => Success(input)
       case _ => Failure(IllegalArgumentException("Invalid input"))
 
-  def getPlayerStateFromApi: Stone = {
+  private def getPlayerStateFromApi: Stone = {
     val url = "http://localhost:8080/field/playerState" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val json: JsValue = Json.parse(result)
@@ -69,5 +71,61 @@ class TUI(using controller: ControllerInterface) extends Observer:
       case "□" => Stone.W
       case "■" => Stone.B
       case _ => Stone.Empty
+    }
+  }
+
+  def putMoveWithApi(move: Move): Unit = {
+    val json = Json.obj(
+      "method" -> "put",
+      "stone" -> move.stone.toString,
+      "row" -> move.r,
+      "col" -> move.c
+    )
+    executePostToCore(json.toString())
+  }
+
+  def undoWithApi(): Unit = {
+    val json = Json.obj(
+      "method" -> "undo"
+    )
+    executePostToCore(json.toString())
+  }
+
+  def redoWithApi(): Unit = {
+    val json = Json.obj(
+      "method" -> "redo"
+    )
+    executePostToCore(json.toString())
+  }
+
+  def saveWithApi(): Unit = {
+    val json = Json.obj(
+      "method" -> "save"
+    )
+    executePostToCore(json.toString())
+  }
+
+  def loadWithApi(): Unit = {
+    val json = Json.obj(
+      "method" -> "load"
+    )
+    executePostToCore(json.toString())
+  }
+
+  private def executePostToCore(json: String): Boolean = {
+    val url = new URL("http://localhost:8082/core/doAndPublish") // replace with your API URL
+    val connection = url.openConnection().asInstanceOf[HttpURLConnection]
+    connection.setRequestMethod("POST")
+    connection.setDoOutput(true)
+    connection.setRequestProperty("Content-Type", "application/json")
+
+    val outputStreamWriter = new OutputStreamWriter(connection.getOutputStream, "UTF-8")
+    outputStreamWriter.write(json)
+    outputStreamWriter.close()
+
+    if (connection.getResponseCode == HttpURLConnection.HTTP_OK) {
+      true
+    } else {
+      throw new RuntimeException("Failed : HTTP error code : " + connection.getResponseCode)
     }
   }
