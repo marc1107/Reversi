@@ -1,4 +1,5 @@
-import controllerComponent.ControllerInterface
+package GuiComponent
+
 import fieldComponent.{Move, Stone}
 import lib.{Event, Observer}
 import play.api.libs.json.{JsValue, Json}
@@ -12,8 +13,7 @@ import scala.language.postfixOps
 import scala.swing.*
 import scala.swing.event.*
 
-class GUI(using controller: ControllerInterface) extends Frame, Observer {
-  controller.add(this)
+class GUI extends Frame {
 
   def run(): Unit =
     update(Event.Move)
@@ -59,7 +59,7 @@ class GUI(using controller: ControllerInterface) extends Frame, Observer {
   centerOnScreen()
   open()
 
-  override def update(e: Event): Unit = e match {
+  def update(e: Event): Unit = e match {
     case Event.Quit => this.dispose
     case Event.Move => contents = new BorderPanel {
       val lbl: Label = new Label(getPlayerStateFromApi.toString + " ist an der Reihe")

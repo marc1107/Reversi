@@ -5,6 +5,7 @@ import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
 import controllerComponent.ControllerInterface
 import fieldComponent.{Move, Stone}
+import lib.UpdateObserver
 import org.slf4j.{Logger, LoggerFactory}
 import play.api.libs.json.{JsValue, Json}
 
@@ -59,6 +60,18 @@ class CoreApi(var controller: ControllerInterface) {
               log.error("Invalid method")
               complete(StatusCodes.BadRequest, "Invalid method")
           }
+        }
+      }
+    } ~
+    path("addObserver") {
+      post {
+        log.info("Received POST request for addObserver")
+        entity(as[String]) { json =>
+          val jsonValue: JsValue = Json.parse(json)
+          val url: String = (jsonValue \ "url").as[String]
+          controller.add(new UpdateObserver(url))
+
+          complete(StatusCodes.OK)
         }
       }
     }
