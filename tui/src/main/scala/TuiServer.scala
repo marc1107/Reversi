@@ -1,31 +1,32 @@
-import GuiComponent.GUI
+import tuiComponent.TUI
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
-import api.GuiApi
+import api.TuiApi
 import play.api.libs.json.Json
 
 import java.io.OutputStreamWriter
 import java.net.{HttpURLConnection, URL}
 import scala.concurrent.ExecutionContext
-import scala.io.{Source, StdIn}
+import scala.io.StdIn
 
-object GuiServer {
+object TuiServer {
   def main(args: Array[String]): Unit = {
     implicit val system: ActorSystem = ActorSystem("mySystem")
     implicit val executionContext: ExecutionContext = system.dispatcher
-    val port = 8083
+    val port = 8084
 
-    val gui = new GUI
-    gui.run()
+    val tui = new TUI
 
-    val guiApi = new GuiApi(gui)
-    val routes: Route = guiApi.routes
+    val tuiApi = new TuiApi(tui)
+    val routes: Route = tuiApi.routes
 
-    addAsObserver(s"http://localhost:$port/gui/update")
+    addAsObserver(s"http://localhost:$port/tui/update")
 
     // Start the server
     val bindingFuture = Http().newServerAt("localhost", port).bind(routes)
+
+    tui.run()
 
     println(s"Server online at http://localhost:$port/\nPress RETURN to stop...")
     StdIn.readLine()

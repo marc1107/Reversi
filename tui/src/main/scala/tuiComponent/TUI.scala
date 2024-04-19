@@ -1,6 +1,9 @@
+package tuiComponent
+
 import controllerComponent.ControllerInterface
-import fieldComponent.{Move, Stone}
-import lib.{Event, Observer}
+import fieldComponent.Stone.Empty
+import fieldComponent.{Field, FieldInterface, Move, Stone}
+import lib.Event
 import play.api.libs.json.{JsValue, Json}
 
 import java.io.OutputStreamWriter
@@ -9,18 +12,17 @@ import scala.io.Source
 import scala.io.StdIn.readLine
 import scala.util.{Failure, Success, Try}
 
-class TUI(using controller: ControllerInterface) extends Observer:
-  controller.add(this)
+class TUI:
 
   def run(): Unit =
     update(Event.Move)
     gameloop
     
-  override def update(e: Event): Unit = e match {
+  def update(e: Event): Unit = e match {
     case Event.Quit => sys.exit()
     case Event.Move =>
       println(getPlayerStateFromApi.toString + " ist an der Reihe")
-      println(controller.toString)
+      println(getFieldFromApi.toString)
     case Event.End => println("Spieler X" + " hat gewonnen")
   }
 
@@ -128,4 +130,29 @@ class TUI(using controller: ControllerInterface) extends Observer:
     } else {
       throw new RuntimeException("Failed : HTTP error code : " + connection.getResponseCode)
     }
+  }
+  
+  private def getFieldFromApi: FieldInterface = {
+    val url = "http://localhost:8080/field" // replace with your API URL
+    val result = Source.fromURL(url).mkString
+    val json: JsValue = Json.parse(result)
+    val fieldJson: JsValue = (json \ "field").get
+    val size: Int = (fieldJson \ "size").as[Int]
+    val cellsJson: Seq[JsValue] = (fieldJson \ "cells").as[Seq[JsValue]]
+  
+    var field: Field = new Field(size, Stone.Empty)
+  
+    for (cellJson <- cellsJson) {
+      val row: Int = (cellJson \ "row").as[Int]
+      val col: Int = (cellJson \ "col").as[Int]
+      val cellValue: String = (cellJson \ "cell").as[String]
+      val stone: Stone = cellValue match {
+        case "□" => Stone.W
+        case "■" => Stone.B
+        case _ => Stone.Empty
+      }
+      field = field.put(stone, row, col)
+    }
+  
+    field
   }
