@@ -1,0 +1,180 @@
+openapi: 3.0.0
+info:
+  title: Reversi API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8083
+    description: GUI API
+  - url: http://localhost:8084
+    description: TUI API
+  - url: http://localhost:8082
+    description: Core API
+  - url: http://localhost:8080
+    description: Model API
+tags:
+  - name: Model
+    description: Model API
+  - name: Core
+    description: Core API
+  - name: GUI
+    description: GUI API
+  - name: TUI
+    description: TUI API
+paths:
+  /gui/update:
+    servers:
+      - url: http://localhost:8083
+    get:
+      tags:
+        - GUI
+      parameters:
+        - name: event
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [quit, move, end]
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid event
+  /tui/update:
+    servers:
+      - url: http://localhost:8084
+    get:
+      tags:
+        - TUI
+      parameters:
+        - name: event
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [quit, move, end]
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid event
+  /core/doAndPublish:
+    servers:
+      - url: http://localhost:8082
+    post:
+      tags:
+        - Core
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                method:
+                  type: string
+                stone:
+                  type: string
+                row:
+                  type: integer
+                col:
+                  type: integer
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid method
+  /core/addObserver:
+    servers:
+      - url: http://localhost:8082
+    post:
+      tags:
+        - Core
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+      responses:
+        '200':
+          description: OK
+  /field:
+    servers:
+      - url: http://localhost:8080
+    get:
+      tags:
+        - Model
+      responses:
+        '200':
+          description: OK
+    post:
+      tags:
+        - Model
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                field:
+                  type: string
+                stone:
+                  type: string
+                row:
+                  type: integer
+                col:
+                  type: integer
+      responses:
+        '200':
+          description: OK
+  /field/size:
+    servers:
+      - url: http://localhost:8080
+    get:
+      tags:
+        - Model
+      responses:
+        '200':
+          description: OK
+  /field/getStone:
+    servers:
+      - url: http://localhost:8080
+    get:
+      tags:
+        - Model
+      parameters:
+        - name: row
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: col
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+  /field/playerState:
+    servers:
+      - url: http://localhost:8080
+    get:
+      tags:
+        - Model
+      responses:
+        '200':
+          description: OK
+  /field/changePlayerState:
+    servers:
+      - url: http://localhost:8080
+    get:
+      tags:
+        - Model
+      responses:
+        '200':
+          description: OK
