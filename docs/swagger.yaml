@@ -3,19 +3,23 @@ info:
   title: Reversi API
   version: 1.0.0
 servers:
+  - url: http://localhost:8080
+    description: Model API
+  - url: http://localhost:8081
+    description: Persistence API
+  - url: http://localhost:8082
+    description: Core API
   - url: http://localhost:8083
     description: GUI API
   - url: http://localhost:8084
     description: TUI API
-  - url: http://localhost:8082
-    description: Core API
-  - url: http://localhost:8080
-    description: Model API
 tags:
   - name: Model
     description: Model API
   - name: Core
     description: Core API
+  - name: Persistence
+    description: Persistence API
   - name: GUI
     description: GUI API
   - name: TUI
@@ -175,6 +179,33 @@ paths:
     get:
       tags:
         - Model
+      responses:
+        '200':
+          description: OK
+  /fileio:
+    servers:
+      - url: http://localhost:8081
+    post:
+      tags:
+        - Persistence
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                field:
+                  type: string
+      responses:
+        '200':
+          description: OK
+  /fileio/load:
+    servers:
+      - url: http://localhost:8081
+    get:
+      tags:
+        - Persistence
       responses:
         '200':
           description: OK

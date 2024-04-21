@@ -11,10 +11,6 @@ class PersistenceApi(var field: FieldInterface, var fileIO: FileIOInterface) {
 
    val routes: Route = pathPrefix("fileio") {
      pathEnd {
-       get {
-         log.info("Received GET request for field")
-         complete(field.toJsObject.toString)
-       } ~
        post {
         log.info("Received POST request for field")
         entity(as[String]) { json =>
