@@ -2,10 +2,11 @@ import fieldComponent.{Field, Move, Stone}
 import fileIoComponent.fileIoXmlImpl.FileIO
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
+import tuiComponent.TUI
 
 class TUISpec extends AnyWordSpec {
 
-  "The TUI" should {
+  "The tuiComponent.TUI" should {
     var field = new Field(3, Stone.Empty)
     field = field.put(Stone.B, 3, 1)
     field = field.put(Stone.W, 2, 1)

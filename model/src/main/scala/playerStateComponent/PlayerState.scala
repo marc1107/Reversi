@@ -13,12 +13,10 @@ class PlayerState {
   }
 
   def changeState: Int = {
-    print("Old state: " + state + " ")
     state match {
       case 1 => state = player2
       case 2 => state = player1
     }
-    println("New state: " + state)
     state
   }
 

@@ -7,7 +7,7 @@ import playerStateComponent.PlayerState
 
 case class Field @Inject()(matrix: MatrixInterface[Stone]) extends FieldInterface:
   val playerState: PlayerState = PlayerState()
-  
+
   def this(size: Int, filling: Stone) = this(new Matrix(size, filling))
 
   def size: Int = matrix.size
@@ -47,7 +47,29 @@ case class Field @Inject()(matrix: MatrixInterface[Stone]) extends FieldInterfac
       )
     )
   }
-  
+
+  def toJsObjectPlayer(player: PlayerState): JsObject = {
+    Json.obj(
+      "field" -> Json.obj(
+        "size" -> JsNumber(this.size),
+        "playerState" -> player.getStone.toString,
+        "cells" -> Json.toJson(
+          for {
+            row <- 1 to this.size
+            col <- 1 to this.size
+          } yield {
+            Json.obj(
+              "row" -> row,
+              "col" -> col,
+              "cell" -> this.get(row, col).toString
+            )
+          }
+        )
+      )
+    )
+  }
+
+
   def jsonToField(jsonString: String): FieldInterface = {
     val json: JsValue = Json.parse(jsonString)
     val size: Int = (json \ "size").as[Int]

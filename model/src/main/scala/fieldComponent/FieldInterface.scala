@@ -19,10 +19,12 @@ trait FieldInterface {
   def get(r: Int, c: Int): Stone
   
   def toJsObject: JsObject
-  
+
+  def toJsObjectPlayer(player: PlayerState): JsObject
+
   def jsonToField(json: String): FieldInterface
-  
+
   def getPlayerStone: Stone
-  
+
   def changePlayerState: Int
 }
