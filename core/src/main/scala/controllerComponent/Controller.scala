@@ -38,11 +38,13 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
 
   def undo: FieldInterface =
     changePlayerStateWithApi
-    undoManager.undoStep(fieldC)
+    val f = undoManager.undoStep(fieldC)
+    putStoneAndGetFieldFromApi(f, f.get(1, 1), 1, 1)
 
   def redo: FieldInterface =
     changePlayerStateWithApi
-    undoManager.redoStep(fieldC)
+    val f = undoManager.redoStep(fieldC)
+    putStoneAndGetFieldFromApi(f, f.get(1, 1), 1, 1)
 
   def save: FieldInterface =
     val playerState = PlayerState()
