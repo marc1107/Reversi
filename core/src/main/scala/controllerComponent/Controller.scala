@@ -3,7 +3,8 @@ package controllerComponent
 import fieldComponent.{FieldInterface, Move, Stone}
 import fileIoComponent.FileIOInterface
 import lib.{Event, MovePossible, Observable, PutCommand, UndoManager}
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
+import playerStateComponent.PlayerState
 
 import java.io.{BufferedReader, InputStreamReader, OutputStreamWriter}
 import java.net.{HttpURLConnection, URL}
@@ -44,13 +45,27 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
     undoManager.redoStep(fieldC)
 
   def save: FieldInterface =
-    fileIo.save(fieldC)
+    val playerState = PlayerState()
+    if (playerState.getStone.toString != getPlayerStateFromApi.toString) {
+      playerState.changeState
+    }
+    saveapi(fieldC,playerState)
     fieldC
 
   def load: FieldInterface =
-    val tupel = fileIo.load
-    fieldC = tupel(0)
-    if (getPlayerStateFromApi.toString != tupel(1).getStone.toString) {
+    val url = "http://localhost:8081/fileio/load" // replace with your API URL
+    val result = Source.fromURL(url).mkString
+    val jsonValue: JsValue = Json.parse(result)
+    val fieldValue: JsValue = (jsonValue \ "field").as[JsValue]
+    val playerr: Option[String] = (fieldValue \ "playerState").asOpt[String]
+
+    val playerstone: Stone = playerr match {
+      case Some("□") => Stone.W
+      case Some("■") => Stone.B
+      case _ => Stone.Empty
+    }
+    fieldC = fieldC.jsonToField(fieldValue.toString())
+    if (getPlayerStateFromApi.toString != playerstone.toString) {
       changePlayerStateWithApi
     }
     fieldC
@@ -61,6 +76,24 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
 
   override def toString: String = fieldC.toString
 
+  def saveapi(field: FieldInterface, playerState: PlayerState): Unit = {
+    val url = new URL("http://localhost:8081/fileio") // replace with your API URL
+    val connection = url.openConnection().asInstanceOf[HttpURLConnection]
+    connection.setRequestMethod("POST")
+    connection.setDoOutput(true)
+    connection.setRequestProperty("Content-Type", "application/json")
+
+    val jsonInputString = field.toJsObjectPlayer(playerState).toString()
+    val outputStreamWriter = new OutputStreamWriter(connection.getOutputStream, "UTF-8")
+    outputStreamWriter.write(jsonInputString)
+    outputStreamWriter.close()
+    
+    connection.getResponseCode
+  }
+
+
+
+// vorlage für save
   def putStoneAndGetFieldFromApi(field: FieldInterface, stone: Stone, r: Int, c: Int): FieldInterface = {
     val url = new URL("http://localhost:8080/field") // replace with your API URL
     val connection = url.openConnection().asInstanceOf[HttpURLConnection]
@@ -73,7 +106,7 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
       ("row" -> Json.toJson(r)) +
       ("col" -> Json.toJson(c))
     ).toString()
-
+  
     val outputStreamWriter = new OutputStreamWriter(connection.getOutputStream, "UTF-8")
     outputStreamWriter.write(jsonInputString)
     outputStreamWriter.close()
@@ -105,12 +138,12 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
       case _ => Stone.Empty
     }
   }
-  
+
   def changePlayerStateWithApi: Int = {
     val url = "http://localhost:8080/field/changePlayerState" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val json: JsValue = Json.parse(result)
     val playerTurn: Int = (json \ "playersTurn").as[Int]
-  
+
     playerTurn
   }
