@@ -53,6 +53,17 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
     fieldC
 
   def load: FieldInterface =
+    val f: FieldInterface = loadFieldFromApi
+    fieldC = putStoneAndGetFieldFromApi(f, f.get(1, 1), 1, 1)
+    fieldC
+
+  def field: FieldInterface = fieldC
+
+  def winner(field: FieldInterface): String = Stone.B.toString
+
+  override def toString: String = fieldC.toString
+
+  private def loadFieldFromApi: FieldInterface =
     val url = "http://localhost:8081/fileio/load" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val jsonValue: JsValue = Json.parse(result)
@@ -64,19 +75,13 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
       case Some("■") => Stone.B
       case _ => Stone.Empty
     }
-    fieldC = fieldC.jsonToField(fieldValue.toString())
+    val field = fieldC.jsonToField(fieldValue.toString())
     if (getPlayerStateFromApi.toString != playerstone.toString) {
       changePlayerStateWithApi
     }
-    fieldC
+    field
 
-  def field: FieldInterface = fieldC
-
-  def winner(field: FieldInterface): String = Stone.B.toString
-
-  override def toString: String = fieldC.toString
-
-  def saveapi(field: FieldInterface, playerState: PlayerState): Unit = {
+  private def saveapi(field: FieldInterface, playerState: PlayerState): Unit = {
     val url = new URL("http://localhost:8081/fileio") // replace with your API URL
     val connection = url.openConnection().asInstanceOf[HttpURLConnection]
     connection.setRequestMethod("POST")
@@ -91,9 +96,6 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
     connection.getResponseCode
   }
 
-
-
-// vorlage für save
   def putStoneAndGetFieldFromApi(field: FieldInterface, stone: Stone, r: Int, c: Int): FieldInterface = {
     val url = new URL("http://localhost:8080/field") // replace with your API URL
     val connection = url.openConnection().asInstanceOf[HttpURLConnection]
