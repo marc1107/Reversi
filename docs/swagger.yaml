@@ -122,16 +122,10 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                field:
-                  type: string
-                stone:
-                  type: string
-                row:
-                  type: integer
-                col:
-                  type: integer
+              $ref: '#/components/schemas/PutField'
+            examples:
+              example1:
+                $ref: '#/components/examples/PutFieldExample'
       responses:
         '200':
           description: OK
@@ -209,3 +203,52 @@ paths:
       responses:
         '200':
           description: OK
+components:
+  schemas:
+    PutField:
+      type: object
+      properties:
+        field:
+          type: string
+        stone:
+          type: string
+        row:
+          type: integer
+        col:
+          type: integer
+  examples:
+    PutFieldExample:
+      value:
+        field:
+          size: 3
+          cells:
+            - row: 1
+              col: 1
+              cell: " "
+            - row: 1
+              col: 2
+              cell: " "
+            - row: 1
+              col: 3
+              cell: " "
+            - row: 2
+              col: 1
+              cell: " "
+            - row: 2
+              col: 2
+              cell: "■"
+            - row: 2
+              col: 3
+              cell: " "
+            - row: 3
+              col: 1
+              cell: "■"
+            - row: 3
+              col: 2
+              cell: " "
+            - row: 3
+              col: 3
+              cell: " "
+        stone: "■"
+        row: 1
+        col: 1
