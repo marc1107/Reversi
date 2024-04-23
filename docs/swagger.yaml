@@ -72,16 +72,12 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                method:
-                  type: string
-                stone:
-                  type: string
-                row:
-                  type: integer
-                col:
-                  type: integer
+              $ref: '#/components/schemas/DoAndPublish'
+            examples:
+              example1:
+                $ref: '#/components/examples/DoAndPublishExamplePut'
+              example2:
+                $ref: '#/components/examples/DoAndPublishExampleUndo'
       responses:
         '200':
           description: OK
@@ -98,10 +94,10 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                url:
-                  type: string
+              $ref: '#/components/schemas/AddObserver'
+            examples:
+              example1:
+                $ref: '#/components/examples/AddObserverExample'
       responses:
         '200':
           description: OK
@@ -122,16 +118,10 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                field:
-                  type: string
-                stone:
-                  type: string
-                row:
-                  type: integer
-                col:
-                  type: integer
+              $ref: '#/components/schemas/PutField'
+            examples:
+              example1:
+                $ref: '#/components/examples/PutFieldExample'
       responses:
         '200':
           description: OK
@@ -193,10 +183,10 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                field:
-                  type: string
+              $ref: '#/components/schemas/Field'
+            examples:
+              example1:
+                $ref: '#/components/examples/FieldExample'
       responses:
         '200':
           description: OK
@@ -209,3 +199,132 @@ paths:
       responses:
         '200':
           description: OK
+components:
+  schemas:
+    Field:
+      type: object
+      properties:
+        size:
+          type: integer
+        cells:
+          type: array
+          items:
+            type: object
+            properties:
+              row:
+                type: integer
+              col:
+                type: integer
+              cell:
+                type: string
+    PutField:
+      type: object
+      properties:
+        field:
+          type: string
+        stone:
+          type: string
+        row:
+          type: integer
+        col:
+          type: integer
+    DoAndPublish:
+      type: object
+      properties:
+        method:
+          type: string
+        stone:
+          type: string
+          nullable: true
+        row:
+          type: integer
+          nullable: true
+        col:
+          type: integer
+          nullable: true
+    AddObserver:
+      type: object
+      properties:
+        url:
+          type: string
+  examples:
+    FieldExample:
+      value:
+        playerState: "□"
+        field:
+          size: 3
+          cells:
+            - row: 1
+              col: 1
+              cell: " "
+            - row: 1
+              col: 2
+              cell: " "
+            - row: 1
+              col: 3
+              cell: " "
+            - row: 2
+              col: 1
+              cell: " "
+            - row: 2
+              col: 2
+              cell: "□"
+            - row: 2
+              col: 3
+              cell: " "
+            - row: 3
+              col: 1
+              cell: "■"
+            - row: 3
+              col: 2
+              cell: " "
+            - row: 3
+              col: 3
+              cell: " "
+    AddObserverExample:
+      value:
+        url: "http://localhost:8083/gui/update"
+    DoAndPublishExamplePut:
+      value:
+        method: "put"
+        stone: "■"
+        row: 1
+        col: 1
+    DoAndPublishExampleUndo:
+        value:
+            method: "undo"
+    PutFieldExample:
+      value:
+        field:
+          size: 3
+          cells:
+            - row: 1
+              col: 1
+              cell: " "
+            - row: 1
+              col: 2
+              cell: " "
+            - row: 1
+              col: 3
+              cell: " "
+            - row: 2
+              col: 1
+              cell: " "
+            - row: 2
+              col: 2
+              cell: "□"
+            - row: 2
+              col: 3
+              cell: " "
+            - row: 3
+              col: 1
+              cell: "■"
+            - row: 3
+              col: 2
+              cell: " "
+            - row: 3
+              col: 3
+              cell: " "
+        stone: "■"
+        row: 1
+        col: 1
