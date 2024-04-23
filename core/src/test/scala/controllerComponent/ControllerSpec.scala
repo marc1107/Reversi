@@ -19,11 +19,21 @@ class ControllerSpec extends AnyWordSpec {
       fieldWithMove.get(1, 3) should be(Stone.B)
       fieldWithMove.get(2, 1) should be(Stone.Empty)
     }
+    "print a field1" in {
+      controller.toString should be(
+        """#+---+---+---+
+          #| ■ | □ |   |
+          #+---+---+---+
+          #|   |   |   |
+          #+---+---+---+
+          #|   |   |   |
+          #+---+---+---+
+          #""".stripMargin('#'))
+    }
     "notify its observers on change" in {
       class TestObserver(controller: Controller) extends Observer:
         controller.add(this)
         var bing = false
-
         def update(e: Event): Unit = bing = true
       val testObserver = TestObserver(controller)
       testObserver.bing should be(false)
@@ -60,13 +70,7 @@ class ControllerSpec extends AnyWordSpec {
       //field.get(1, 2) should be(Stone.B)
       controller.doAndPublish(controller.undo)
     }
-    "have failures" in {
-      val stone_test_a = controller.playerState.getStone
-      controller.doAndPublish(controller.put, Move(stone_test_a, 1, 1))
-      controller.playerState.changeState
-      val stone_test_b = controller.playerState.getStone
-      controller.doAndPublish(controller.put, Move(stone_test_b, 3, 3))
-    }
+    
     "get a winner" in {
       val field = new Field(3, Stone.Empty)
       controller.winner(field.put(Stone.B, 1, 1)) should be {

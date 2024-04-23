@@ -13,7 +13,7 @@ class FileIOSpec extends AnyFlatSpec with Matchers {
     val field = new Field(8, Stone.Empty)
 
     // Save the game state
-    fileIO.save(field, playerState)
+    fileIO.save(field)
   }
 
   it should "correctly load a game state" in {
@@ -33,7 +33,7 @@ class FileIOSpec extends AnyFlatSpec with Matchers {
     val field = new Field(8, Stone.Empty)
 
     // Save the game state as a string
-    fileIO.saveString(field, playerState)
+    fileIO.saveString(field)
   }
 
   it should "correctly create an empty field" in {
@@ -52,7 +52,7 @@ class FileIOSpec extends AnyFlatSpec with Matchers {
     val field = new Field(8, Stone.Empty)
 
     // Convert the field to JSON
-    val json = fileIO.fieldToJson(field, playerState)
+    val json = fileIO.fieldToJson(field)
 
     // Assertions
     (json \ "field").asOpt[JsObject] should not be empty
