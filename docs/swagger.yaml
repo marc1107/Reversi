@@ -37,7 +37,7 @@ paths:
           required: true
           schema:
             type: string
-            enum: [quit, move, end]
+            enum: [move, quit, end]
       responses:
         '200':
           description: OK
@@ -55,7 +55,7 @@ paths:
           required: true
           schema:
             type: string
-            enum: [quit, move, end]
+            enum: [move, quit, end]
       responses:
         '200':
           description: OK
