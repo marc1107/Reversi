@@ -28,11 +28,11 @@ object TuiServer {
 
     tui.run()
 
-    /*println(s"Server online at http://localhost:$port/\nPress RETURN to stop...")
+    println(s"Server online at http://localhost:$port/\nPress RETURN to stop...")
     StdIn.readLine()
     bindingFuture
       .flatMap(_.unbind())
-      .onComplete(_ => system.terminate())*/
+      .onComplete(_ => system.terminate())
   }
 
   private def addAsObserver(myUrl: String): Unit = {
