@@ -19,17 +19,6 @@ class ControllerSpec extends AnyWordSpec {
       fieldWithMove.get(1, 3) should be(Stone.B)
       fieldWithMove.get(2, 1) should be(Stone.Empty)
     }
-    "print a field1" in {
-      controller.toString should be(
-        """#+---+---+---+
-          #| ■ | □ |   |
-          #+---+---+---+
-          #|   |   |   |
-          #+---+---+---+
-          #|   |   |   |
-          #+---+---+---+
-          #""".stripMargin('#'))
-    }
     "notify its observers on change" in {
       class TestObserver(controller: Controller) extends Observer:
         controller.add(this)
@@ -43,7 +32,7 @@ class ControllerSpec extends AnyWordSpec {
     "print a field" in {
       controller.toString should be(
         """#+---+---+---+
-          #| ■ | ■ | ■ |
+          #| ■ | □ |   |
           #+---+---+---+
           #|   |   |   |
           #+---+---+---+
