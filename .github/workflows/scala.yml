@@ -29,6 +29,8 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
+      - name: start servers
+        run: sbt "model/runMain ModelServer"
       - name: Run tests
         run: sbt clean jacoco jacocoAggregate
       - name: Download Codecov
