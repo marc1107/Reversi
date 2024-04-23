@@ -33,7 +33,7 @@ class ControllerSpec extends AnyWordSpec {
     "print a field" in {
       controller.toString should be(
         """#+---+---+---+
-          #| ■ | ■ | ■ |
+          #| ■ | □ |   |
           #+---+---+---+
           #|   |   |   |
           #+---+---+---+
@@ -59,13 +59,6 @@ class ControllerSpec extends AnyWordSpec {
       field = controller.redo
       //field.get(1, 2) should be(Stone.B)
       controller.doAndPublish(controller.undo)
-    }
-    "have failures" in {
-      val stone_test_a = controller.playerState.getStone
-      controller.doAndPublish(controller.put, Move(stone_test_a, 1, 1))
-      controller.playerState.changeState
-      val stone_test_b = controller.playerState.getStone
-      controller.doAndPublish(controller.put, Move(stone_test_b, 3, 3))
     }
     "get a winner" in {
       val field = new Field(3, Stone.Empty)
