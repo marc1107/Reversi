@@ -1,6 +1,4 @@
-import com.google.inject.AbstractModule
-import controllerComponent.Controller
-import controllerComponent.ControllerInterface
+import controllerComponent.{Controller, ControllerInterface}
 import fieldComponent.{Field, FieldInterface, Stone}
 import fileIoComponent.FileIOInterface
 import fileIoComponent.fileIoXmlImpl.FileIO
@@ -13,8 +11,10 @@ object CoreModule {
   val field: Field = field3.put(Stone.W, 5, 5)
 
   given FieldInterface = field
+  
+  val controller: Controller = Controller()
 
-  given ControllerInterface = Controller()
+  given ControllerInterface = controller
 
   given FileIOInterface = FileIO()
 }

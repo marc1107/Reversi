@@ -1,11 +1,9 @@
 package controllerComponent
 
 import fieldComponent.{FieldInterface, Move}
-import fileIoComponent.PlayerState
 import lib.{MovePossible, Observable}
 
 trait ControllerInterface extends Observable {
-val playerState: PlayerState
 val movePossible: MovePossible
 
 def doAndPublish(doThis: Move => FieldInterface, move: Move): Unit

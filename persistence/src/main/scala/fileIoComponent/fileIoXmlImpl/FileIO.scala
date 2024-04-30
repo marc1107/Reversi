@@ -1,8 +1,11 @@
 package fileIoComponent.fileIoXmlImpl
 
-import fileIoComponent.{FileIOInterface, PlayerState}
+import fileIoComponent.FileIOInterface
 import fieldComponent.{Field, FieldInterface, Stone}
+import play.api.libs.json.{JsValue, Json}
+import playerStateComponent.PlayerState
 
+import scala.io.Source
 import scala.xml.{Elem, NodeSeq, PrettyPrinter}
 
 class FileIO extends FileIOInterface {
@@ -33,26 +36,26 @@ class FileIO extends FileIOInterface {
     (field, player)
   }
 
-  override def save(field: FieldInterface, player: PlayerState): Unit =
-    saveString(field, player)
+  override def save(field: FieldInterface): Unit =
+    saveString(field)
 
   def saveXML(field: FieldInterface, player: PlayerState): Unit = {
-    scala.xml.XML.save("field.xml", fieldToXml(field, player))
+    scala.xml.XML.save("field.xml", fieldToXml(field))
   }
 
-  def saveString(field: FieldInterface, player: PlayerState): Unit = {
+  def saveString(field: FieldInterface): Unit = {
     import java.io._
     val pw = new PrintWriter(new File("field.xml"))
     val prettyPrinter = new scala.xml.PrettyPrinter(120, 4)
-    val xml = prettyPrinter.format(fieldToXml(field, player))
+    val xml = prettyPrinter.format(fieldToXml(field))
     pw.write(xml)
     pw.close()
   }
 
   def createEmptyField(size: Int): FieldInterface = new Field(size, Stone.Empty)
 
-  def fieldToXml(field: FieldInterface, player: PlayerState): Elem = {
-    <field size={field.size.toString} playerState={player.getStone.toString}>
+  def fieldToXml(field: FieldInterface): Elem = {
+    <field size={field.size.toString} playerState={getPlayerStateFromApi.toString}>
       {for {
       row <- 1 to field.size
       col <- 1 to field.size
@@ -64,5 +67,18 @@ class FileIO extends FileIOInterface {
     <cell row={row.toString} col={col.toString}>
       {field.get(row, col).toString}
     </cell>
+  }
+
+  def getPlayerStateFromApi: Stone = {
+    val url = "http://localhost:8080/field/playerState" // replace with your API URL
+    val result = Source.fromURL(url).mkString
+    val json: JsValue = Json.parse(result)
+    val playerStone: String = (json \ "playerStone").as[String]
+
+    playerStone match {
+      case "□" => Stone.W
+      case "■" => Stone.B
+      case _ => Stone.Empty
+    }
   }
 }

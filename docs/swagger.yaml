@@ -1,0 +1,330 @@
+openapi: 3.0.0
+info:
+  title: Reversi API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Model API
+  - url: http://localhost:8081
+    description: Persistence API
+  - url: http://localhost:8082
+    description: Core API
+  - url: http://localhost:8083
+    description: GUI API
+  - url: http://localhost:8084
+    description: TUI API
+tags:
+  - name: Model
+    description: Model API
+  - name: Core
+    description: Core API
+  - name: Persistence
+    description: Persistence API
+  - name: GUI
+    description: GUI API
+  - name: TUI
+    description: TUI API
+paths:
+  /gui/update:
+    servers:
+      - url: http://localhost:8083
+    get:
+      tags:
+        - GUI
+      parameters:
+        - name: event
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [move, quit, end]
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid event
+  /tui/update:
+    servers:
+      - url: http://localhost:8084
+    get:
+      tags:
+        - TUI
+      parameters:
+        - name: event
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [move, quit, end]
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid event
+  /core/doAndPublish:
+    servers:
+      - url: http://localhost:8082
+    post:
+      tags:
+        - Core
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DoAndPublish'
+            examples:
+              example1:
+                $ref: '#/components/examples/DoAndPublishExamplePut'
+              example2:
+                $ref: '#/components/examples/DoAndPublishExampleUndo'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid method
+  /core/addObserver:
+    servers:
+      - url: http://localhost:8082
+    post:
+      tags:
+        - Core
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddObserver'
+            examples:
+              example1:
+                $ref: '#/components/examples/AddObserverExample'
+      responses:
+        '200':
+          description: OK
+  /field:
+    servers:
+      - url: http://localhost:8080
+    get:
+      tags:
+        - Model
+      responses:
+        '200':
+          description: OK
+    post:
+      tags:
+        - Model
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutField'
+            examples:
+              example1:
+                $ref: '#/components/examples/PutFieldExample'
+      responses:
+        '200':
+          description: OK
+  /field/size:
+    servers:
+      - url: http://localhost:8080
+    get:
+      tags:
+        - Model
+      responses:
+        '200':
+          description: OK
+  /field/getStone:
+    servers:
+      - url: http://localhost:8080
+    get:
+      tags:
+        - Model
+      parameters:
+        - name: row
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: col
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+  /field/playerState:
+    servers:
+      - url: http://localhost:8080
+    get:
+      tags:
+        - Model
+      responses:
+        '200':
+          description: OK
+  /field/changePlayerState:
+    servers:
+      - url: http://localhost:8080
+    get:
+      tags:
+        - Model
+      responses:
+        '200':
+          description: OK
+  /fileio:
+    servers:
+      - url: http://localhost:8081
+    post:
+      tags:
+        - Persistence
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Field'
+            examples:
+              example1:
+                $ref: '#/components/examples/FieldExample'
+      responses:
+        '200':
+          description: OK
+  /fileio/load:
+    servers:
+      - url: http://localhost:8081
+    get:
+      tags:
+        - Persistence
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    Field:
+      type: object
+      properties:
+        size:
+          type: integer
+        cells:
+          type: array
+          items:
+            type: object
+            properties:
+              row:
+                type: integer
+              col:
+                type: integer
+              cell:
+                type: string
+    PutField:
+      type: object
+      properties:
+        field:
+          type: string
+        stone:
+          type: string
+        row:
+          type: integer
+        col:
+          type: integer
+    DoAndPublish:
+      type: object
+      properties:
+        method:
+          type: string
+        stone:
+          type: string
+          nullable: true
+        row:
+          type: integer
+          nullable: true
+        col:
+          type: integer
+          nullable: true
+    AddObserver:
+      type: object
+      properties:
+        url:
+          type: string
+  examples:
+    FieldExample:
+      value:
+        playerState: "□"
+        field:
+          size: 3
+          cells:
+            - row: 1
+              col: 1
+              cell: " "
+            - row: 1
+              col: 2
+              cell: " "
+            - row: 1
+              col: 3
+              cell: " "
+            - row: 2
+              col: 1
+              cell: " "
+            - row: 2
+              col: 2
+              cell: "□"
+            - row: 2
+              col: 3
+              cell: " "
+            - row: 3
+              col: 1
+              cell: "■"
+            - row: 3
+              col: 2
+              cell: " "
+            - row: 3
+              col: 3
+              cell: " "
+    AddObserverExample:
+      value:
+        url: "http://localhost:8083/gui/update"
+    DoAndPublishExamplePut:
+      value:
+        method: "put"
+        stone: "■"
+        row: 1
+        col: 1
+    DoAndPublishExampleUndo:
+        value:
+            method: "undo"
+    PutFieldExample:
+      value:
+        field:
+          size: 3
+          cells:
+            - row: 1
+              col: 1
+              cell: " "
+            - row: 1
+              col: 2
+              cell: " "
+            - row: 1
+              col: 3
+              cell: " "
+            - row: 2
+              col: 1
+              cell: " "
+            - row: 2
+              col: 2
+              cell: "□"
+            - row: 2
+              col: 3
+              cell: " "
+            - row: 3
+              col: 1
+              cell: "■"
+            - row: 3
+              col: 2
+              cell: " "
+            - row: 3
+              col: 3
+              cell: " "
+        stone: "■"
+        row: 1
+        col: 1

@@ -29,6 +29,14 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
+      - name: Start Model Server
+        run: sbt "model/runMain ModelServer" &
+      - name: Start PersistenceServer
+        run: sbt "persistence/runMain PersistenceServer" &
+      - name: Start CoreServer
+        run: sbt "core/runMain CoreServer" &
+      - name: Start TuiServer
+        run: sbt "tui/runMain TuiServer" &
       - name: Run tests
         run: sbt clean jacoco jacocoAggregate
       - name: Download Codecov
