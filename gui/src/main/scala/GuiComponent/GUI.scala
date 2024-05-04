@@ -168,17 +168,19 @@ class GUI extends Frame {
     }
   }
 
-  private class CellPanel(r: Int, c: Int) extends GridPanel(r, c):
+  private class CellPanel(r: Int, c: Int) extends GridPanel(r, c){
+
     private val list: List[CellButton] =
-      for {
-        i <- (1 to r).toList
-        j <- 1 to c
-        cb = CellButton(i, j, getStoneFromApi(i, j))
-      } yield cb
+    for {
+      i <- (1 to r).toList
+      j <- 1 to c
+      cb = CellButton(i, j, getStoneFromApi(i, j))
+    } yield cb
 
     list.foreach(t => contents += t)
+  }
 
-  private case class CellButton(r: Int, c: Int, var stone: Stone) extends Button():
+  private case class CellButton(r: Int, c: Int, var stone: Stone) extends Button(){
     private val dim = new Dimension(90, 90)
     minimumSize = dim
     maximumSize = dim
@@ -198,4 +200,6 @@ class GUI extends Frame {
         putMoveWithApi(Move(stone, r, c))
         //controller.doAndPublish(controller.put, Move(stone, r, c))
     }
+  }
+
 }
