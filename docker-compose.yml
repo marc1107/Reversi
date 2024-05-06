@@ -8,11 +8,6 @@ services:
       dockerfile: persistence/Dockerfile
     ports:
       - "8081:8081"
-    expose:
-      - "8080"
-      - "8082"
-      - "8083"
-      - "8084"
     stdin_open: true
     tty: true
     container_name: persistence-service
@@ -21,7 +16,7 @@ services:
       PERSISTENCE_SERVICE_PORT: 8081
     working_dir: /fileio
     volumes:
-      - ./:/fileio:ro
+      - ./:/fileio
 
   core:
     build:
@@ -29,11 +24,6 @@ services:
       dockerfile: core/Dockerfile
     ports:
       - "8082:8082"
-    expose:
-      - "8080"
-      - "8081"
-      - "8083"
-      - "8084"
     stdin_open: true
     tty: true
     container_name: core-service
@@ -49,11 +39,6 @@ services:
       dockerfile: model/Dockerfile
     ports:
       - "8080:8080"
-    expose:
-      - "8081"
-      - "8082"
-      - "8083"
-      - "8084"
     stdin_open: true
     tty: true
     container_name: model-service
@@ -62,3 +47,34 @@ services:
     environment:
       CORE_SERVICE_HOST: model-service
       CORE_SERVICE_PORT: 8080
+
+  tui:
+    build:
+      context: ./
+      dockerfile: tui/Dockerfile
+    ports:
+      - "8084:8084"
+    stdin_open: true
+    tty: true
+    container_name: tui-service
+    depends_on:
+      - persistence
+    environment:
+      CORE_SERVICE_HOST: tui-service
+      CORE_SERVICE_PORT: 8084
+
+  gui:
+    build:
+      context: ./
+      dockerfile: gui/Dockerfile
+    ports:
+      - "8083:8083"
+    stdin_open: true
+    tty: true
+    container_name: gui-service
+    depends_on:
+      - persistence
+    environment:
+      CORE_SERVICE_HOST: gui-service
+      CORE_SERVICE_PORT: 8083
+      

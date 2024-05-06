@@ -1,21 +1,27 @@
-# Dockerfile
-FROM hseeberger/scala-sbt:17.0.2_1.6.2_3.1.1
-#FROM hseeberger/scala-sbt:8u222_1.3.5_2.13.1
+# Start from Ubuntu
+FROM ubuntu:latest
 
+# Install curl and OpenJDK 17
+RUN apt-get update && apt-get install -y curl openjdk-17-jdk
 
-# Setzen Sie die Umgebungsvariable DISPLAY
-ENV DISPLAY=host.docker.internal:0.0
+# Set the working directory
+WORKDIR /app
 
-# Installieren Sie die notwendigen Bibliotheken für die GUI
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends openjfx && \
-    rm -rf /var/lib/apt/lists/* && \
-    apt-get install -y  libxrender1 libxtst6 libxi6
+# Download and extract sbt
+RUN curl -L -o sbt-1.9.8.tgz https://github.com/sbt/sbt/releases/download/v1.9.8/sbt-1.9.8.tgz && \
+    tar -xvzf sbt-1.9.8.tgz && \
+    rm sbt-1.9.8.tgz
 
-# Setzen Sie das Arbeitsverzeichnis
-WORKDIR /gui
+# Update PATH environment variable
+ENV PATH="/app/sbt/bin:${PATH}"
 
-# Kopieren Sie das Projektverzeichnis in den Docker-Container
-ADD . /gui
+# Copy the project, excluding specified directories and files
+# Copy the project, excluding specified directories and files
+COPY . ./
+RUN find . -name target -type d -exec rm -rf {} + && \
+    rm -rf .idea .bsp field.json field.xml
 
-CMD sbt run
+RUN sbt compile
+
+# Run the ModelServer
+CMD sbt "gui/runMain GuiServer"
