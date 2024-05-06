@@ -15,7 +15,8 @@ object GuiServer {
     implicit val system: ActorSystem = ActorSystem("mySystem")
     implicit val executionContext: ExecutionContext = system.dispatcher
     val port = 8083
-    val host = "0.0.0.0"
+    val host = "localhost"
+    val hostdocker = "host.docker.internal" // for docker so it knows to use the "real" localhost and not any other container
 
     val gui = new GUI
     gui.run()
@@ -23,7 +24,7 @@ object GuiServer {
     val guiApi = new GuiApi(gui)
     val routes: Route = guiApi.routes
 
-    addAsObserver(s"http://$host:$port/gui/update")
+    addAsObserver(s"http://$hostdocker:$port/gui/update")
 
     // Start the server
     val bindingFuture = Http().newServerAt(host, port).bind(routes)
@@ -34,7 +35,7 @@ object GuiServer {
   }
 
   private def addAsObserver(myUrl: String): Unit = {
-    val url = new URL("http://0.0.0.0:8082/core/addObserver") // replace with your API URL
+    val url = new URL("http://localhost:8082/core/addObserver") // replace with your API URL
     val connection = url.openConnection().asInstanceOf[HttpURLConnection]
     connection.setRequestMethod("POST")
     connection.setDoOutput(true)

@@ -70,7 +70,7 @@ class FileIO extends FileIOInterface {
   }
 
   def getPlayerStateFromApi: Stone = {
-    val url = "http://0.0.0.0:8080/field/playerState" // replace with your API URL
+    val url = "http://model-service:8080/field/playerState" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val json: JsValue = Json.parse(result)
     val playerStone: String = (json \ "playerStone").as[String]

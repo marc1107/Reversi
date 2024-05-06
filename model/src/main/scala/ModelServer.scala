@@ -12,7 +12,7 @@ object ModelServer {
   def main(args: Array[String]): Unit = {
     implicit val system: ActorSystem = ActorSystem("mySystem")
     implicit val executionContext: ExecutionContext = system.dispatcher
-    val host = "0.0.0.0"
+    val host = "model-service"
     val port = 8080
 
     val gameField: FieldInterface = field
@@ -26,7 +26,7 @@ object ModelServer {
     println(s"Server online at http://$host:$port/")
     while(true) {
     }
-    /*println(s"Server online at http://0.0.0.0:$port/\nPress RETURN to stop...")
+    /*println(s"Server online at http://$host:$port/\nPress RETURN to stop...")
     StdIn.readLine()
     bindingFuture
       .flatMap(_.unbind())

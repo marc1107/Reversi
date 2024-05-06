@@ -14,7 +14,7 @@ object PersistenceServer {
     implicit val system: ActorSystem = ActorSystem("mySystem")
     implicit val executionContext: ExecutionContext = system.dispatcher
     val port = 8081
-    val host = "0.0.0.0"
+    val host = "persitence-service"
 
     val gameField: FieldInterface = field
     val fileIO: FileIOInterface = new fileIoComponent.fileIoJsonImpl.FileIO
@@ -28,7 +28,7 @@ object PersistenceServer {
     println(s"Server online at http://$host:$port/")
     while(true) {
     }
-    /*println(s"Server online at http://0.0.0.0:$port/\nPress RETURN to stop...")
+    /*println(s"Server online at http://$host:$port/\nPress RETURN to stop...")
     StdIn.readLine()
     bindingFuture
       .flatMap(_.unbind())

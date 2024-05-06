@@ -64,7 +64,7 @@ class TUI:
       case _ => Failure(IllegalArgumentException("Invalid input"))
 
   private def getPlayerStateFromApi: Stone = {
-    val url = "http://0.0.0.0:8080/field/playerState" // replace with your API URL
+    val url = "http://localhost:8080/field/playerState" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val json: JsValue = Json.parse(result)
     val playerStone: String = (json \ "playerStone").as[String]
@@ -115,7 +115,7 @@ class TUI:
   }
 
   private def executePostToCore(json: String): Boolean = {
-    val url = new URL("http://0.0.0.0:8082/core/doAndPublish") // replace with your API URL
+    val url = new URL("http://localhost:8082/core/doAndPublish") // replace with your API URL
     val connection = url.openConnection().asInstanceOf[HttpURLConnection]
     connection.setRequestMethod("POST")
     connection.setDoOutput(true)
@@ -133,7 +133,7 @@ class TUI:
   }
   
   private def getFieldFromApi: FieldInterface = {
-    val url = "http://0.0.0.0:8080/field" // replace with your API URL
+    val url = "http://localhost:8080/field" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val json: JsValue = Json.parse(result)
     val fieldJson: JsValue = (json \ "field").get

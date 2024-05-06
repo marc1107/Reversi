@@ -20,7 +20,7 @@ class PutCommand(move: Move, var field: FieldInterface) extends Command:
     fieldTemp
 
   def putStoneAndGetFieldFromApi(field: FieldInterface, stone: Stone, r: Int, c: Int): FieldInterface = {
-    val url = new URL("http://0.0.0.0:8080/field")
+    val url = new URL("http://model-service:8080/field")
     val connection = url.openConnection().asInstanceOf[HttpURLConnection]
     connection.setRequestMethod("POST")
     connection.setDoOutput(true)
