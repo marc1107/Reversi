@@ -12,6 +12,7 @@ object ModelServer {
   def main(args: Array[String]): Unit = {
     implicit val system: ActorSystem = ActorSystem("mySystem")
     implicit val executionContext: ExecutionContext = system.dispatcher
+    val host = "0.0.0.0"
     val port = 8080
 
     val gameField: FieldInterface = field
@@ -20,12 +21,15 @@ object ModelServer {
     val routes: Route = fieldApi.routes
 
     // Start the server
-    val bindingFuture = Http().newServerAt("localhost", port).bind(routes)
+    val bindingFuture = Http().newServerAt(host, port).bind(routes)
 
-    println(s"Server online at http://localhost:$port/\nPress RETURN to stop...")
+    println(s"Server online at http://$host:$port/")
+    while(true) {
+    }
+    /*println(s"Server online at http://0.0.0.0:$port/\nPress RETURN to stop...")
     StdIn.readLine()
     bindingFuture
       .flatMap(_.unbind())
-      .onComplete(_ => system.terminate())
+      .onComplete(_ => system.terminate())*/
   }
 }

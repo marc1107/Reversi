@@ -66,7 +66,7 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
   override def toString: String = fieldC.toString
 
   private def loadFieldFromApi: FieldInterface =
-    val url = "http://localhost:8081/fileio/load" // replace with your API URL
+    val url = "http://0.0.0.0:8081/fileio/load" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val jsonValue: JsValue = Json.parse(result)
     val fieldValue: JsValue = (jsonValue \ "field").as[JsValue]
@@ -84,7 +84,7 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
     field
 
   private def saveapi(field: FieldInterface, playerState: PlayerState): Unit = {
-    val url = new URL("http://localhost:8081/fileio") // replace with your API URL
+    val url = new URL("http://0.0.0.0:8081/fileio") // replace with your API URL
     val connection = url.openConnection().asInstanceOf[HttpURLConnection]
     connection.setRequestMethod("POST")
     connection.setDoOutput(true)
@@ -99,7 +99,7 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
   }
 
   def putStoneAndGetFieldFromApi(field: FieldInterface, stone: Stone, r: Int, c: Int): FieldInterface = {
-    val url = new URL("http://localhost:8080/field") // replace with your API URL
+    val url = new URL("http://0.0.0.0:8080/field") // replace with your API URL
     val connection = url.openConnection().asInstanceOf[HttpURLConnection]
     connection.setRequestMethod("POST")
     connection.setDoOutput(true)
@@ -131,7 +131,7 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
   }
 
   def getPlayerStateFromApi: Stone = {
-    val url = "http://localhost:8080/field/playerState" // replace with your API URL
+    val url = "http://0.0.0.0:8080/field/playerState" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val json: JsValue = Json.parse(result)
     val playerStone: String = (json \ "playerStone").as[String]
@@ -144,7 +144,7 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
   }
 
   def changePlayerStateWithApi: Int = {
-    val url = "http://localhost:8080/field/changePlayerState" // replace with your API URL
+    val url = "http://0.0.0.0:8080/field/changePlayerState" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val json: JsValue = Json.parse(result)
     val playerTurn: Int = (json \ "playersTurn").as[Int]

@@ -15,6 +15,7 @@ object GuiServer {
     implicit val system: ActorSystem = ActorSystem("mySystem")
     implicit val executionContext: ExecutionContext = system.dispatcher
     val port = 8083
+    val host = "0.0.0.0"
 
     val gui = new GUI
     gui.run()
@@ -22,20 +23,18 @@ object GuiServer {
     val guiApi = new GuiApi(gui)
     val routes: Route = guiApi.routes
 
-    addAsObserver(s"http://localhost:$port/gui/update")
+    addAsObserver(s"http://$host:$port/gui/update")
 
     // Start the server
-    val bindingFuture = Http().newServerAt("localhost", port).bind(routes)
+    val bindingFuture = Http().newServerAt(host, port).bind(routes)
 
-    println(s"Server online at http://localhost:$port/\nPress RETURN to stop...")
-    StdIn.readLine()
-    bindingFuture
-      .flatMap(_.unbind())
-      .onComplete(_ => system.terminate())
+    println(s"Server online at http://$host:$port/")
+    while(true) {
+    }
   }
 
   private def addAsObserver(myUrl: String): Unit = {
-    val url = new URL("http://localhost:8082/core/addObserver") // replace with your API URL
+    val url = new URL("http://0.0.0.0:8082/core/addObserver") // replace with your API URL
     val connection = url.openConnection().asInstanceOf[HttpURLConnection]
     connection.setRequestMethod("POST")
     connection.setDoOutput(true)
