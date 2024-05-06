@@ -3,15 +3,15 @@ info:
   title: Reversi API
   version: 1.0.0
 servers:
-  - url: http://0.0.0.0:8080
+  - url: http://localhost:8080
     description: Model API
-  - url: http://0.0.0.0:8081
+  - url: http://localhost:8081
     description: Persistence API
-  - url: http://0.0.0.0:8082
+  - url: http://localhost:8082
     description: Core API
-  - url: http://0.0.0.0:8083
+  - url: http://localhost:8083
     description: GUI API
-  - url: http://0.0.0.0:8084
+  - url: http://localhost:8084
     description: TUI API
 tags:
   - name: Model
@@ -27,7 +27,7 @@ tags:
 paths:
   /gui/update:
     servers:
-      - url: http://0.0.0.0:8083
+      - url: http://localhost:8083
     get:
       tags:
         - GUI
@@ -45,7 +45,7 @@ paths:
           description: Invalid event
   /tui/update:
     servers:
-      - url: http://0.0.0.0:8084
+      - url: http://localhost:8084
     get:
       tags:
         - TUI
@@ -63,7 +63,7 @@ paths:
           description: Invalid event
   /core/doAndPublish:
     servers:
-      - url: http://0.0.0.0:8082
+      - url: http://localhost:8082
     post:
       tags:
         - Core
@@ -85,7 +85,7 @@ paths:
           description: Invalid method
   /core/addObserver:
     servers:
-      - url: http://0.0.0.0:8082
+      - url: http://localhost:8082
     post:
       tags:
         - Core
@@ -103,7 +103,7 @@ paths:
           description: OK
   /field:
     servers:
-      - url: http://0.0.0.0:8080
+      - url: http://localhost:8080
     get:
       tags:
         - Model
@@ -127,7 +127,7 @@ paths:
           description: OK
   /field/size:
     servers:
-      - url: http://0.0.0.0:8080
+      - url: http://localhost:8080
     get:
       tags:
         - Model
@@ -136,7 +136,7 @@ paths:
           description: OK
   /field/getStone:
     servers:
-      - url: http://0.0.0.0:8080
+      - url: http://localhost:8080
     get:
       tags:
         - Model
@@ -156,7 +156,7 @@ paths:
           description: OK
   /field/playerState:
     servers:
-      - url: http://0.0.0.0:8080
+      - url: http://localhost:8080
     get:
       tags:
         - Model
@@ -165,7 +165,7 @@ paths:
           description: OK
   /field/changePlayerState:
     servers:
-      - url: http://0.0.0.0:8080
+      - url: http://localhost:8080
     get:
       tags:
         - Model
@@ -174,7 +174,7 @@ paths:
           description: OK
   /fileio:
     servers:
-      - url: http://0.0.0.0:8081
+      - url: http://localhost:8081
     post:
       tags:
         - Persistence
@@ -192,7 +192,7 @@ paths:
           description: OK
   /fileio/load:
     servers:
-      - url: http://0.0.0.0:8081
+      - url: http://localhost:8081
     get:
       tags:
         - Persistence
@@ -283,7 +283,7 @@ components:
               cell: " "
     AddObserverExample:
       value:
-        url: "http://0.0.0.0:8083/gui/update"
+        url: "http://localhost:8083/gui/update"
     DoAndPublishExamplePut:
       value:
         method: "put"

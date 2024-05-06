@@ -29,8 +29,8 @@ object TuiServer {
     val bindingFuture = Http().newServerAt(host, port).bind(routes)
 
     println(s"Server online at http://$host:$port/")
-    /*while(true) {
-    }*/
+    while(true) {
+    }
   }
 
   private def addAsObserver(myUrl: String): Unit = {
