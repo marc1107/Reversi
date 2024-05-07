@@ -100,7 +100,7 @@ class GUI extends Frame {
   }
 
   private def getPlayerStateFromApi: Stone = {
-    val url = "http://core-service:8080/field/playerState" // replace with your API URL
+    val url = "http://model-service:8080/field/playerState" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val json: JsValue = Json.parse(result)
     val playerStone: String = (json \ "playerStone").as[String]

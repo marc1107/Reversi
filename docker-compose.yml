@@ -77,4 +77,7 @@ services:
     environment:
       CORE_SERVICE_HOST: gui-service
       CORE_SERVICE_PORT: 8083
+      DISPLAY: host.docker.internal:0
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
       
