@@ -16,7 +16,6 @@ RUN curl -L -o sbt-1.9.8.tgz https://github.com/sbt/sbt/releases/download/v1.9.8
 ENV PATH="/app/sbt/bin:${PATH}"
 
 # Copy the project, excluding specified directories and files
-# Copy the project, excluding specified directories and files
 COPY . ./
 RUN find . -name target -type d -exec rm -rf {} + && \
     rm -rf .idea .bsp field.json field.xml
