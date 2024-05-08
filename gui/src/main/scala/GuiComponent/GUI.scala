@@ -79,7 +79,7 @@ class GUI extends Frame {
   }
 
   private def getFieldSizeFromApi: Int = {
-    val url = "http://localhost:8080/field/size" // replace with your API URL
+    val url = "http://model-service:8080/field/size" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val json: JsValue = Json.parse(result)
     val size: Int = (json \ "size").as[Int]
@@ -87,7 +87,7 @@ class GUI extends Frame {
   }
 
   private def getStoneFromApi(row: Int, col: Int): Stone = {
-    val url = s"http://localhost:8080/field/getStone?row=$row&col=$col" // replace with your API URL
+    val url = s"http://model-service:8080/field/getStone?row=$row&col=$col" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val json: JsValue = Json.parse(result)
     val stoneValue: String = (json \ "stone").as[String]
@@ -100,7 +100,7 @@ class GUI extends Frame {
   }
 
   private def getPlayerStateFromApi: Stone = {
-    val url = "http://localhost:8080/field/playerState" // replace with your API URL
+    val url = "http://model-service:8080/field/playerState" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val json: JsValue = Json.parse(result)
     val playerStone: String = (json \ "playerStone").as[String]
@@ -151,7 +151,7 @@ class GUI extends Frame {
   }
   
   private def executePostToCore(json: String): Boolean = {
-    val url = new URL("http://localhost:8082/core/doAndPublish") // replace with your API URL
+    val url = new URL("http://core-service:8082/core/doAndPublish") // replace with your API URL
     val connection = url.openConnection().asInstanceOf[HttpURLConnection]
     connection.setRequestMethod("POST")
     connection.setDoOutput(true)
@@ -168,17 +168,19 @@ class GUI extends Frame {
     }
   }
 
-  private class CellPanel(r: Int, c: Int) extends GridPanel(r, c):
+  private class CellPanel(r: Int, c: Int) extends GridPanel(r, c){
+
     private val list: List[CellButton] =
-      for {
-        i <- (1 to r).toList
-        j <- 1 to c
-        cb = CellButton(i, j, getStoneFromApi(i, j))
-      } yield cb
+    for {
+      i <- (1 to r).toList
+      j <- 1 to c
+      cb = CellButton(i, j, getStoneFromApi(i, j))
+    } yield cb
 
     list.foreach(t => contents += t)
+  }
 
-  private case class CellButton(r: Int, c: Int, var stone: Stone) extends Button():
+  private case class CellButton(r: Int, c: Int, var stone: Stone) extends Button(){
     private val dim = new Dimension(90, 90)
     minimumSize = dim
     maximumSize = dim
@@ -198,4 +200,6 @@ class GUI extends Frame {
         putMoveWithApi(Move(stone, r, c))
         //controller.doAndPublish(controller.put, Move(stone, r, c))
     }
+  }
+
 }
