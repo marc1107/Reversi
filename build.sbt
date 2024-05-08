@@ -18,7 +18,8 @@ lazy val commonSettings = Seq(
     libraryDependencies ++= Seq(
       "com.typesafe.slick" %% "slick" % "3.5.0",
       //"org.slf4j" % "slf4j-nop" % "2.0.13",
-      "ch.qos.logback" % "logback-classic" % "1.5.6"
+      "ch.qos.logback" % "logback-classic" % "1.5.6",
+      "org.postgresql" % "postgresql" % "42.7.3"
     ),
     jacocoReportSettings := JacocoReportSettings(
       "Jacoco Coverage Report",
