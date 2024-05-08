@@ -12,6 +12,7 @@ object CoreServer {
     implicit val system: ActorSystem = ActorSystem("mySystem")
     implicit val executionContext: ExecutionContext = system.dispatcher
     val port = 8082
+    val host = "core-service"
 
     val controller: ControllerInterface = CoreModule.controller
 
@@ -19,12 +20,15 @@ object CoreServer {
     val routes: Route = coreApi.routes
 
     // Start the server
-    val bindingFuture = Http().newServerAt("localhost", port).bind(routes)
+    val bindingFuture = Http().newServerAt(host, port).bind(routes)
 
-    println(s"Server online at http://localhost:$port/\nPress RETURN to stop...")
+    println(s"Server online at http://$host:$port/")
+    while(true) {
+    }
+    /*println(s"Server online at http://$host:$port/\nPress RETURN to stop...")
     StdIn.readLine()
     bindingFuture
       .flatMap(_.unbind())
-      .onComplete(_ => system.terminate())
+      .onComplete(_ => system.terminate())*/
   }
 }

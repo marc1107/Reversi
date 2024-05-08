@@ -15,28 +15,26 @@ object TuiServer {
     implicit val system: ActorSystem = ActorSystem("mySystem")
     implicit val executionContext: ExecutionContext = system.dispatcher
     val port = 8084
+    val host = "tui-service"
+    //val hostdocker = "host.docker.internal" // for docker so it knows to use the "real" localhost and not any other container
 
     val tui = new TUI
 
     val tuiApi = new TuiApi(tui)
     val routes: Route = tuiApi.routes
 
-    addAsObserver(s"http://localhost:$port/tui/update")
+    addAsObserver(s"http://$host:$port/tui/update")
 
     // Start the server
-    val bindingFuture = Http().newServerAt("localhost", port).bind(routes)
+    val bindingFuture = Http().newServerAt(host, port).bind(routes)
 
-    tui.run()
-
-    println(s"Server online at http://localhost:$port/\nPress RETURN to stop...")
-    StdIn.readLine()
-    bindingFuture
-      .flatMap(_.unbind())
-      .onComplete(_ => system.terminate())
+    println(s"Server online at http://$host:$port/")
+    while(true) {
+    }
   }
 
   private def addAsObserver(myUrl: String): Unit = {
-    val url = new URL("http://localhost:8082/core/addObserver") // replace with your API URL
+    val url = new URL("http://core-service:8082/core/addObserver") // replace with your API URL
     val connection = url.openConnection().asInstanceOf[HttpURLConnection]
     connection.setRequestMethod("POST")
     connection.setDoOutput(true)

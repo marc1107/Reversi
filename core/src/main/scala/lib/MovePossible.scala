@@ -47,7 +47,7 @@ class MovePossible(controller: ControllerInterface) {
     }
 
     def getFieldSizeFromApi: Int = {
-      val url = "http://localhost:8080/field/size" // replace with your API URL
+      val url = "http://model-service:8080/field/size" // replace with your API URL
       val result = Source.fromURL(url).mkString
       val json: JsValue = Json.parse(result)
       val size: Int = (json \ "size").as[Int]
@@ -55,7 +55,7 @@ class MovePossible(controller: ControllerInterface) {
     }
 
     def getStoneFromApi(row: Int, col: Int): Stone = {
-      val url = s"http://localhost:8080/field/getStone?row=$row&col=$col" // replace with your API URL
+      val url = s"http://model-service:8080/field/getStone?row=$row&col=$col" // replace with your API URL
       val result = Source.fromURL(url).mkString
       val json: JsValue = Json.parse(result)
       val stoneValue: String = (json \ "stone").as[String]
@@ -68,7 +68,7 @@ class MovePossible(controller: ControllerInterface) {
     }
 
     def getPlayerStateFromApi: Stone = {
-      val url = "http://localhost:8080/field/playerState" // replace with your API URL
+      val url = "http://model-service:8080/field/playerState" // replace with your API URL
       val result = Source.fromURL(url).mkString
       val json: JsValue = Json.parse(result)
       val playerStone: String = (json \ "playerStone").as[String]
