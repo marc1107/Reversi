@@ -15,7 +15,11 @@ lazy val commonSettings = Seq(
       "com.typesafe.akka" %% "akka-actor-typed" % "2.8.5",
       "com.typesafe.akka" %% "akka-stream" % "2.8.5"
     ),
-    libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.5.2",
+    libraryDependencies ++= Seq(
+      "com.typesafe.slick" %% "slick" % "3.5.0",
+      //"org.slf4j" % "slf4j-nop" % "2.0.13",
+      "ch.qos.logback" % "logback-classic" % "1.5.6"
+    ),
     jacocoReportSettings := JacocoReportSettings(
       "Jacoco Coverage Report",
       None,
