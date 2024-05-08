@@ -15,23 +15,26 @@ class PersistenceApi(var field: FieldInterface, var fileIO: FileIOInterface) {
        post {
         log.info("Received POST request for field")
         entity(as[String]) { json =>
-        val jsonValue: JsValue = Json.parse(json)
-        val fieldValue: String = (jsonValue \ "field").as[JsValue].toString() //parse json string to JsValue
-        field = field.jsonToField(fieldValue)
-        fileIO.save(field)
-        val db = SlickUserDAO()
-        db.createTables()
-        db.save(field.toJsObjectPlayer.toString())
-        complete(field.toJsObject.toString())
+          val jsonValue: JsValue = Json.parse(json)
+          val fieldValue: String = (jsonValue \ "field").as[JsValue].toString() //parse json string to JsValue
+          field = field.jsonToField(fieldValue)
+          fileIO.save(field)
+          val db = SlickUserDAO()
+          db.createTables()
+          db.save(field.toJsObjectPlayer.toString())
+          complete(field.toJsObject.toString())
         }
        }
      } ~
      path("load") {
        get {
-        log.info("Received POST request for load")
-        val tupel= fileIO.load
-        field = tupel(0)
-        complete(field.toJsObjectPlayer.toString())
+         log.info("Received POST request for load")
+         val tupel= fileIO.load
+         val db = SlickUserDAO()
+         db.createTables()
+         db.load()
+         field = tupel(0)
+         complete(field.toJsObjectPlayer.toString())
       }
      }
    }
