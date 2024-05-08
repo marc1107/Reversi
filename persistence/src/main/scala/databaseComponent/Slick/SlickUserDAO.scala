@@ -3,12 +3,9 @@ package databaseComponent.Slick
 import databaseComponent.Slick.Tables.{BoardTable, FieldTable, PlayerStateTable}
 import databaseComponent.UserDAO
 import play.api.libs.json.{JsValue, Json}
-import playerStateComponent.PlayerState
 import slick.jdbc.JdbcBackend.Database
-import slick.lifted.TableQuery
 import slick.jdbc.PostgresProfile.api.*
-import slick.jdbc.JdbcBackend.Database
-import scala.io.StdIn
+import slick.lifted.TableQuery
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -72,14 +69,14 @@ class SlickUserDAO extends UserDAO {
     database.run((playerState returning playerState.map(_.playerStateId)) += (0, playerStateValue))
   }
 
-  def insertField(boardId: Int, playerStateId: Int, fieldCells: Seq[JsValue]): Future[Int] = {
+  private def insertCells(boardId: Int, playerStateId: Int, fieldCells: Seq[JsValue]): Future[Option[Int]] = {
     val fieldInsertions = fieldCells.map { cell =>
       val r = (cell \ "row").as[Int]
       val c = (cell \ "col").as[Int]
       val stone = (cell \ "cell").as[String]
       (0, boardId, playerStateId, r, c, stone)
     }
-    database.run((field returning field.map(_.fieldId)) ++= fieldInsertions)
+    database.run(field ++= fieldInsertions)
   }
 
   override def save(game: String): Future[Int] = {
@@ -91,19 +88,11 @@ class SlickUserDAO extends UserDAO {
         val playerState: String = (json \ "field" \ "playerState").as[String]
         val fieldCells: Seq[JsValue] = (json \ "field" \ "cells").asOpt[Seq[JsValue]].getOrElse(Seq.empty)
 
-        /*val gameStateType = (data \ "gameState" \ "type").asOpt[String].getOrElse("")
-        val boardFields = (data \ "gameState" \ "game" \ "board" \ "fields").asOpt[Seq[JsValue]].getOrElse(Seq.empty)
-        val boardSize = (data \ "gameState" \ "game" \ "board" \ "size").asOpt[Int].getOrElse(0)
-        val players = (data \ "gameState" \ "game" \ "players").asOpt[Seq[JsValue]].getOrElse(Seq.empty)
-        val currentPlayerName = (data \ "gameState" \ "game" \ "currentPlayer" \ "name").asOpt[String].getOrElse("")
-        val currentPlayerColor = (data \ "gameState" \ "game" \ "currentPlayer" \ "color").asOpt[String].getOrElse("")
-        val setStones = (data \ "gameState" \ "game" \ "setStones").asOpt[Int].getOrElse(0)
-*/
         for {
           boardId <- insertBoard(size)
           playerStateId <- insertPlayerState(playerState)
-          fieldId <- insertField(boardId, playerStateId, fieldCells)
-        } yield fieldId
+          fieldId <- insertCells(boardId, playerStateId, fieldCells)
+        } yield fieldId.get
     }
   }
 
