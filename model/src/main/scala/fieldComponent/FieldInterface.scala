@@ -20,7 +20,7 @@ trait FieldInterface {
   
   def toJsObject: JsObject
 
-  def toJsObjectPlayer(player: PlayerState): JsObject
+  def toJsObjectPlayer: JsObject
 
   def jsonToField(json: String): FieldInterface
 

@@ -47,11 +47,7 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
     putStoneAndGetFieldFromApi(f, f.get(1, 1), 1, 1)
 
   def save: FieldInterface =
-    val playerState = PlayerState()
-    if (playerState.getStone.toString != getPlayerStateFromApi.toString) {
-      playerState.changeState
-    }
-    saveapi(fieldC,playerState)
+    saveapi(fieldC)
     fieldC
 
   def load: FieldInterface =
@@ -83,14 +79,14 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
     }
     field
 
-  private def saveapi(field: FieldInterface, playerState: PlayerState): Unit = {
+  private def saveapi(field: FieldInterface): Unit = {
     val url = new URL("http://persistence-service:8081/fileio") // replace with your API URL
     val connection = url.openConnection().asInstanceOf[HttpURLConnection]
     connection.setRequestMethod("POST")
     connection.setDoOutput(true)
     connection.setRequestProperty("Content-Type", "application/json")
 
-    val jsonInputString = field.toJsObjectPlayer(playerState).toString()
+    val jsonInputString = field.toJsObjectPlayer.toString()
     val outputStreamWriter = new OutputStreamWriter(connection.getOutputStream, "UTF-8")
     outputStreamWriter.write(jsonInputString)
     outputStreamWriter.close()

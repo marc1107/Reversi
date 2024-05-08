@@ -48,11 +48,11 @@ case class Field @Inject()(matrix: MatrixInterface[Stone]) extends FieldInterfac
     )
   }
 
-  def toJsObjectPlayer(player: PlayerState): JsObject = {
+  def toJsObjectPlayer: JsObject = {
     Json.obj(
       "field" -> Json.obj(
         "size" -> JsNumber(this.size),
-        "playerState" -> player.getStone.toString,
+        "playerState" -> this.playerState.getStone.toString,
         "cells" -> Json.toJson(
           for {
             row <- 1 to this.size
