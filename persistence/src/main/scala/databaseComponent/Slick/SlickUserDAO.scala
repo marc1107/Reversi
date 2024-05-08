@@ -13,7 +13,7 @@ import scala.util.{Failure, Success, Try}
 
 class SlickUserDAO extends UserDAO {
 
-  private val databaseDB: String = sys.env.getOrElse("POSTGRES_DATABASE", "tbl")
+  private val databaseDB: String = sys.env.getOrElse("POSTGRES_DATABASE", "postgres")
   private val databaseUser: String = sys.env.getOrElse("POSTGRES_USER", "postgres")
   private val databasePassword: String = sys.env.getOrElse("POSTGRES_PASSWORD", "postgres")
   private val databasePort: String = sys.env.getOrElse("POSTGRES_PORT", "5432")
