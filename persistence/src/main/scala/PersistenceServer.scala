@@ -14,7 +14,7 @@ object PersistenceServer {
     implicit val system: ActorSystem = ActorSystem("mySystem")
     implicit val executionContext: ExecutionContext = system.dispatcher
     val port = 8081
-    val host = "persitence-service"
+    val host = "persistence-service"
 
     val gameField: FieldInterface = field
     val fileIO: FileIOInterface = new fileIoComponent.fileIoJsonImpl.FileIO
