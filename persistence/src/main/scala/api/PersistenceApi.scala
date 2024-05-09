@@ -51,8 +51,9 @@ class PersistenceApi(var field: FieldInterface, var fileIO: FileIOInterface) {
            case Success(_) =>
              log.info("Tables created")
              db.load().onComplete {
-               case Success(fieldJson) =>
+               case Success(fieldOption) =>
                  log.info("Field loaded")
+                 val fieldJson = fieldOption.get
                  // TODO: convert returned fieldJson to field (including playerState)
                case Failure(exception) => log.error("Field not loaded", exception)
              }
