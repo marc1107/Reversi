@@ -29,7 +29,10 @@ class PersistenceApi(var field: FieldInterface, var fileIO: FileIOInterface) {
             case Success(_) => log.info("Tables created")
             case Failure(exception) => log.error("Tables not created", exception)
           }
-          db.save(field.toJsObjectPlayer.toString())
+          db.save(field.toJsObjectPlayer.toString()).onComplete {
+            case Success(_) => log.info("Field saved")
+            case Failure(exception) => log.error("Field not saved", exception)
+          }
           complete(field.toJsObject.toString())
         }
        }
