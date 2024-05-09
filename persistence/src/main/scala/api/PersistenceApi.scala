@@ -7,6 +7,11 @@ import play.api.libs.json.{JsValue, Json}
 import akka.http.scaladsl.server.Directives.*
 import databaseComponent.Slick.SlickUserDAO
 import fileIoComponent.FileIOInterface
+
+import scala.concurrent.Future
+import scala.util.{Failure, Success}
+import scala.concurrent.ExecutionContext.Implicits.global
+
 class PersistenceApi(var field: FieldInterface, var fileIO: FileIOInterface) {
   val log: Logger = LoggerFactory.getLogger(getClass)
 
@@ -20,7 +25,10 @@ class PersistenceApi(var field: FieldInterface, var fileIO: FileIOInterface) {
           field = field.jsonToField(fieldValue)
           fileIO.save(field)
           val db = SlickUserDAO()
-          db.createTables()
+          db.createTables().onComplete {
+            case Success(_) => log.info("Tables created")
+            case Failure(exception) => log.error("Tables not created", exception)
+          }
           db.save(field.toJsObjectPlayer.toString())
           complete(field.toJsObject.toString())
         }
