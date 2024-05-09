@@ -97,6 +97,7 @@ class SlickUserDAO extends UserDAO {
   }
 
   override def load(): Future[Option[String]] = {
+    // TODO: implement loading from database and return everything as json string
     ???
   }
 

@@ -25,14 +25,18 @@ class PersistenceApi(var field: FieldInterface, var fileIO: FileIOInterface) {
           field = field.jsonToField(fieldValue)
           fileIO.save(field)
           val db = SlickUserDAO()
+
           db.createTables().onComplete {
-            case Success(_) => log.info("Tables created")
+            case Success(_) =>
+              log.info("Tables created")
+              db.save(field.toJsObjectPlayer.toString()).onComplete {
+                case Success(_) => log.info("Field saved")
+                case Failure(exception) => log.error("Field not saved", exception)
+              }
+
             case Failure(exception) => log.error("Tables not created", exception)
           }
-          db.save(field.toJsObjectPlayer.toString()).onComplete {
-            case Success(_) => log.info("Field saved")
-            case Failure(exception) => log.error("Field not saved", exception)
-          }
+
           complete(field.toJsObject.toString())
         }
        }
@@ -42,6 +46,20 @@ class PersistenceApi(var field: FieldInterface, var fileIO: FileIOInterface) {
          log.info("Received POST request for load")
          val tupel= fileIO.load
          val db = SlickUserDAO()
+
+         db.createTables().onComplete {
+           case Success(_) =>
+             log.info("Tables created")
+             db.load().onComplete {
+               case Success(fieldJson) =>
+                 log.info("Field loaded")
+                 // TODO: convert returned fieldJson to field (including playerState)
+               case Failure(exception) => log.error("Field not loaded", exception)
+             }
+
+           case Failure(exception) => log.error("Tables not created", exception)
+         }
+
          db.createTables()
          db.load()
          field = tupel(0)
