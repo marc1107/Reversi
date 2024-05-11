@@ -2,6 +2,7 @@ package databaseComponent.Slick
 
 import databaseComponent.Slick.Tables.{BoardTable, FieldTable, PlayerStateTable}
 import databaseComponent.UserDAO
+import play.api.libs.json.Json
 import play.api.libs.json.{JsValue, Json}
 import slick.jdbc.JdbcBackend.Database
 import slick.jdbc.PostgresProfile.api.*
@@ -60,7 +61,6 @@ class SlickUserDAO extends UserDAO {
     database.run(combinedAction)
   }
 
-  // for size
   private def insertBoard(size: Int): Future[Int] = {
     database.run((board returning board.map(_.boardId)) += (0, size))
   }
@@ -97,9 +97,34 @@ class SlickUserDAO extends UserDAO {
   }
 
   override def load(): Future[Option[String]] = {
-    // TODO: implement loading from database and return everything as json string
-    ???
+
+    val loadBoards = board.result
+    val loadPlayerStates = playerState.result
+    val loadFields = field.result
+
+    for {
+      boards <- database.run(loadBoards)
+      playerStates <- database.run(loadPlayerStates)
+      fields <- database.run(loadFields)
+    } yield {
+      val data = Map(
+        "boards" -> Json.toJson(boards),
+        "playerStates" -> Json.toJson(playerStates),
+        "fields" -> Json.toJson(fields)
+      )
+      val bo_re = data("boards").as[Seq[(Int, Int)]]
+      val pl_re = data("playerStates").as[Seq[(Int, String)]]
+      val fi_re = data("fields").as[Seq[(Int, Int, Int, Int, Int, String)]]
+      print("bo_re" +   bo_re)
+      print("pl_re" +   pl_re)
+      print("fi_re" +   fi_re)
+      val json = Json.toJson(data)
+      print("jons" + json)
+      Some(Json.stringify(Json.toJson(data)))
+    }
   }
+
+
 
   override def closeDatabase(): Unit = {
     database.close()

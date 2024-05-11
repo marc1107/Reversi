@@ -25,7 +25,11 @@ class PersistenceApi(var field: FieldInterface, var fileIO: FileIOInterface) {
           field = field.jsonToField(fieldValue)
           fileIO.save(field)
           val db = SlickUserDAO()
-
+          db.dropTables().onComplete {
+            case Success(_) =>
+              log.info("Tables dropped")
+            case Failure(exception) => log.error("Tables not dropped", exception)
+          }
           db.createTables().onComplete {
             case Success(_) =>
               log.info("Tables created")
@@ -53,16 +57,44 @@ class PersistenceApi(var field: FieldInterface, var fileIO: FileIOInterface) {
              db.load().onComplete {
                case Success(fieldOption) =>
                  log.info("Field loaded")
-                 val fieldJson = fieldOption.get
-                 // TODO: convert returned fieldJson to field (including playerState)
+
+                 val json = Json.parse(fieldOption.get)
+
+                 val boards = (json \ "boards").as[Seq[Seq[Int]]]
+                 val playerStates = (json \ "playerStates").as[Seq[Seq[String]]]
+                 val fields = (json \ "fields").as[Seq[Seq[(Int, Int, Int, Int, Int, String)]]]
+
+                 val size = boards.head(1)
+
+                 val playerState = playerStates.head(1)
+
+                 val cells = fields.map { field =>
+                   val row = field(3).asInstanceOf[Int]
+                   val col = field(4).asInstanceOf[Int]
+                   val cell = field(5).asInstanceOf[String]
+                   Json.obj("row" -> row, "col" -> col, "cell" -> cell)
+                 }
+
+                 val output = Json.obj(
+                   "field" -> Json.obj(
+                     "size" -> size,
+                     "playerState" -> playerState,
+                     "cells" -> cells
+                   )
+                 )
+
+                 val outputString = Json.stringify(output)
+
+                 println(outputString)
+                 field = field.jsonToField(outputString)
+
+
                case Failure(exception) => log.error("Field not loaded", exception)
              }
 
            case Failure(exception) => log.error("Tables not created", exception)
          }
 
-         db.createTables()
-         db.load()
          field = tupel(0)
          complete(field.toJsObjectPlayer.toString())
       }
