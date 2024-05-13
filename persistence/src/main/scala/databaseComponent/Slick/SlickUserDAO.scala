@@ -124,8 +124,6 @@ class SlickUserDAO extends UserDAO {
     }
   }
 
-
-
   override def closeDatabase(): Unit = {
     database.close()
   }
