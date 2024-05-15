@@ -53,9 +53,9 @@ class SlickUserDAO extends UserDAO {
     val dropFieldTableAction = field.schema.dropIfExists
 
     val combinedAction = for {
+      _ <- dropFieldTableAction
       _ <- dropPlayerStateTabelAction
       _ <- dropBoardTableAction
-      _ <- dropFieldTableAction
     } yield ()
 
     database.run(combinedAction)
