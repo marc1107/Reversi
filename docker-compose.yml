@@ -81,10 +81,10 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
 
-  db:
+  postgresdb:
     image: postgres:latest
     restart: always
-    container_name: database
+    container_name: postgresdb
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres

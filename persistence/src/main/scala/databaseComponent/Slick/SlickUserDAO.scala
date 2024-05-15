@@ -18,7 +18,7 @@ class SlickUserDAO extends UserDAO {
   private val databaseUser: String = sys.env.getOrElse("POSTGRES_USER", "postgres")
   private val databasePassword: String = sys.env.getOrElse("POSTGRES_PASSWORD", "postgres")
   private val databasePort: String = sys.env.getOrElse("POSTGRES_PORT", "5432")
-  private val databaseHost: String = sys.env.getOrElse("POSTGRES_HOST", "database")
+  private val databaseHost: String = sys.env.getOrElse("POSTGRES_HOST", "postgresdb")
   private val databaseUrl = s"jdbc:postgresql://$databaseHost:$databasePort/$databaseDB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&autoReconnect=true"
 
   val database = Database.forURL(
