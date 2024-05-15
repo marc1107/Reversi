@@ -19,7 +19,9 @@ lazy val commonSettings = Seq(
       "com.typesafe.slick" %% "slick" % "3.5.0",
       //"org.slf4j" % "slf4j-nop" % "2.0.13",
       "ch.qos.logback" % "logback-classic" % "1.5.6",
-      "org.postgresql" % "postgresql" % "42.7.3"
+      "org.postgresql" % "postgresql" % "42.7.3",
+      ("org.mongodb.scala" %% "mongo-scala-driver" % "5.1.0")
+        .cross(CrossVersion.for3Use2_13)
     ),
     jacocoReportSettings := JacocoReportSettings(
       "Jacoco Coverage Report",
