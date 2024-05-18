@@ -23,8 +23,8 @@ class MongoUserDAO extends UserDAO {
   private val gameCollection: MongoCollection[JsonObject] =
     db.getCollection("game")
 
-  override def dropTables(): Future[Unit] = ???
-  override def createTables(): Future[Unit] = ???
+  override def delete(): Future[Unit] = ???
+  override def create(): Future[Unit] = ???
   override def save(game: String): Future[Int] = ???
   override def load(): Future[Option[String]] = ???
   override def closeDatabase(): Unit = ???

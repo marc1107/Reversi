@@ -25,12 +25,12 @@ class PersistenceApi(var field: FieldInterface, var fileIO: FileIOInterface) {
           field = field.jsonToField(fieldValue)
           fileIO.save(field)
           val db = SlickUserDAO()
-          db.dropTables().onComplete {
+          db.delete().onComplete {
             case Success(_) =>
               log.info("Tables dropped")
             case Failure(exception) => log.error("Tables not dropped", exception)
           }
-          db.createTables().onComplete {
+          db.create().onComplete {
             case Success(_) =>
               log.info("Tables created")
               db.save(field.toJsObjectPlayer.toString()).onComplete {
@@ -51,7 +51,7 @@ class PersistenceApi(var field: FieldInterface, var fileIO: FileIOInterface) {
          val tupel= fileIO.load
          val db = SlickUserDAO()
 
-         db.createTables().onComplete {
+         db.create().onComplete {
            case Success(_) =>
              log.info("Tables created")
              db.load().onComplete {
