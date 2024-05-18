@@ -5,14 +5,17 @@ import fieldComponent.{FieldInterface, Stone}
 import org.slf4j.{Logger, LoggerFactory}
 import play.api.libs.json.{JsValue, Json}
 import akka.http.scaladsl.server.Directives.*
-import databaseComponent.Slick.SlickUserDAO
+import com.google.inject.{Guice, Injector}
+import databaseComponent.UserDAO
 import fileIoComponent.FileIOInterface
+import module.PersistenceModule
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class PersistenceApi(var field: FieldInterface, var fileIO: FileIOInterface) {
+  val injector: Injector = Guice.createInjector(new PersistenceModule)
   val log: Logger = LoggerFactory.getLogger(getClass)
 
    val routes: Route = pathPrefix("fileio") {
@@ -24,7 +27,7 @@ class PersistenceApi(var field: FieldInterface, var fileIO: FileIOInterface) {
           val fieldValue: String = (jsonValue \ "field").as[JsValue].toString() //parse json string to JsValue
           field = field.jsonToField(fieldValue)
           fileIO.save(field)
-          val db = SlickUserDAO()
+          val db = injector.getInstance(classOf[UserDAO])
           db.delete().onComplete {
             case Success(_) =>
               log.info("Tables dropped")
@@ -49,7 +52,7 @@ class PersistenceApi(var field: FieldInterface, var fileIO: FileIOInterface) {
        get {
          log.info("Received POST request for load")
          val tupel= fileIO.load
-         val db = SlickUserDAO()
+         val db = injector.getInstance(classOf[UserDAO])
 
          db.create().onComplete {
            case Success(_) =>
