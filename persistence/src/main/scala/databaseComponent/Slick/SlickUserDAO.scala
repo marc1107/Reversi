@@ -33,13 +33,13 @@ class SlickUserDAO extends UserDAO {
   val board = TableQuery[BoardTable]
 
   override def createTables(): Future[Unit] = {
-    val createPlayerStateTabelAction = playerState.schema.createIfNotExists
+    val createPlayerStateTableAction = playerState.schema.createIfNotExists
     val createBoardTableAction = board.schema.createIfNotExists
     val createFieldTableAction = field.schema.createIfNotExists
 
     val combinedAction = for {
-      _ <- createPlayerStateTabelAction
       _ <- createBoardTableAction
+      _ <- createPlayerStateTableAction
       _ <- createFieldTableAction
     } yield ()
 
@@ -48,13 +48,13 @@ class SlickUserDAO extends UserDAO {
   }
 
   override def dropTables(): Future[Unit] = {
-    val dropPlayerStateTabelAction = playerState.schema.dropIfExists
+    val dropPlayerStateTableAction = playerState.schema.dropIfExists
     val dropBoardTableAction = board.schema.dropIfExists
     val dropFieldTableAction = field.schema.dropIfExists
 
     val combinedAction = for {
       _ <- dropFieldTableAction
-      _ <- dropPlayerStateTabelAction
+      _ <- dropPlayerStateTableAction
       _ <- dropBoardTableAction
     } yield ()
 
