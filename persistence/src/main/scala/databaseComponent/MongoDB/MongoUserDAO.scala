@@ -4,7 +4,9 @@ import databaseComponent.UserDAO
 import org.bson.json.JsonObject
 import org.mongodb.scala.{MongoClient, MongoCollection, MongoDatabase}
 
-import scala.concurrent.Future
+import scala.concurrent.{Await, Future}
+import scala.concurrent.duration.DurationInt
+import scala.util.{Failure, Success, Try}
 
 class MongoUserDAO extends UserDAO {
   private val databaseDB: String = sys.env.getOrElse("MONGO_DB", "mongo")
@@ -23,9 +25,38 @@ class MongoUserDAO extends UserDAO {
   private val gameCollection: MongoCollection[JsonObject] =
     db.getCollection("game")
 
-  override def delete(): Future[Unit] = ???
-  override def create(): Future[Unit] = ???
-  override def save(game: String): Future[Int] = ???
+  override def delete(): Future[Unit] = {
+    Try {
+      Await.result(gameCollection.drop().head, 10.seconds)
+    } match
+      case Failure(exception) =>
+        println(exception)
+        Future.failed(exception)
+      case Success(value) =>
+        println(value)
+        Future.successful(())
+  }
+  override def create(): Future[Unit] = {
+    Try {
+      Await.result(db.createCollection("game").head, 10.seconds)
+      Await.result(db.listCollectionNames().head, 10.seconds)
+    } match
+      case Failure(exception) =>
+        println(exception)
+        Future.failed(exception)
+      case Success(value) =>
+        println(value)
+        Future.successful(())
+  }
+
+  override def save(game: String): Future[Int] = {
+    print("save called")
+    Future.successful(1)
+  }
+
   override def load(): Future[Option[String]] = ???
-  override def closeDatabase(): Unit = ???
+
+  override def closeDatabase(): Unit = {
+    client.close()
+  }
 }
