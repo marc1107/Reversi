@@ -60,36 +60,12 @@ class PersistenceApi(var field: FieldInterface, var fileIO: FileIOInterface) {
              db.load().onComplete {
                case Success(fieldOption) =>
                  log.info("Field loaded")
-
                  val json = Json.parse(fieldOption.get)
 
-                 val boards = (json \ "boards").as[Seq[Seq[Int]]]
-                 val playerStates = (json \ "playerStates").as[Seq[Seq[String]]]
-                 val fields = (json \ "fields").as[Seq[Seq[(Int, Int, Int, Int, Int, String)]]]
+                 val fields: String = (json \ "field").as[JsValue].toString()
 
-                 val size = boards.head(1)
-
-                 val playerState = playerStates.head(1)
-
-                 val cells = fields.map { field =>
-                   val row = field(3).asInstanceOf[Int]
-                   val col = field(4).asInstanceOf[Int]
-                   val cell = field(5).asInstanceOf[String]
-                   Json.obj("row" -> row, "col" -> col, "cell" -> cell)
-                 }
-
-                 val output = Json.obj(
-                   "field" -> Json.obj(
-                     "size" -> size,
-                     "playerState" -> playerState,
-                     "cells" -> cells
-                   )
-                 )
-
-                 val outputString = Json.stringify(output)
-
-                 println(outputString)
-                 field = field.jsonToField(outputString)
+                 println(fields)
+                 field = field.jsonToField(fields)
 
 
                case Failure(exception) => log.error("Field not loaded", exception)
