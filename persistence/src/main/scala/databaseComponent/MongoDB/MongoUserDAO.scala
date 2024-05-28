@@ -3,10 +3,13 @@ package databaseComponent.MongoDB
 import databaseComponent.UserDAO
 import org.bson.json.JsonObject
 import org.mongodb.scala.{MongoClient, MongoCollection, MongoDatabase}
-
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.DurationInt
 import scala.util.{Failure, Success, Try}
+import org.mongodb.scala._
+import org.mongodb.scala.bson.Document
+
 
 class MongoUserDAO extends UserDAO {
   private val databaseDB: String = sys.env.getOrElse("MONGO_DB", "mongo")
@@ -50,11 +53,18 @@ class MongoUserDAO extends UserDAO {
   }
 
   override def save(game: String): Future[Int] = {
-    print("save called")
-    Future.successful(1)
+    print("save called MongoUserDAO")
+
+    val doc: JsonObject =JsonObject(game)
+    gameCollection.insertOne(doc).toFuture().map(_ => 1)
   }
 
-  override def load(): Future[Option[String]] = ???
+  override def load(): Future[Option[String]] = {
+    gameCollection.find().sort(Document("_id" -> -1)).first().toFuture().map {
+      case null => None
+      case doc => Some(doc.toString)
+    }
+  }
 
   override def closeDatabase(): Unit = {
     client.close()
