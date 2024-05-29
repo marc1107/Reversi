@@ -112,15 +112,27 @@ class SlickUserDAO extends UserDAO {
         "playerStates" -> Json.toJson(playerStates),
         "fields" -> Json.toJson(fields)
       )
-      val bo_re = data("boards").as[Seq[(Int, Int)]]
-      val pl_re = data("playerStates").as[Seq[(Int, String)]]
-      val fi_re = data("fields").as[Seq[(Int, Int, Int, Int, Int, String)]]
-      print("bo_re" +   bo_re)
-      print("pl_re" +   pl_re)
-      print("fi_re" +   fi_re)
-      val json = Json.toJson(data)
-      print("jons" + json)
-      Some(Json.stringify(Json.toJson(data)))
+
+      val size = boards.head(1)
+
+      val playerState = playerStates.head(1)
+
+      val cells = fields.map { field =>
+        val row = field(3).asInstanceOf[Int]
+        val col = field(4).asInstanceOf[Int]
+        val cell = field(5).asInstanceOf[String]
+        Json.obj("row" -> row, "col" -> col, "cell" -> cell)
+      }
+
+      val output = Json.obj(
+        "field" -> Json.obj(
+          "size" -> size,
+          "playerState" -> playerState,
+          "cells" -> cells
+        )
+      )
+      
+      Some(Json.stringify(output))
     }
   }
 
