@@ -5,14 +5,17 @@ import fieldComponent.{FieldInterface, Stone}
 import org.slf4j.{Logger, LoggerFactory}
 import play.api.libs.json.{JsValue, Json}
 import akka.http.scaladsl.server.Directives.*
-import databaseComponent.Slick.SlickUserDAO
+import com.google.inject.{Guice, Injector}
+import databaseComponent.UserDAO
 import fileIoComponent.FileIOInterface
+import module.PersistenceModule
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class PersistenceApi(var field: FieldInterface, var fileIO: FileIOInterface) {
+  val injector: Injector = Guice.createInjector(new PersistenceModule)
   val log: Logger = LoggerFactory.getLogger(getClass)
 
    val routes: Route = pathPrefix("fileio") {
@@ -24,13 +27,13 @@ class PersistenceApi(var field: FieldInterface, var fileIO: FileIOInterface) {
           val fieldValue: String = (jsonValue \ "field").as[JsValue].toString() //parse json string to JsValue
           field = field.jsonToField(fieldValue)
           fileIO.save(field)
-          val db = SlickUserDAO()
-          db.dropTables().onComplete {
+          val db = injector.getInstance(classOf[UserDAO])
+          db.delete().onComplete {
             case Success(_) =>
               log.info("Tables dropped")
             case Failure(exception) => log.error("Tables not dropped", exception)
           }
-          db.createTables().onComplete {
+          db.create().onComplete {
             case Success(_) =>
               log.info("Tables created")
               db.save(field.toJsObjectPlayer.toString()).onComplete {
@@ -49,44 +52,20 @@ class PersistenceApi(var field: FieldInterface, var fileIO: FileIOInterface) {
        get {
          log.info("Received POST request for load")
          val tupel= fileIO.load
-         val db = SlickUserDAO()
+         val db = injector.getInstance(classOf[UserDAO])
 
-         db.createTables().onComplete {
+         db.create().onComplete {
            case Success(_) =>
              log.info("Tables created")
              db.load().onComplete {
                case Success(fieldOption) =>
                  log.info("Field loaded")
-
                  val json = Json.parse(fieldOption.get)
 
-                 val boards = (json \ "boards").as[Seq[Seq[Int]]]
-                 val playerStates = (json \ "playerStates").as[Seq[Seq[String]]]
-                 val fields = (json \ "fields").as[Seq[Seq[(Int, Int, Int, Int, Int, String)]]]
+                 val fields: String = (json \ "field").as[JsValue].toString()
 
-                 val size = boards.head(1)
-
-                 val playerState = playerStates.head(1)
-
-                 val cells = fields.map { field =>
-                   val row = field(3).asInstanceOf[Int]
-                   val col = field(4).asInstanceOf[Int]
-                   val cell = field(5).asInstanceOf[String]
-                   Json.obj("row" -> row, "col" -> col, "cell" -> cell)
-                 }
-
-                 val output = Json.obj(
-                   "field" -> Json.obj(
-                     "size" -> size,
-                     "playerState" -> playerState,
-                     "cells" -> cells
-                   )
-                 )
-
-                 val outputString = Json.stringify(output)
-
-                 println(outputString)
-                 field = field.jsonToField(outputString)
+                 println(fields)
+                 field = field.jsonToField(fields)
 
 
                case Failure(exception) => log.error("Field not loaded", exception)

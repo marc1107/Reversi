@@ -18,7 +18,7 @@ class SlickUserDAO extends UserDAO {
   private val databaseUser: String = sys.env.getOrElse("POSTGRES_USER", "postgres")
   private val databasePassword: String = sys.env.getOrElse("POSTGRES_PASSWORD", "postgres")
   private val databasePort: String = sys.env.getOrElse("POSTGRES_PORT", "5432")
-  private val databaseHost: String = sys.env.getOrElse("POSTGRES_HOST", "database")
+  private val databaseHost: String = sys.env.getOrElse("POSTGRES_HOST", "postgresdb")
   private val databaseUrl = s"jdbc:postgresql://$databaseHost:$databasePort/$databaseDB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&autoReconnect=true"
 
   val database = Database.forURL(
@@ -32,14 +32,14 @@ class SlickUserDAO extends UserDAO {
   val field = TableQuery[FieldTable]
   val board = TableQuery[BoardTable]
 
-  override def createTables(): Future[Unit] = {
-    val createPlayerStateTabelAction = playerState.schema.createIfNotExists
+  override def create(): Future[Unit] = {
+    val createPlayerStateTableAction = playerState.schema.createIfNotExists
     val createBoardTableAction = board.schema.createIfNotExists
     val createFieldTableAction = field.schema.createIfNotExists
 
     val combinedAction = for {
-      _ <- createPlayerStateTabelAction
       _ <- createBoardTableAction
+      _ <- createPlayerStateTableAction
       _ <- createFieldTableAction
     } yield ()
 
@@ -47,14 +47,14 @@ class SlickUserDAO extends UserDAO {
 
   }
 
-  override def dropTables(): Future[Unit] = {
-    val dropPlayerStateTabelAction = playerState.schema.dropIfExists
+  override def delete(): Future[Unit] = {
+    val dropPlayerStateTableAction = playerState.schema.dropIfExists
     val dropBoardTableAction = board.schema.dropIfExists
     val dropFieldTableAction = field.schema.dropIfExists
 
     val combinedAction = for {
       _ <- dropFieldTableAction
-      _ <- dropPlayerStateTabelAction
+      _ <- dropPlayerStateTableAction
       _ <- dropBoardTableAction
     } yield ()
 
@@ -112,15 +112,27 @@ class SlickUserDAO extends UserDAO {
         "playerStates" -> Json.toJson(playerStates),
         "fields" -> Json.toJson(fields)
       )
-      val bo_re = data("boards").as[Seq[(Int, Int)]]
-      val pl_re = data("playerStates").as[Seq[(Int, String)]]
-      val fi_re = data("fields").as[Seq[(Int, Int, Int, Int, Int, String)]]
-      print("bo_re" +   bo_re)
-      print("pl_re" +   pl_re)
-      print("fi_re" +   fi_re)
-      val json = Json.toJson(data)
-      print("jons" + json)
-      Some(Json.stringify(Json.toJson(data)))
+
+      val size = boards.head(1)
+
+      val playerState = playerStates.head(1)
+
+      val cells = fields.map { field =>
+        val row = field(3).asInstanceOf[Int]
+        val col = field(4).asInstanceOf[Int]
+        val cell = field(5).asInstanceOf[String]
+        Json.obj("row" -> row, "col" -> col, "cell" -> cell)
+      }
+
+      val output = Json.obj(
+        "field" -> Json.obj(
+          "size" -> size,
+          "playerState" -> playerState,
+          "cells" -> cells
+        )
+      )
+      
+      Some(Json.stringify(output))
     }
   }
 
