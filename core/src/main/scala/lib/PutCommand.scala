@@ -1,6 +1,7 @@
 package lib
 
 import fieldComponent.{FieldInterface, Move, Stone}
+import lib.Servers.modelServer
 import play.api.libs.json.{JsValue, Json}
 
 import java.io.{BufferedReader, InputStreamReader, OutputStreamWriter}
@@ -20,7 +21,7 @@ class PutCommand(move: Move, var field: FieldInterface) extends Command:
     fieldTemp
 
   def putStoneAndGetFieldFromApi(field: FieldInterface, stone: Stone, r: Int, c: Int): FieldInterface = {
-    val url = new URL("http://model-service:8080/field")
+    val url = new URL(s"http://$modelServer/field")
     val connection = url.openConnection().asInstanceOf[HttpURLConnection]
     connection.setRequestMethod("POST")
     connection.setDoOutput(true)

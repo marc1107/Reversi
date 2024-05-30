@@ -4,6 +4,7 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
 import api.ModelApi
 import fieldComponent.FieldInterface
+import lib.Servers.modelServer
 
 import scala.concurrent.ExecutionContext
 import scala.io.StdIn
@@ -12,8 +13,10 @@ object ModelServer {
   def main(args: Array[String]): Unit = {
     implicit val system: ActorSystem = ActorSystem("mySystem")
     implicit val executionContext: ExecutionContext = system.dispatcher
-    val host = "model-service"
-    val port = 8080
+    
+    val modelServerParts = modelServer.split(":")
+    val host = modelServerParts(0)
+    val port = modelServerParts(1).toInt
 
     val gameField: FieldInterface = field
 

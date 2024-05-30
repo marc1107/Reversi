@@ -47,7 +47,7 @@ lazy val gui = project
       commonSettings,
       jacocoExcludes := Seq("*")
   )
-  .dependsOn(core)
+  .dependsOn(core, model)
 
 lazy val tui = project
   .in(file("tui"))
@@ -56,7 +56,7 @@ lazy val tui = project
       commonSettings,
       jacocoExcludes := Seq("*")
   )
-  .dependsOn(core)
+  .dependsOn(core, model)
   .enablePlugins(JacocoPlugin)
 
 lazy val core = project

@@ -3,6 +3,7 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
 import api.GuiApi
+import lib.Servers.{coreServer, guiServer}
 import play.api.libs.json.Json
 
 import java.io.OutputStreamWriter
@@ -14,8 +15,10 @@ object GuiServer {
   def main(args: Array[String]): Unit = {
     implicit val system: ActorSystem = ActorSystem("mySystem")
     implicit val executionContext: ExecutionContext = system.dispatcher
-    val port = 8083
-    val host = "gui-service"
+
+    val guiServerParts = guiServer.split(":")
+    val host = guiServerParts(0)
+    val port = guiServerParts(1).toInt
     // val hostdocker = "host.docker.internal" // for docker so it knows to use the "real" localhost and not any other container
 
     val gui = new GUI
@@ -35,7 +38,7 @@ object GuiServer {
   }
 
   private def addAsObserver(myUrl: String): Unit = {
-    val url = new URL("http://core-service:8082/core/addObserver") // replace with your API URL
+    val url = new URL(s"http://$coreServer/core/addObserver") // replace with your API URL
     val connection = url.openConnection().asInstanceOf[HttpURLConnection]
     connection.setRequestMethod("POST")
     connection.setDoOutput(true)

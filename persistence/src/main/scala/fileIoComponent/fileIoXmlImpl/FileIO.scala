@@ -2,6 +2,7 @@ package fileIoComponent.fileIoXmlImpl
 
 import fileIoComponent.FileIOInterface
 import fieldComponent.{Field, FieldInterface, Stone}
+import lib.Servers.modelServer
 import play.api.libs.json.{JsValue, Json}
 import playerStateComponent.PlayerState
 
@@ -70,7 +71,7 @@ class FileIO extends FileIOInterface {
   }
 
   def getPlayerStateFromApi: Stone = {
-    val url = "http://model-service:8080/field/playerState" // replace with your API URL
+    val url = s"http://$modelServer/field/playerState" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val json: JsValue = Json.parse(result)
     val playerStone: String = (json \ "playerStone").as[String]

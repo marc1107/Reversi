@@ -3,6 +3,7 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
 import api.CoreApi
 import controllerComponent.ControllerInterface
+import lib.Servers.coreServer
 
 import scala.concurrent.ExecutionContext
 import scala.io.StdIn
@@ -11,8 +12,10 @@ object CoreServer {
   def main(args: Array[String]): Unit = {
     implicit val system: ActorSystem = ActorSystem("mySystem")
     implicit val executionContext: ExecutionContext = system.dispatcher
-    val port = 8082
-    val host = "core-service"
+
+    val coreServerParts = coreServer.split(":")
+    val host = coreServerParts(0)
+    val port = coreServerParts(1).toInt
 
     val controller: ControllerInterface = CoreModule.controller
 
