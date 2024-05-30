@@ -40,14 +40,6 @@ lazy val commonSettings = Seq(
     Test / classLoaderLayeringStrategy := ClassLoaderLayeringStrategy.ScalaLibrary
 )
 
-lazy val util = project
-  .in(file("util"))
-  .settings(
-      name := "util",
-      commonSettings
-  )
-  .dependsOn(model)
-
 lazy val gui = project
   .in(file("gui"))
   .settings(
@@ -55,7 +47,7 @@ lazy val gui = project
       commonSettings,
       jacocoExcludes := Seq("*")
   )
-  .dependsOn(core, util)
+  .dependsOn(core)
 
 lazy val tui = project
   .in(file("tui"))
@@ -64,7 +56,7 @@ lazy val tui = project
       commonSettings,
       jacocoExcludes := Seq("*")
   )
-  .dependsOn(core, util)
+  .dependsOn(core)
   .enablePlugins(JacocoPlugin)
 
 lazy val core = project
@@ -73,7 +65,7 @@ lazy val core = project
       name := "core",
       commonSettings
   )
-  .dependsOn(model, persistence, util)
+  .dependsOn(model, persistence)
   .enablePlugins(JacocoPlugin)
 
 lazy val model = project
@@ -99,4 +91,4 @@ lazy val root = project
       commonSettings
   )
   .enablePlugins(JacocoPlugin, JacocoCoverallsPlugin)
-  .aggregate(gui, tui, core, util, model, persistence)
+  .aggregate(gui, tui, core, model, persistence)
