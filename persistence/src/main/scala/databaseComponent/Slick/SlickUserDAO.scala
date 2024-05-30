@@ -2,6 +2,7 @@ package databaseComponent.Slick
 
 import databaseComponent.Slick.Tables.{BoardTable, FieldTable, PlayerStateTable}
 import databaseComponent.UserDAO
+import lib.Servers.postgresServer
 import play.api.libs.json.Json
 import play.api.libs.json.{JsValue, Json}
 import slick.jdbc.JdbcBackend.Database
@@ -13,12 +14,15 @@ import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
 class SlickUserDAO extends UserDAO {
+  private val postgresServerParts = postgresServer.split(":")
+  private val host = postgresServerParts(0)
+  private val port = postgresServerParts(1)
 
   private val databaseDB: String = sys.env.getOrElse("POSTGRES_DATABASE", "postgres")
   private val databaseUser: String = sys.env.getOrElse("POSTGRES_USER", "postgres")
   private val databasePassword: String = sys.env.getOrElse("POSTGRES_PASSWORD", "postgres")
-  private val databasePort: String = sys.env.getOrElse("POSTGRES_PORT", "5432")
-  private val databaseHost: String = sys.env.getOrElse("POSTGRES_HOST", "postgresdb")
+  private val databasePort: String = sys.env.getOrElse("POSTGRES_PORT", port)
+  private val databaseHost: String = sys.env.getOrElse("POSTGRES_HOST", host)
   private val databaseUrl = s"jdbc:postgresql://$databaseHost:$databasePort/$databaseDB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&autoReconnect=true"
 
   val database = Database.forURL(
