@@ -19,13 +19,13 @@ class PersistenceLoadTest extends SimulationSkeleton {
     buildOperation(
       "persistence save",
       "POST",
-      "/persistence/save",
+      "/fileio",
       ElFileBody("game.json")
     ),
     buildOperation(
       "persistence load",
       "GET",
-      "/persistence/load",
+      "/fileio/load",
       StringBody("")
     )
   )
