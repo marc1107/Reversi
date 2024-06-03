@@ -7,6 +7,6 @@ import databaseComponent.UserDAO
 
 class PersistenceModule extends AbstractModule {
   override def configure(): Unit = {
-    bind(classOf[UserDAO]).to(classOf[SlickUserDAO])
+    bind(classOf[UserDAO]).to(classOf[MongoUserDAO])
   }
 }
