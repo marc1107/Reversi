@@ -20,7 +20,7 @@ class PersistenceVolumeTest extends SimulationSkeleton {
       "persistence save",
       "POST",
       "/fileio",
-      ElFileBody("game_volume.json")
+      ElFileBody("game-vol.json")
     ),
     buildOperation(
       "persistence load",
@@ -38,20 +38,7 @@ class PersistenceVolumeTest extends SimulationSkeleton {
     setUp(
       scn
         .inject(
-          // ramp up users to 100 in 10 seconds
-          rampUsersPerSec(10) to 100 during (10.second)
-        )
-        .andThen(
-          scn2.inject(
-            // hold 100 users for 10 seconds
-            constantUsersPerSec(100) during (10.second)
-          )
-        )
-        .andThen(
-          scn3.inject(
-            // ramp down users to 0 in 10 seconds
-            rampUsersPerSec(100) to 0 during (10.second)
-          )
+          rampUsers(10) during (20.seconds)
         )
     ).protocols(httpProtocol)
   }
