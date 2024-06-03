@@ -14,6 +14,8 @@ lazy val gatlingDependencies = Seq(
   gatlingTest
 )
 
+
+
 lazy val commonSettings = Seq(
     version := "0.1.0-SNAPSHOT",
     scalaVersion := scala3Version,
@@ -38,6 +40,13 @@ lazy val commonSettings = Seq(
         .cross(CrossVersion.for3Use2_13)
     ),
     libraryDependencies ++= gatlingDependencies,
+    libraryDependencies ++= Seq(
+      "io.prometheus" % "simpleclient" % "0.16.0",
+      "io.prometheus" % "simpleclient_pushgateway" % "0.16.0",
+      "io.prometheus" % "simpleclient_httpserver" % "0.16.0"
+    ),
+    resolvers += "Gatling" at "https://repo.gatling.io/gatling",
+
     jacocoReportSettings := JacocoReportSettings(
       "Jacoco Coverage Report",
       None,

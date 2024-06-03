@@ -12,6 +12,11 @@ import io.gatling.core.structure.ChainBuilder
 import io.gatling.core.structure.PopulationBuilder
 import io.gatling.core.body.Body
 import akka.http.javadsl.model.HttpMethod
+import io.prometheus.client.CollectorRegistry
+//import io.prometheus.client.pushgateway.PushGateway
+import io.prometheus.client.Gauge
+import io.prometheus.client.{CollectorRegistry, Gauge}
+import io.prometheus.client.exporter.PushGateway
 
 
 abstract class SimulationSkeleton extends Simulation {
@@ -54,4 +59,24 @@ abstract class SimulationSkeleton extends Simulation {
       )
 
   def executeOperations(): Unit
+
+  // Collect Gatling metrics and send them to Prometheus
+  after {
+    // Assuming you have a Gauge metric for Gatling test success/failure
+    val gauge = io.prometheus.client.Gauge.build()
+      .name("gatling_test_result")
+      .help("Gatling test result (1 for success, 0 for failure)")
+      .register()
+
+    // Set your metric value here
+    gauge.set(1.0)
+
+    // You can add more metrics here as needed
+
+    // Sending metrics to Prometheus
+    // Assuming you have configured Prometheus to scrape metrics from host.docker.internal:9090
+    val prometheusUrl = "localhost:9091"
+    val pushGateway = new PushGateway(prometheusUrl)
+    pushGateway.pushAdd(CollectorRegistry.defaultRegistry, "gatling_test")
+  }
 }
