@@ -1,0 +1,33 @@
+Load Tests
+
+MongoDB
+================================================================================
+---- Global Information --------------------------------------------------------
+> request count                                         20 (OK=20     KO=0     )
+> min response time                                  10008 (OK=10008  KO=-     )
+> max response time                                  20112 (OK=20112  KO=-     )
+> mean response time                                 15023 (OK=15023  KO=-     )
+> std deviation                                       5012 (OK=5012   KO=-     )
+> response time 50th percentile                      15018 (OK=15018  KO=-     )
+> response time 75th percentile                      20027 (OK=20027  KO=-     )
+> response time 95th percentile                      20045 (OK=20045  KO=-     )
+> response time 99th percentile                      20099 (OK=20099  KO=-     )
+> mean requests/sec                                   0.41 (OK=0.41   KO=-     )
+---- Response Time Distribution ------------------------------------------------
+
+
+Slick DB
+================================================================================
+---- Global Information --------------------------------------------------------
+> request count                                         20 (OK=20     KO=0     )
+> min response time                                      8 (OK=8      KO=-     )
+> max response time                                    468 (OK=468    KO=-     )
+> mean response time                                    41 (OK=41     KO=-     )
+> std deviation                                         98 (OK=98     KO=-     )
+> response time 50th percentile                         24 (OK=24     KO=-     )
+> response time 75th percentile                         27 (OK=27     KO=-     )
+> response time 95th percentile                         55 (OK=55     KO=-     )
+> response time 99th percentile                        385 (OK=385    KO=-     )
+> mean requests/sec                                   1.05 (OK=1.05   KO=-     )
+---- Response Time Distribution ------------------------------------------------
+
