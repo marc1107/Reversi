@@ -9,6 +9,8 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - monitoring
 
   grafana:
     image: grafana/grafana:latest
@@ -19,12 +21,18 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     depends_on:
       - prometheus
+    networks:
+      - monitoring
 
   pushgateway:
     image: prom/pushgateway:latest
     container_name: pushgateway
     ports:
-     - "9091:9091"
+      - "9091:9091"
+    networks:
+      - monitoring
+
+
 
 
   postgresdb:
@@ -133,3 +141,6 @@ services:
 #      DISPLAY: host.docker.internal:0
 #    volumes:
 #      - /tmp/.X11-unix:/tmp/.X11-unix
+networks:
+  monitoring:
+    driver: bridge
