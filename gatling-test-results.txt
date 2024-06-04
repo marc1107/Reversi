@@ -1,33 +1,197 @@
-Load Tests
+================================================================================
+                                    Load Tests
+================================================================================
 
 MongoDB
 ================================================================================
 ---- Global Information --------------------------------------------------------
 > request count                                         20 (OK=20     KO=0     )
-> min response time                                  10008 (OK=10008  KO=-     )
-> max response time                                  20112 (OK=20112  KO=-     )
-> mean response time                                 15023 (OK=15023  KO=-     )
-> std deviation                                       5012 (OK=5012   KO=-     )
-> response time 50th percentile                      15018 (OK=15018  KO=-     )
-> response time 75th percentile                      20027 (OK=20027  KO=-     )
-> response time 95th percentile                      20045 (OK=20045  KO=-     )
-> response time 99th percentile                      20099 (OK=20099  KO=-     )
-> mean requests/sec                                   0.41 (OK=0.41   KO=-     )
+> min response time                                     30 (OK=30     KO=-     )
+> max response time                                    196 (OK=196    KO=-     )
+> mean response time                                    67 (OK=67     KO=-     )
+> std deviation                                         41 (OK=41     KO=-     )
+> response time 50th percentile                         58 (OK=58     KO=-     )
+> response time 75th percentile                         87 (OK=87     KO=-     )
+> response time 95th percentile                        141 (OK=141    KO=-     )
+> response time 99th percentile                        185 (OK=185    KO=-     )
+> mean requests/sec                                   1.05 (OK=1.05   KO=-     )
 ---- Response Time Distribution ------------------------------------------------
+> t < 800 ms                                            20 (   100%)
+> 800 ms <= t < 1200 ms                                  0 (     0%)
+> t >= 1200 ms                                           0 (     0%)
+> failed                                                 0 (     0%)
+================================================================================
 
 
-Slick DB
+Postgres DB
 ================================================================================
 ---- Global Information --------------------------------------------------------
 > request count                                         20 (OK=20     KO=0     )
-> min response time                                      8 (OK=8      KO=-     )
-> max response time                                    468 (OK=468    KO=-     )
-> mean response time                                    41 (OK=41     KO=-     )
-> std deviation                                         98 (OK=98     KO=-     )
-> response time 50th percentile                         24 (OK=24     KO=-     )
-> response time 75th percentile                         27 (OK=27     KO=-     )
-> response time 95th percentile                         55 (OK=55     KO=-     )
-> response time 99th percentile                        385 (OK=385    KO=-     )
+> min response time                                      4 (OK=4      KO=-     )
+> max response time                                    100 (OK=100    KO=-     )
+> mean response time                                    20 (OK=20     KO=-     )
+> std deviation                                         20 (OK=20     KO=-     )
+> response time 50th percentile                         17 (OK=17     KO=-     )
+> response time 75th percentile                         26 (OK=26     KO=-     )
+> response time 95th percentile                         37 (OK=37     KO=-     )
+> response time 99th percentile                         87 (OK=87     KO=-     )
 > mean requests/sec                                   1.05 (OK=1.05   KO=-     )
 ---- Response Time Distribution ------------------------------------------------
+> t < 800 ms                                            20 (   100%)
+> 800 ms <= t < 1200 ms                                  0 (     0%)
+> t >= 1200 ms                                           0 (     0%)
+> failed                                                 0 (     0%)
+================================================================================
 
+
+================================================================================
+                                Spike Tests
+================================================================================
+
+MongoDB
+================================================================================
+---- Global Information --------------------------------------------------------
+> request count                                        640 (OK=639    KO=1     )
+> min response time                                     25 (OK=25     KO=385   )
+> max response time                                  17866 (OK=17866  KO=385   )
+> mean response time                                  6117 (OK=6125   KO=385   )
+> std deviation                                       5129 (OK=5128   KO=0     )
+> response time 50th percentile                       5225 (OK=5237   KO=385   )
+> response time 75th percentile                      10584 (OK=10585  KO=385   )
+> response time 95th percentile                      15221 (OK=15222  KO=385   )
+> response time 99th percentile                      16815 (OK=16815  KO=385   )
+> mean requests/sec                                  21.33 (OK=21.3   KO=0.03  )
+---- Response Time Distribution ------------------------------------------------
+> t < 800 ms                                           116 ( 18.12%)
+> 800 ms <= t < 1200 ms                                 30 (  4.69%)
+> t >= 1200 ms                                         493 ( 77.03%)
+> failed                                                 1 (  0.16%)
+---- Errors --------------------------------------------------------------------
+> status.find.in([200, 209], 304), found 500                          1 (100.0%)
+================================================================================
+
+
+Postgres DB
+================================================================================
+---- Global Information --------------------------------------------------------
+> request count                                        640 (OK=569    KO=71    )
+> min response time                                      5 (OK=5      KO=1598  )
+> max response time                                   8958 (OK=8958   KO=7723  )
+> mean response time                                  2667 (OK=2359   KO=5137  )
+> std deviation                                       2092 (OK=1952   KO=1437  )
+> response time 50th percentile                       1979 (OK=1813   KO=5067  )
+> response time 75th percentile                       4287 (OK=3857   KO=6320  )
+> response time 95th percentile                       6616 (OK=5900   KO=7280  )
+> response time 99th percentile                       7793 (OK=7856   KO=7533  )
+> mean requests/sec                                  29.09 (OK=25.86  KO=3.23  )
+---- Response Time Distribution ------------------------------------------------
+> t < 800 ms                                           156 ( 24.38%)
+> 800 ms <= t < 1200 ms                                 46 (  7.19%)
+> t >= 1200 ms                                         367 ( 57.34%)
+> failed                                                71 ( 11.09%)
+---- Errors --------------------------------------------------------------------
+> j.n.ConnectException: Connection refused                           68 (95.77%)
+> status.find.in([200, 209], 304), found 500                          3 ( 4.23%)
+================================================================================
+
+
+
+================================================================================
+                                Stress Tests
+================================================================================
+
+MongoDB
+================================================================================
+---- Global Information --------------------------------------------------------
+> request count                                       6000 (OK=110    KO=5890  )
+> min response time                                      7 (OK=22     KO=7     )
+> max response time                                  34315 (OK=12223  KO=34315 )
+> mean response time                                 12536 (OK=3391   KO=12707 )
+> std deviation                                       3767 (OK=4278   KO=3539  )
+> response time 50th percentile                      12199 (OK=153    KO=12271 )
+> response time 75th percentile                      14679 (OK=7029   KO=14722 )
+> response time 95th percentile                      18707 (OK=11364  KO=18724 )
+> response time 99th percentile                      23931 (OK=12187  KO=23940 )
+> mean requests/sec                                 117.65 (OK=2.16   KO=115.49)
+---- Response Time Distribution ------------------------------------------------
+> t < 800 ms                                            62 (  1.03%)
+> 800 ms <= t < 1200 ms                                  1 (  0.02%)
+> t >= 1200 ms                                          47 (  0.78%)
+> failed                                              5890 ( 98.17%)
+---- Errors --------------------------------------------------------------------
+> j.n.ConnectException: Connection refused                         5221 (88.64%)
+> j.i.IOException: Premature close                                  647 (10.98%)
+> status.find.in([200, 209], 304), found 500                         22 ( 0.37%)
+================================================================================
+
+
+Postgres DB
+================================================================================
+---- Global Information --------------------------------------------------------
+> request count                                       6000 (OK=908    KO=5092  )
+> min response time                                      5 (OK=5      KO=9     )
+> max response time                                  28358 (OK=14664  KO=28358 )
+> mean response time                                 12629 (OK=6767   KO=13674 )
+> std deviation                                       4689 (OK=4806   KO=3816  )
+> response time 50th percentile                      12880 (OK=7165   KO=13681 )
+> response time 75th percentile                      15743 (OK=11509  KO=16232 )
+> response time 95th percentile                      19500 (OK=12887  KO=19706 )
+> response time 99th percentile                      23165 (OK=14438  KO=23546 )
+> mean requests/sec                                 109.09 (OK=16.51  KO=92.58 )
+---- Response Time Distribution ------------------------------------------------
+> t < 800 ms                                           196 (  3.27%)
+> 800 ms <= t < 1200 ms                                 30 (   0.5%)
+> t >= 1200 ms                                         682 ( 11.37%)
+> failed                                              5092 ( 84.87%)
+---- Errors --------------------------------------------------------------------
+> j.n.ConnectException: Connection refused                         4699 (92.28%)
+> j.i.IOException: Premature close                                  363 ( 7.13%)
+> status.find.in([200, 209], 304), found 500                         30 ( 0.59%)
+================================================================================
+
+
+
+================================================================================
+                                Volume Tests
+================================================================================
+
+MongoDB
+================================================================================
+---- Global Information --------------------------------------------------------
+> request count                                         20 (OK=20     KO=0     )
+> min response time                                     22 (OK=22     KO=-     )
+> max response time                                    966 (OK=966    KO=-     )
+> mean response time                                   102 (OK=102    KO=-     )
+> std deviation                                        201 (OK=201    KO=-     )
+> response time 50th percentile                         53 (OK=53     KO=-     )
+> response time 75th percentile                         66 (OK=66     KO=-     )
+> response time 95th percentile                        176 (OK=176    KO=-     )
+> response time 99th percentile                        808 (OK=808    KO=-     )
+> mean requests/sec                                   1.05 (OK=1.05   KO=-     )
+---- Response Time Distribution ------------------------------------------------
+> t < 800 ms                                            19 (    95%)
+> 800 ms <= t < 1200 ms                                  1 (     5%)
+> t >= 1200 ms                                           0 (     0%)
+> failed                                                 0 (     0%)
+================================================================================
+
+
+Postgres DB
+================================================================================
+---- Global Information --------------------------------------------------------
+> request count                                         20 (OK=20     KO=0     )
+> min response time                                      9 (OK=9      KO=-     )
+> max response time                                    859 (OK=859    KO=-     )
+> mean response time                                    68 (OK=68     KO=-     )
+> std deviation                                        182 (OK=182    KO=-     )
+> response time 50th percentile                         25 (OK=25     KO=-     )
+> response time 75th percentile                         36 (OK=36     KO=-     )
+> response time 95th percentile                        104 (OK=104    KO=-     )
+> response time 99th percentile                        708 (OK=708    KO=-     )
+> mean requests/sec                                      1 (OK=1      KO=-     )
+---- Response Time Distribution ------------------------------------------------
+> t < 800 ms                                            19 (    95%)
+> 800 ms <= t < 1200 ms                                  1 (     5%)
+> t >= 1200 ms                                           0 (     0%)
+> failed                                                 0 (     0%)
+================================================================================
