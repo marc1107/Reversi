@@ -104,6 +104,14 @@ lazy val persistence = project
   .dependsOn(model)
   .enablePlugins(GatlingPlugin)
 
+lazy val kafka = project
+  .in(file("kafka"))
+  .settings(
+    name := "kafka",
+    commonSettings
+  )
+  .enablePlugins(JacocoPlugin)
+
 lazy val root = project
   .in(file("."))
   .settings(
@@ -111,4 +119,5 @@ lazy val root = project
     commonSettings
   )
   .enablePlugins(JacocoPlugin, JacocoCoverallsPlugin, GatlingPlugin)
-  .aggregate(gui, tui, core, model, persistence)
+  .aggregate(gui, tui, core, model, persistence, kafka)
+
