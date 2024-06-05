@@ -13,7 +13,7 @@ import io.gatling.core.structure.PopulationBuilder
 import io.gatling.core.body.Body
 import akka.http.javadsl.model.HttpMethod
 
-class PersistenceVolumeTest extends SimulationSkeleton {
+class PersistenceVolumeTest extends CommonSimConfig {
 
   override val operations = List(
     buildOperation(

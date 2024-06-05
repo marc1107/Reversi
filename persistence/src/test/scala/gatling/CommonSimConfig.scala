@@ -14,7 +14,7 @@ import io.gatling.core.body.Body
 import akka.http.javadsl.model.HttpMethod
 
 
-abstract class SimulationSkeleton extends Simulation {
+abstract class CommonSimConfig extends Simulation {
 
   val operations: List[ChainBuilder]
 
