@@ -1,6 +1,7 @@
 package GuiComponent
 
 import fieldComponent.{Move, Stone}
+import lib.Servers.{coreServer, modelServer}
 import lib.{Event, Observer}
 import play.api.libs.json.{JsValue, Json}
 
@@ -79,7 +80,7 @@ class GUI extends Frame {
   }
 
   private def getFieldSizeFromApi: Int = {
-    val url = "http://model-service:8080/field/size" // replace with your API URL
+    val url = s"http://$modelServer/field/size" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val json: JsValue = Json.parse(result)
     val size: Int = (json \ "size").as[Int]
@@ -87,7 +88,7 @@ class GUI extends Frame {
   }
 
   private def getStoneFromApi(row: Int, col: Int): Stone = {
-    val url = s"http://model-service:8080/field/getStone?row=$row&col=$col" // replace with your API URL
+    val url = s"http://$modelServer/field/getStone?row=$row&col=$col" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val json: JsValue = Json.parse(result)
     val stoneValue: String = (json \ "stone").as[String]
@@ -100,7 +101,7 @@ class GUI extends Frame {
   }
 
   private def getPlayerStateFromApi: Stone = {
-    val url = "http://model-service:8080/field/playerState" // replace with your API URL
+    val url = s"http://$modelServer/field/playerState" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val json: JsValue = Json.parse(result)
     val playerStone: String = (json \ "playerStone").as[String]
@@ -151,7 +152,7 @@ class GUI extends Frame {
   }
   
   private def executePostToCore(json: String): Boolean = {
-    val url = new URL("http://core-service:8082/core/doAndPublish") // replace with your API URL
+    val url = new URL(s"http://$coreServer/core/doAndPublish") // replace with your API URL
     val connection = url.openConnection().asInstanceOf[HttpURLConnection]
     connection.setRequestMethod("POST")
     connection.setDoOutput(true)

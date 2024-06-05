@@ -5,6 +5,7 @@ import akka.http.scaladsl.server.Route
 import api.{ModelApi, PersistenceApi}
 import fieldComponent.FieldInterface
 import fileIoComponent.FileIOInterface
+import lib.Servers.persistenceServer
 
 import scala.concurrent.ExecutionContext
 import scala.io.StdIn
@@ -13,8 +14,10 @@ object PersistenceServer {
   def main(args: Array[String]): Unit = {
     implicit val system: ActorSystem = ActorSystem("mySystem")
     implicit val executionContext: ExecutionContext = system.dispatcher
-    val port = 8081
-    val host = "persistence-service"
+
+    val persistenceServerParts = persistenceServer.split(":")
+    val host = persistenceServerParts(0)
+    val port = persistenceServerParts(1).toInt
 
     val gameField: FieldInterface = field
     val fileIO: FileIOInterface = new fileIoComponent.fileIoJsonImpl.FileIO

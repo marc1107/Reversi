@@ -3,6 +3,7 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
 import api.TuiApi
+import lib.Servers.{coreServer, tuiServer}
 import play.api.libs.json.Json
 
 import java.io.OutputStreamWriter
@@ -14,8 +15,10 @@ object TuiServer {
   def main(args: Array[String]): Unit = {
     implicit val system: ActorSystem = ActorSystem("mySystem")
     implicit val executionContext: ExecutionContext = system.dispatcher
-    val port = 8084
-    val host = "tui-service"
+
+    val tuiServerParts = tuiServer.split(":")
+    val host = tuiServerParts(0)
+    val port = tuiServerParts(1).toInt
     //val hostdocker = "host.docker.internal" // for docker so it knows to use the "real" localhost and not any other container
 
     val tui = new TUI
@@ -34,7 +37,7 @@ object TuiServer {
   }
 
   private def addAsObserver(myUrl: String): Unit = {
-    val url = new URL("http://core-service:8082/core/addObserver") // replace with your API URL
+    val url = new URL(s"http://$coreServer/core/addObserver") // replace with your API URL
     val connection = url.openConnection().asInstanceOf[HttpURLConnection]
     connection.setRequestMethod("POST")
     connection.setDoOutput(true)

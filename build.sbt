@@ -1,5 +1,19 @@
 val scala3Version = "3.3.3"
 
+val gatlingExclude = Seq(
+  ExclusionRule("com.typesafe.akka", "akka-actor_2.13"),
+  ExclusionRule("org.scala-lang.modules", "scala-java8-compat_2.13"),
+  ExclusionRule("com.typesafe.akka", "akka-slf4j_2.13")
+)
+
+val gatlingHigh = "io.gatling.highcharts" % "gatling-charts-highcharts" % "3.11.3" % "test" excludeAll (gatlingExclude *)
+val gatlingTest = "io.gatling" % "gatling-test-framework" % "3.11.3" % "test" excludeAll (gatlingExclude *)
+
+lazy val gatlingDependencies = Seq(
+  gatlingHigh,
+  gatlingTest
+)
+
 lazy val commonSettings = Seq(
     version := "0.1.0-SNAPSHOT",
     scalaVersion := scala3Version,
@@ -23,6 +37,7 @@ lazy val commonSettings = Seq(
       ("org.mongodb.scala" %% "mongo-scala-driver" % "5.1.0")
         .cross(CrossVersion.for3Use2_13)
     ),
+    libraryDependencies ++= gatlingDependencies,
     jacocoReportSettings := JacocoReportSettings(
       "Jacoco Coverage Report",
       None,
@@ -40,14 +55,6 @@ lazy val commonSettings = Seq(
     Test / classLoaderLayeringStrategy := ClassLoaderLayeringStrategy.ScalaLibrary
 )
 
-lazy val util = project
-  .in(file("util"))
-  .settings(
-      name := "util",
-      commonSettings
-  )
-  .dependsOn(model)
-
 lazy val gui = project
   .in(file("gui"))
   .settings(
@@ -55,7 +62,7 @@ lazy val gui = project
       commonSettings,
       jacocoExcludes := Seq("*")
   )
-  .dependsOn(core, util)
+  .dependsOn(core, model)
 
 lazy val tui = project
   .in(file("tui"))
@@ -64,7 +71,7 @@ lazy val tui = project
       commonSettings,
       jacocoExcludes := Seq("*")
   )
-  .dependsOn(core, util)
+  .dependsOn(core, model)
   .enablePlugins(JacocoPlugin)
 
 lazy val core = project
@@ -73,7 +80,7 @@ lazy val core = project
       name := "core",
       commonSettings
   )
-  .dependsOn(model, persistence, util)
+  .dependsOn(model, persistence)
   .enablePlugins(JacocoPlugin)
 
 lazy val model = project
@@ -91,6 +98,7 @@ lazy val persistence = project
       commonSettings
   )
   .dependsOn(model)
+  .enablePlugins(GatlingPlugin)
 
 lazy val root = project
   .in(file("."))
@@ -98,5 +106,5 @@ lazy val root = project
       name := "Reversi",
       commonSettings
   )
-  .enablePlugins(JacocoPlugin, JacocoCoverallsPlugin)
-  .aggregate(gui, tui, core, util, model, persistence)
+  .enablePlugins(JacocoPlugin, JacocoCoverallsPlugin, GatlingPlugin)
+  .aggregate(gui, tui, core, model, persistence)

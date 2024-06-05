@@ -1,25 +1,31 @@
 package databaseComponent.MongoDB
 
 import databaseComponent.UserDAO
+import lib.Servers.mongoServer
 import org.bson.json.JsonObject
 import org.mongodb.scala.{MongoClient, MongoCollection, MongoDatabase}
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.DurationInt
 import scala.util.{Failure, Success, Try}
-import org.mongodb.scala._
+import org.mongodb.scala.*
 import org.mongodb.scala.bson.Document
 
 
 class MongoUserDAO extends UserDAO {
+  private val mongoServerParts = mongoServer.split(":")
+  private val host = mongoServerParts(0)
+  private val port = mongoServerParts(1)
+
   private val databaseDB: String = sys.env.getOrElse("MONGO_DB", "mongo")
   private val databaseUser: String =
     sys.env.getOrElse("MONGO_USERNAME", "root")
   private val databasePassword: String =
     sys.env.getOrElse("MONGO_PASSWORD", "mongo")
-  private val databasePort: String = sys.env.getOrElse("MONGO_PORT", "27017")
+  private val databasePort: String = sys.env.getOrElse("MONGO_PORT", port)
   private val databaseHost: String =
-    sys.env.getOrElse("MONGO_HOST", "mongodb")
+    sys.env.getOrElse("MONGO_HOST", host)
 
   private val databaseURI: String =
     s"mongodb://$databaseUser:$databasePassword@$databaseHost:$databasePort/?authSource=admin"

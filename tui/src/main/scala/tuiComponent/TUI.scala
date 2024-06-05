@@ -4,6 +4,7 @@ import controllerComponent.ControllerInterface
 import fieldComponent.Stone.Empty
 import fieldComponent.{Field, FieldInterface, Move, Stone}
 import lib.Event
+import lib.Servers.{coreServer, modelServer}
 import play.api.libs.json.{JsValue, Json}
 
 import java.io.OutputStreamWriter
@@ -64,7 +65,7 @@ class TUI:
       case _ => Failure(IllegalArgumentException("Invalid input"))
 
   private def getPlayerStateFromApi: Stone = {
-    val url = "http://model-service:8080/field/playerState" // replace with your API URL
+    val url = s"http://$modelServer/field/playerState" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val json: JsValue = Json.parse(result)
     val playerStone: String = (json \ "playerStone").as[String]
@@ -115,7 +116,7 @@ class TUI:
   }
 
   private def executePostToCore(json: String): Boolean = {
-    val url = new URL("http://core-service:8082/core/doAndPublish") // replace with your API URL
+    val url = new URL(s"http://$coreServer/core/doAndPublish") // replace with your API URL
     val connection = url.openConnection().asInstanceOf[HttpURLConnection]
     connection.setRequestMethod("POST")
     connection.setDoOutput(true)
@@ -133,7 +134,7 @@ class TUI:
   }
   
   private def getFieldFromApi: FieldInterface = {
-    val url = "http://model-service:8080/field" // replace with your API URL
+    val url = s"http://$modelServer/field" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val json: JsValue = Json.parse(result)
     val fieldJson: JsValue = (json \ "field").get
