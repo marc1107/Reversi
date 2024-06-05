@@ -14,11 +14,6 @@ lazy val gatlingDependencies = Seq(
   gatlingTest
 )
 
-lazy val kafkaDependencies = Seq(
-  "org.apache.kafka" %% "kafka-streams-scala" % "3.3.2",
-  "org.apache.kafka" % "kafka-clients" % "3.7.0"
-)
-
 lazy val commonSettings = Seq(
   version := "0.1.0-SNAPSHOT",
   scalaVersion := scala3Version,
@@ -43,7 +38,10 @@ lazy val commonSettings = Seq(
       .cross(CrossVersion.for3Use2_13)
   ),
   libraryDependencies ++= gatlingDependencies,
-  libraryDependencies ++= kafkaDependencies,
+  libraryDependencies ++= Seq(
+    ("org.apache.kafka" %% "kafka-streams-scala" % "3.7.0").cross(CrossVersion.for3Use2_13),
+    "org.apache.kafka" % "kafka-clients" % "3.7.0"
+  ),
   jacocoReportSettings := JacocoReportSettings(
     "Jacoco Coverage Report",
     None,
