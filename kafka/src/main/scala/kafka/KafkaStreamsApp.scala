@@ -12,7 +12,7 @@ object KafkaStreamsApp extends App {
   props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, "org.apache.kafka.common.serialization.Serdes$StringSerde")
 
   val builder = new StreamsBuilder()
-  val inputTopic = "input-topic"
+  val inputTopic = "field-topic"
   val outputTopic = "output-topic"
 
   val stream: KStream[String, String] = builder.stream(inputTopic)

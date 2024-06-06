@@ -2,8 +2,10 @@ package controllerComponent
 
 import fieldComponent.{FieldInterface, Move, Stone}
 import fileIoComponent.FileIOInterface
+import kafka.Producer
 import lib.Servers.{modelServer, persistenceServer}
 import lib.{Event, MovePossible, Observable, PutCommand, UndoManager}
+import org.apache.kafka.clients.producer.KafkaProducer
 import play.api.libs.json.{JsObject, JsValue, Json}
 import playerStateComponent.PlayerState
 
@@ -16,6 +18,7 @@ import scala.util.{Failure, Success}
 class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) extends ControllerInterface() with Observable:
   private val undoManager = new UndoManager
   val movePossible: MovePossible = new MovePossible(this)
+  val producer = new Producer("field-topic")
 
   def doAndPublish(doThis: Move => FieldInterface, move: Move): Unit =
     val t = movePossible.strategy(move) // returns a Try
@@ -26,9 +29,14 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
         fieldC = putStoneAndGetFieldFromApi(fieldC, move.stone, move.r, move.c)
         //fieldC = fieldC.put(move.stone, move.r, move.c)
         list.foreach(el => fieldC = putStoneAndGetFieldFromApi(fieldC, el.stone, el.r, el.c))
+        producer.sendValue("size", fieldC.size.toString)
+        producer.sendValue("playerState", getPlayerStateFromApi.toString)
+        for (i <- 1 to fieldC.size)
+          for (j <- 1 to fieldC.size)
+            producer.sendValue(s"$i-$j", fieldC.get(i, j).toString)
       case Failure(f) => println(f.getMessage)
 
-    notifyObservers(Event.Move)
+    //notifyObservers(Event.Move)
 
   def doAndPublish(doThis: => FieldInterface): Unit =
     fieldC = doThis
