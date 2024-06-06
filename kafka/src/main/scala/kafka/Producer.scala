@@ -3,7 +3,7 @@ package kafka
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 import java.util.Properties
 
-object KafkaProducerApp extends App {
+class Producer extends App {
   val props = new Properties()
   props.put("bootstrap.servers", "localhost:9092")
   props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
@@ -11,11 +11,13 @@ object KafkaProducerApp extends App {
 
   val producer = new KafkaProducer[String, String](props)
   val topic = "input-topic"
+  
+  def getProducer = producer
 
-  for (i <- 1 to 10) {
+  /*for (i <- 1 to 10) {
     val record = new ProducerRecord[String, String](topic, s"key-$i", s"value-$i")
     producer.send(record)
   }
 
-  producer.close()
+  producer.close()*/
 }
