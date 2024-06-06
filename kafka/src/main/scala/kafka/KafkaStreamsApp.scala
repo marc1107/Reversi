@@ -1,3 +1,5 @@
+package kafka
+
 import org.apache.kafka.streams.{KafkaStreams, StreamsBuilder, StreamsConfig}
 import org.apache.kafka.streams.kstream.{KStream, Produced}
 import java.util.Properties

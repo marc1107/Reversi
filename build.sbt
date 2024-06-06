@@ -66,7 +66,7 @@ lazy val gui = project
     commonSettings,
     jacocoExcludes := Seq("*")
   )
-  .dependsOn(core, model)
+  .dependsOn(core, model, kafka)
 
 lazy val tui = project
   .in(file("tui"))
@@ -75,7 +75,7 @@ lazy val tui = project
     commonSettings,
     jacocoExcludes := Seq("*")
   )
-  .dependsOn(core, model)
+  .dependsOn(core, model, kafka)
   .enablePlugins(JacocoPlugin)
 
 lazy val core = project
@@ -84,7 +84,7 @@ lazy val core = project
     name := "core",
     commonSettings
   )
-  .dependsOn(model, persistence)
+  .dependsOn(model, persistence, kafka)
   .enablePlugins(JacocoPlugin)
 
 lazy val model = project
