@@ -22,6 +22,7 @@ object TuiServer {
     //val hostdocker = "host.docker.internal" // for docker so it knows to use the "real" localhost and not any other container
 
     val tui = new TUI
+    tui.run()
 
     val tuiApi = new TuiApi(tui)
     val routes: Route = tuiApi.routes

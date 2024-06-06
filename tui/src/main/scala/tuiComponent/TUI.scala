@@ -6,6 +6,8 @@ import fieldComponent.{Field, FieldInterface, Move, Stone}
 import lib.Event
 import lib.Servers.{coreServer, modelServer}
 import play.api.libs.json.{JsValue, Json}
+import kafka.Consumer
+import scala.jdk.CollectionConverters.*
 
 import java.io.OutputStreamWriter
 import java.net.{HttpURLConnection, URL}
@@ -16,7 +18,45 @@ import scala.util.{Failure, Success, Try}
 class TUI:
 
   def run(): Unit =
-    update(Event.Move)
+    val consumer = new Consumer("field-topic").getConsumer
+
+    new Thread(() => {
+      while (true) {
+        val records = consumer.poll(java.time.Duration.ofMillis(3000)).asScala
+
+        var field: FieldInterface = new Field(0, Stone.Empty)
+        var playerState: Stone = Stone.Empty
+        var cells: Map[(Int, Int), Stone] = Map.empty
+
+        for (record <- records) {
+          val key = record.key()
+          val value = record.value()
+
+          key match {
+            case "size" => field = new Field(value.toInt, Empty)
+            case "playerState" => playerState = value match {
+              case "□" => Stone.W
+              case "■" => Stone.B
+              case _ => Stone.Empty
+            }
+            case _ => // the key is in the format "i-j"
+              val coordinates = key.split("-").map(_.toInt)
+              val stone = value match {
+                case "□" => Stone.W
+                case "■" => Stone.B
+                case _ => Stone.Empty
+              }
+              cells += (coordinates(0), coordinates(1)) -> stone
+          }
+        }
+
+        for ((coordinates, stone) <- cells) {
+          field = field.put(stone, coordinates._1, coordinates._2)
+        }
+      }
+    }).start()
+
+    //update(Event.Move)
     gameloop
     
   def update(e: Event): Unit = e match {
@@ -26,6 +66,10 @@ class TUI:
       println(getFieldFromApi.toString)
     case Event.End => println("Spieler X" + " hat gewonnen")
   }
+
+  def printCurrentState(field: FieldInterface, playerState: Stone) =
+    println(playerState.toString + " ist an der Reihe")
+    println(field.toString)
 
   def gameloop: Unit =
     val input: String = readLine
