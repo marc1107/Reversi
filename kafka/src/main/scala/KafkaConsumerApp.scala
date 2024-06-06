@@ -1,5 +1,6 @@
 import org.apache.kafka.clients.consumer.{ConsumerConfig, KafkaConsumer}
 import java.util.{Collections, Properties}
+import scala.jdk.CollectionConverters._
 
 object KafkaConsumerApp extends App {
   val props = new Properties()
@@ -8,13 +9,17 @@ object KafkaConsumerApp extends App {
   props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
   props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
 
+  props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
+
   val consumer = new KafkaConsumer[String, String](props)
   val topic = "output-topic"
 
   consumer.subscribe(Collections.singletonList(topic))
 
   while (true) {
-    val records = consumer.poll(java.time.Duration.ofMillis(100))
-    records.forEach(record => println(s"Consumed record with key ${record.key()} and value ${record.value()}"))
+    val records = consumer.poll(java.time.Duration.ofMillis(100)).asScala
+    for (record <- records) {
+      println(s"Consumed record with key ${record.key()} and value ${record.value()}")
+    }
   }
 }
