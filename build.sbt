@@ -27,7 +27,8 @@ lazy val commonSettings = Seq(
     "com.typesafe.akka" %% "akka-http" % "10.5.3",
     "com.typesafe.akka" %% "akka-http-spray-json" % "10.5.3",
     "com.typesafe.akka" %% "akka-actor-typed" % "2.8.5",
-    "com.typesafe.akka" %% "akka-stream" % "2.8.5"
+    "com.typesafe.akka" %% "akka-stream" % "2.8.5",
+    "com.typesafe.akka" %% "akka-stream-kafka" % "4.0.2",
   ),
   libraryDependencies ++= Seq(
     "com.typesafe.slick" %% "slick" % "3.5.1",

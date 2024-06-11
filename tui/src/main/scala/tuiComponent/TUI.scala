@@ -6,8 +6,15 @@ import fieldComponent.{Field, FieldInterface, Move, Stone}
 import lib.Event
 import lib.Servers.{coreServer, modelServer}
 import play.api.libs.json.{JsValue, Json}
-import kafka.Consumer
 import scala.jdk.CollectionConverters.*
+
+import akka.actor.ActorSystem
+import akka.kafka.scaladsl.Consumer
+import akka.kafka.{ConsumerSettings, Subscriptions}
+import akka.stream.scaladsl.Sink
+import org.apache.kafka.clients.consumer.ConsumerConfig
+import org.apache.kafka.common.serialization.StringDeserializer
+import scala.concurrent.ExecutionContextExecutor
 
 import java.io.OutputStreamWriter
 import java.net.{HttpURLConnection, URL}
@@ -18,43 +25,45 @@ import scala.util.{Failure, Success, Try}
 class TUI:
 
   def run(): Unit =
-    val consumer = new Consumer("field-topic").getConsumer
+    implicit val system: ActorSystem = ActorSystem("QuickStart")
+    implicit val ec: ExecutionContextExecutor = system.dispatcher
 
-    new Thread(() => {
-      while (true) {
-        val records = consumer.poll(java.time.Duration.ofMillis(3000)).asScala
+    val bootstrapServers = "localhost:9092"
 
-        var field: FieldInterface = new Field(0, Stone.Empty)
-        var playerState: Stone = Stone.Empty
-        var cells: Map[(Int, Int), Stone] = Map.empty
+    val consumerSettings =
+      ConsumerSettings(system, new StringDeserializer, new StringDeserializer)
+        .withBootstrapServers(bootstrapServers)
+        .withGroupId("kafka-consumer-group")
+        .withProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
 
-        for (record <- records) {
-          val key = record.key()
-          val value = record.value()
+    val topic = "field-topic"
 
-          key match {
-            case "size" => field = new Field(value.toInt, Empty)
-            case "playerState" => playerState = value match {
+    var field: FieldInterface = new Field(0, Stone.Empty)
+    var playerState: Stone = Stone.Empty
+
+    Consumer
+      .plainSource(consumerSettings, Subscriptions.topics(topic))
+      .map(record => (record.key, record.value))
+      .to(Sink.foreach { case (key, value) =>
+        key match {
+          case "size" => field = new Field(value.toInt, Empty)
+          case "playerState" => playerState = value match {
+            case "□" => Stone.W
+            case "■" => Stone.B
+            case _ => Stone.Empty
+          }
+          case "end" => printCurrentState(field, playerState)
+          case _ => // the key is in the format "i-j"
+            val coordinates = key.split("-").map(_.toInt)
+            val stone = value match {
               case "□" => Stone.W
               case "■" => Stone.B
               case _ => Stone.Empty
             }
-            case _ => // the key is in the format "i-j"
-              val coordinates = key.split("-").map(_.toInt)
-              val stone = value match {
-                case "□" => Stone.W
-                case "■" => Stone.B
-                case _ => Stone.Empty
-              }
-              cells += (coordinates(0), coordinates(1)) -> stone
-          }
+            field = field.put(stone, coordinates(0), coordinates(1))
         }
-
-        for ((coordinates, stone) <- cells) {
-          field = field.put(stone, coordinates._1, coordinates._2)
-        }
-      }
-    }).start()
+      })
+      .run()
 
     //update(Event.Move)
     gameloop

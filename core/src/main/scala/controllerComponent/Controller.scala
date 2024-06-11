@@ -34,6 +34,7 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
         for (i <- 1 to fieldC.size)
           for (j <- 1 to fieldC.size)
             producer.sendValue(s"$i-$j", fieldC.get(i, j).toString)
+        producer.sendValue("end", "end")
       case Failure(f) => println(f.getMessage)
 
     //notifyObservers(Event.Move)
