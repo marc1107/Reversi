@@ -33,7 +33,7 @@ class TUI:
     val consumerSettings =
       ConsumerSettings(system, new StringDeserializer, new StringDeserializer)
         .withBootstrapServers(bootstrapServers)
-        .withGroupId("kafka-consumer-group")
+        .withGroupId("kafka-consumer-group-tui")
         .withProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
 
     val topic = "field-topic"
