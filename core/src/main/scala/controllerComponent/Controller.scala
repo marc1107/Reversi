@@ -2,12 +2,18 @@ package controllerComponent
 
 import fieldComponent.{FieldInterface, Move, Stone}
 import fileIoComponent.FileIOInterface
-import kafka.Producer
 import lib.Servers.{modelServer, persistenceServer}
 import lib.{Event, MovePossible, Observable, PutCommand, UndoManager}
 import org.apache.kafka.clients.producer.KafkaProducer
 import play.api.libs.json.{JsObject, JsValue, Json}
 import playerStateComponent.PlayerState
+
+import akka.actor.ActorSystem
+import akka.kafka.ProducerSettings
+import akka.kafka.scaladsl.Producer
+import akka.stream.scaladsl.Source as SRC
+import org.apache.kafka.clients.producer.ProducerRecord
+import org.apache.kafka.common.serialization.StringSerializer
 
 import java.io.{BufferedReader, InputStreamReader, OutputStreamWriter}
 import java.net.{HttpURLConnection, URL}
@@ -18,7 +24,14 @@ import scala.util.{Failure, Success}
 class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) extends ControllerInterface() with Observable:
   private val undoManager = new UndoManager
   val movePossible: MovePossible = new MovePossible(this)
-  val producer = new Producer("field-topic")
+
+  implicit val system: ActorSystem = ActorSystem("QuickStart")
+
+  val bootstrapServers = "localhost:9092"
+
+  val producerSettings =
+    ProducerSettings(system, new StringSerializer, new StringSerializer)
+      .withBootstrapServers(bootstrapServers)
 
   def doAndPublish(doThis: Move => FieldInterface, move: Move): Unit =
     val t = movePossible.strategy(move) // returns a Try
@@ -27,14 +40,21 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
         changePlayerStateWithApi
         fieldC = doThis(move)
         fieldC = putStoneAndGetFieldFromApi(fieldC, move.stone, move.r, move.c)
-        //fieldC = fieldC.put(move.stone, move.r, move.c)
         list.foreach(el => fieldC = putStoneAndGetFieldFromApi(fieldC, el.stone, el.r, el.c))
-        producer.sendValue("size", fieldC.size.toString)
-        producer.sendValue("playerState", getPlayerStateFromApi.toString)
+
+        val records = new ListBuffer[ProducerRecord[String, String]]()
+
+        records += new ProducerRecord("field-topic", "size", fieldC.size.toString)
+        records += new ProducerRecord("field-topic", "playerState", getPlayerStateFromApi.toString)
+
         for (i <- 1 to fieldC.size)
           for (j <- 1 to fieldC.size)
-            producer.sendValue(s"$i-$j", fieldC.get(i, j).toString)
-        producer.sendValue("end", "end")
+            records += new ProducerRecord("field-topic", s"$i-$j", fieldC.get(i, j).toString)
+
+        records += new ProducerRecord("field-topic", "end", "end")
+
+        SRC(records.toList)
+          .runWith(Producer.plainSink(producerSettings))
       case Failure(f) => println(f.getMessage)
 
     //notifyObservers(Event.Move)
