@@ -2,7 +2,7 @@ package GuiComponent
 
 import fieldComponent.{Field, FieldInterface, Move, Stone}
 import lib.Servers.{coreServer, modelServer}
-import lib.{Event, Observer}
+import lib.Event
 import play.api.libs.json.{JsValue, Json}
 import akka.actor.ActorSystem
 import akka.kafka.scaladsl.Consumer
@@ -11,7 +11,6 @@ import akka.stream.scaladsl.Sink
 import fieldComponent.Stone.Empty
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
-import playerStateComponent.PlayerState
 
 import scala.concurrent.ExecutionContextExecutor
 import java.io.{File, OutputStreamWriter}

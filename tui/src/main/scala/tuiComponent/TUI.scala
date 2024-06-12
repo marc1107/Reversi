@@ -1,6 +1,5 @@
 package tuiComponent
 
-import controllerComponent.ControllerInterface
 import fieldComponent.Stone.Empty
 import fieldComponent.{Field, FieldInterface, Move, Stone}
 import lib.Event

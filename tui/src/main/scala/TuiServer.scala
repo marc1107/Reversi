@@ -9,7 +9,6 @@ import play.api.libs.json.Json
 import java.io.OutputStreamWriter
 import java.net.{HttpURLConnection, URL}
 import scala.concurrent.ExecutionContext
-import scala.io.StdIn
 
 object TuiServer {
   def main(args: Array[String]): Unit = {
