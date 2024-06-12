@@ -17,7 +17,7 @@ import scala.util.{Failure, Success, Try}
 class TUI:
 
   def run(): Unit =
-    Consumer("field-topic", printCurrentState(_,_))
+    Consumer("field-topic", "kafka-consumer-group-tui", printCurrentState(_,_))
 
     //update(Event.Move)
     gameloop
