@@ -111,6 +111,7 @@ lazy val kafka = project
     name := "kafka",
     commonSettings
   )
+  .dependsOn(model)
   .enablePlugins(JacocoPlugin)
 
 lazy val root = project
