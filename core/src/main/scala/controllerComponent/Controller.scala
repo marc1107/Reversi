@@ -4,9 +4,7 @@ import fieldComponent.{FieldInterface, Move, Stone}
 import fileIoComponent.FileIOInterface
 import lib.Servers.{modelServer, persistenceServer}
 import lib.{Event, MovePossible, Observable, PutCommand, UndoManager}
-import org.apache.kafka.clients.producer.KafkaProducer
-import play.api.libs.json.{JsObject, JsValue, Json}
-import playerStateComponent.PlayerState
+import play.api.libs.json.{JsValue, Json}
 
 import akka.actor.ActorSystem
 import akka.kafka.ProducerSettings
@@ -29,7 +27,7 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
 
   val bootstrapServers = "localhost:9092"
 
-  val producerSettings =
+  private val producerSettings =
     ProducerSettings(system, new StringSerializer, new StringSerializer)
       .withBootstrapServers(bootstrapServers)
 
@@ -169,7 +167,7 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
     }
   }
 
-  def changePlayerStateWithApi: Int = {
+  private def changePlayerStateWithApi: Int = {
     val url = s"http://$modelServer/field/changePlayerState" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val json: JsValue = Json.parse(result)
