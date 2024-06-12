@@ -5,13 +5,8 @@ import fileIoComponent.FileIOInterface
 import lib.Servers.{modelServer, persistenceServer}
 import lib.{Event, MovePossible, Observable, PutCommand, UndoManager}
 import play.api.libs.json.{JsValue, Json}
-
-import akka.actor.ActorSystem
-import akka.kafka.ProducerSettings
-import akka.kafka.scaladsl.Producer
-import akka.stream.scaladsl.Source as SRC
+import kafkaProducer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
-import org.apache.kafka.common.serialization.StringSerializer
 
 import java.io.{BufferedReader, InputStreamReader, OutputStreamWriter}
 import java.net.{HttpURLConnection, URL}
@@ -22,14 +17,6 @@ import scala.util.{Failure, Success}
 class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) extends ControllerInterface() with Observable:
   private val undoManager = new UndoManager
   val movePossible: MovePossible = new MovePossible(this)
-
-  implicit val system: ActorSystem = ActorSystem("QuickStart")
-
-  val bootstrapServers = "localhost:9092"
-
-  private val producerSettings =
-    ProducerSettings(system, new StringSerializer, new StringSerializer)
-      .withBootstrapServers(bootstrapServers)
 
   def doAndPublish(doThis: Move => FieldInterface, move: Move): Unit =
     val t = movePossible.strategy(move) // returns a Try
@@ -50,9 +37,8 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
             records += new ProducerRecord("field-topic", s"$i-$j", fieldC.get(i, j).toString)
 
         records += new ProducerRecord("field-topic", "end", "end")
-
-        SRC(records.toList)
-          .runWith(Producer.plainSink(producerSettings))
+        
+        Producer(records)
       case Failure(f) => println(f.getMessage)
 
     //notifyObservers(Event.Move)
