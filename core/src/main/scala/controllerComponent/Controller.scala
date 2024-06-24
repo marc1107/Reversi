@@ -4,8 +4,9 @@ import fieldComponent.{FieldInterface, Move, Stone}
 import fileIoComponent.FileIOInterface
 import lib.Servers.{modelServer, persistenceServer}
 import lib.{Event, MovePossible, Observable, PutCommand, UndoManager}
-import play.api.libs.json.{JsObject, JsValue, Json}
-import playerStateComponent.PlayerState
+import play.api.libs.json.{JsValue, Json}
+import kafkaProducer.Producer
+import org.apache.kafka.clients.producer.ProducerRecord
 
 import java.io.{BufferedReader, InputStreamReader, OutputStreamWriter}
 import java.net.{HttpURLConnection, URL}
@@ -24,11 +25,23 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
         changePlayerStateWithApi
         fieldC = doThis(move)
         fieldC = putStoneAndGetFieldFromApi(fieldC, move.stone, move.r, move.c)
-        //fieldC = fieldC.put(move.stone, move.r, move.c)
         list.foreach(el => fieldC = putStoneAndGetFieldFromApi(fieldC, el.stone, el.r, el.c))
+
+        val records = new ListBuffer[ProducerRecord[String, String]]()
+
+        records += new ProducerRecord("field-topic", "size", fieldC.size.toString)
+        records += new ProducerRecord("field-topic", "playerState", getPlayerStateFromApi.toString)
+
+        for (i <- 1 to fieldC.size)
+          for (j <- 1 to fieldC.size)
+            records += new ProducerRecord("field-topic", s"$i-$j", fieldC.get(i, j).toString)
+
+        records += new ProducerRecord("field-topic", "end", "end")
+        
+        Producer(records)
       case Failure(f) => println(f.getMessage)
 
-    notifyObservers(Event.Move)
+    //notifyObservers(Event.Move)
 
   def doAndPublish(doThis: => FieldInterface): Unit =
     fieldC = doThis
@@ -140,7 +153,7 @@ class Controller(using var fieldC: FieldInterface, val fileIo: FileIOInterface) 
     }
   }
 
-  def changePlayerStateWithApi: Int = {
+  private def changePlayerStateWithApi: Int = {
     val url = s"http://$modelServer/field/changePlayerState" // replace with your API URL
     val result = Source.fromURL(url).mkString
     val json: JsValue = Json.parse(result)

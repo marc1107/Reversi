@@ -7,7 +7,6 @@ import fieldComponent.FieldInterface
 import lib.Servers.modelServer
 
 import scala.concurrent.ExecutionContext
-import scala.io.StdIn
 
 object ModelServer {
   def main(args: Array[String]): Unit = {

@@ -6,7 +6,6 @@ import controllerComponent.ControllerInterface
 import lib.Servers.coreServer
 
 import scala.concurrent.ExecutionContext
-import scala.io.StdIn
 
 object CoreServer {
   def main(args: Array[String]): Unit = {

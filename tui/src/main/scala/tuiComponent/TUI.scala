@@ -1,12 +1,13 @@
 package tuiComponent
 
-import controllerComponent.ControllerInterface
 import fieldComponent.Stone.Empty
 import fieldComponent.{Field, FieldInterface, Move, Stone}
+import kafkaConsumer.Consumer
 import lib.Event
 import lib.Servers.{coreServer, modelServer}
 import play.api.libs.json.{JsValue, Json}
 
+import scala.jdk.CollectionConverters.*
 import java.io.OutputStreamWriter
 import java.net.{HttpURLConnection, URL}
 import scala.io.Source
@@ -16,7 +17,9 @@ import scala.util.{Failure, Success, Try}
 class TUI:
 
   def run(): Unit =
-    update(Event.Move)
+    Consumer("field-topic", "kafka-consumer-group-tui", printCurrentState(_,_))
+
+    //update(Event.Move)
     gameloop
     
   def update(e: Event): Unit = e match {
@@ -26,6 +29,10 @@ class TUI:
       println(getFieldFromApi.toString)
     case Event.End => println("Spieler X" + " hat gewonnen")
   }
+
+  def printCurrentState(field: FieldInterface, playerState: Stone) =
+    println(playerState.toString + " ist an der Reihe")
+    println(field.toString)
 
   def gameloop: Unit =
     val input: String = readLine

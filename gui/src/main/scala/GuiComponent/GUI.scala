@@ -1,10 +1,12 @@
 package GuiComponent
 
-import fieldComponent.{Move, Stone}
+import fieldComponent.{Field, FieldInterface, Move, Stone}
+import kafkaConsumer.Consumer
 import lib.Servers.{coreServer, modelServer}
-import lib.{Event, Observer}
+import lib.Event
 import play.api.libs.json.{JsValue, Json}
 
+import scala.concurrent.ExecutionContextExecutor
 import java.io.{File, OutputStreamWriter}
 import java.net.{HttpURLConnection, URL}
 import javax.imageio.ImageIO
@@ -17,8 +19,20 @@ import scala.swing.event.*
 class GUI extends Frame {
 
   def run(): Unit =
-    update(Event.Move)
+    Consumer("field-topic", "kafka-consumer-group-gui", updateGui(_,_))
+
+    //update(Event.Move)
     gameloop
+
+  def updateGui(field: FieldInterface, playerState: Stone): Unit = {
+    contents = new BorderPanel {
+      val lbl: Label = new Label(playerState.toString + " ist an der Reihe")
+      lbl.font = lblFont
+      add(lbl, BorderPanel.Position.North)
+      add(new CellPanel2(field.size, field.size, field), BorderPanel.Position.Center)
+    }
+    repaint
+  }
 
   def gameloop: Unit = None
 
@@ -63,12 +77,11 @@ class GUI extends Frame {
   def update(e: Event): Unit = e match {
     case Event.Quit => this.dispose
     case Event.Move => contents = new BorderPanel {
-      val lbl: Label = new Label(getPlayerStateFromApi.toString + " ist an der Reihe")
-      lbl.font = lblFont
-      add(lbl, BorderPanel.Position.North)
-      add(new CellPanel(getFieldSizeFromApi, getFieldSizeFromApi), BorderPanel.Position.Center)
-    }
-      //controller.winner(controller.field)
+        val lbl: Label = new Label(getPlayerStateFromApi.toString + " ist an der Reihe")
+        lbl.font = lblFont
+        add(lbl, BorderPanel.Position.North)
+        add(new CellPanel(getFieldSizeFromApi, getFieldSizeFromApi), BorderPanel.Position.Center)
+      }
       repaint
     case Event.End => contents = new BorderPanel {
       val lbl: Label = new Label("Spieler X" + " hat gewonnen")
@@ -177,6 +190,18 @@ class GUI extends Frame {
       j <- 1 to c
       cb = CellButton(i, j, getStoneFromApi(i, j))
     } yield cb
+
+    list.foreach(t => contents += t)
+  }
+
+  private class CellPanel2(r: Int, c: Int, field: FieldInterface) extends GridPanel(r, c) {
+
+    private val list: List[CellButton] =
+      for {
+        i <- (1 to r).toList
+        j <- 1 to c
+        cb = CellButton(i, j, field.get(i, j))
+      } yield cb
 
     list.foreach(t => contents += t)
   }
